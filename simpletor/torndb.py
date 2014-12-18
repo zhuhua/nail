@@ -262,3 +262,26 @@ if MySQLdb is not None:
     # Alias some common MySQL exceptions
     IntegrityError = MySQLdb.IntegrityError
     OperationalError = MySQLdb.OperationalError
+    
+import settings
+
+torndb = Connection(settings.db_host, settings.db_name, user=settings.db_user, password=settings.db_password)
+
+class Transactional:
+    
+    def __init__(self):
+        self.result = None
+    
+    def __call__(self, method):
+        
+        def __method(*args):
+            torndb._db.autocommit(False)
+            try:
+                self.result = method(*args)
+                torndb._db.commit()
+            except Exception, e:
+                torndb._db.rollback()
+                raise e
+            
+            return self.result
+        return __method

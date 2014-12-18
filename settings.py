@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 '''
 Created on 2013-3-26
 
@@ -5,11 +6,14 @@ Created on 2013-3-26
 '''
 import os
 
-installed_apps = ['apstat']
+installed_apps = ['account']
 
 template_dir = os.path.join(os.path.dirname(__file__), "templates")
 static_dir = os.path.join(os.path.dirname(__file__), "static")
 
-database_connection_url = 'mysql+mysqldb://%s:%s@localhost:3306/mybatis_demo?charset=utf8' % ('root', '123456')
+db_host='127.0.0.1'
+db_name='nail'
+db_user='root'
+db_password='123456'
 
 port = 8888

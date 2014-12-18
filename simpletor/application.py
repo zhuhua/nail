@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 '''
 Created on 2013-3-26
 
@@ -5,7 +6,8 @@ Created on 2013-3-26
 '''
 import tornado.web
 import tornado.template
-
+import json
+import utils
 import settings
 
 class RequestMapping:
@@ -16,6 +18,13 @@ class RequestMapping:
     def __call__(self, handler):
         self.handler = handler
         return self
+    
+class RequestHandler(tornado.web.RequestHandler):
+    
+    def render_json(self, data):
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(data, cls=utils.JSONEncoder))
+        self.finish()
     
 class Application(tornado.web.Application):
     
