@@ -1,0 +1,27 @@
+# -*- coding:utf-8 -*-
+'''
+Created on 2014年12月18日
+
+@author: zhuhua
+'''
+from simpletor import application
+from simpletor.torndb import torndb, Transactional
+
+@application.RequestMapping("/login")
+class Login(application.RequestHandler):
+    
+    @Transactional()
+    def get(self):
+        mobile = self.get_argument('mobile', strip=True)
+        password = self.get_argument('password', strip=True)
+        account = torndb.get('SELECT * FROM account WHERE mobile=%s AND password=%s', mobile, password)
+        self.render_json(account)
+
+# @application.RequestMapping("/account")
+# class AccountHandler(application.RequestHandler):
+#     
+#     def get(self, *args, **kwargs):
+#         pass
+#     
+#     def post(self, *args, **kwargs):
+#         pass
