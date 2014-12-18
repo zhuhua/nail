@@ -6,9 +6,6 @@ Created on 2013-3-26
 import tornado.web
 import tornado.template
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-
 import settings
 
 class RequestMapping:
@@ -42,6 +39,3 @@ class Application(tornado.web.Application):
         super(Application, self).__init__(handlers, **{
             "static_path": settings.static_dir
         })
-        
-engine = create_engine(settings.database_connection_url, echo=True)
-Session = sessionmaker(bind=engine)
