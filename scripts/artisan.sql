@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2014-12-21 23:18:50
+Date: 2014-12-22 22:39:39
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -40,13 +40,18 @@ CREATE TABLE `artisan` (
 DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL COMMENT '类型（美甲，美足，美睫，护理）',
+  `name` varchar(255) NOT NULL COMMENT '类型（美甲，美足，美睫，护理）',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of category
 -- ----------------------------
+INSERT INTO `category` VALUES ('1', '美甲', '0000-00-00 00:00:00');
+INSERT INTO `category` VALUES ('2', '美睫', '0000-00-00 00:00:00');
+INSERT INTO `category` VALUES ('3', '手足护理', '0000-00-00 00:00:00');
+INSERT INTO `category` VALUES ('4', '空气净化', '0000-00-00 00:00:00');
 
 -- ----------------------------
 -- Table structure for `count`
@@ -65,20 +70,23 @@ CREATE TABLE `count` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for `faverate`
+-- Table structure for `faverite`
 -- ----------------------------
-DROP TABLE IF EXISTS `faverate`;
-CREATE TABLE `faverate` (
+DROP TABLE IF EXISTS `faverite`;
+CREATE TABLE `faverite` (
   `id` bigint(20) NOT NULL,
-  `user_id` char(32) NOT NULL,
-  `simple_id` char(32) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `object_id` char(32) NOT NULL,
   `create_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   `is_valid` bit(1) NOT NULL DEFAULT b'1',
-  PRIMARY KEY (`id`)
+  `type` int(11) NOT NULL COMMENT '0, 收藏手艺人 1, 收藏样品',
+  PRIMARY KEY (`id`),
+  KEY `fk_user_id` (`user_id`),
+  CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `account` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='收藏关系';
 
 -- ----------------------------
--- Records of faverate
+-- Records of faverite
 -- ----------------------------
 
 -- ----------------------------
@@ -101,8 +109,8 @@ CREATE TABLE `images` (
 -- ----------------------------
 DROP TABLE IF EXISTS `sample`;
 CREATE TABLE `sample` (
-  `name` varchar(100) NOT NULL COMMENT '方案-名称',
   `id` char(32) NOT NULL COMMENT 'uuid',
+  `name` varchar(100) NOT NULL COMMENT '方案-名称',
   `price` float NOT NULL,
   `tag_price` float NOT NULL COMMENT '介绍',
   `sale` smallint(6) NOT NULL,
@@ -110,11 +118,32 @@ CREATE TABLE `sample` (
   `category_id` bigint(20) NOT NULL COMMENT '分类',
   `artisan_id` char(32) NOT NULL COMMENT '提供服务的手艺人',
   `is_valid` bit(1) DEFAULT b'1',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `fk_category_id` (`category_id`),
+  KEY `dj_atusab_id` (`artisan_id`),
+  CONSTRAINT `dj_atusab_id` FOREIGN KEY (`artisan_id`) REFERENCES `artisan` (`id`),
+  CONSTRAINT `fk_category_id` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='美甲师提供的作品方案';
 
 -- ----------------------------
 -- Records of sample
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `sample_tag`
+-- ----------------------------
+DROP TABLE IF EXISTS `sample_tag`;
+CREATE TABLE `sample_tag` (
+  `id` int(11) NOT NULL,
+  `sample_id` char(32) NOT NULL,
+  `tag_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_sample_id` (`sample_id`),
+  CONSTRAINT `fk_sample_id` FOREIGN KEY (`sample_id`) REFERENCES `sample` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of sample_tag
 -- ----------------------------
 
 -- ----------------------------
@@ -123,10 +152,20 @@ CREATE TABLE `sample` (
 DROP TABLE IF EXISTS `tag`;
 CREATE TABLE `tag` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL COMMENT '标签（圣诞节，日韩，纯色，新娘，法式，创意，彩绘，糖果）',
+  `name` varchar(100) NOT NULL COMMENT '标签（圣诞节，日韩，纯色，新娘，法式，创意，彩绘，糖果）',
+  `is_valid` bit(1) NOT NULL DEFAULT b'1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tag
 -- ----------------------------
+INSERT INTO `tag` VALUES ('1', '圣诞节', '');
+INSERT INTO `tag` VALUES ('2', '特价款', '');
+INSERT INTO `tag` VALUES ('3', '糖果 ', '');
+INSERT INTO `tag` VALUES ('4', '创意 ', '');
+INSERT INTO `tag` VALUES ('5', '彩绘 ', '');
+INSERT INTO `tag` VALUES ('6', '日韩 ', '');
+INSERT INTO `tag` VALUES ('7', '纯色 ', '');
+INSERT INTO `tag` VALUES ('8', '新娘 ', '');
+INSERT INTO `tag` VALUES ('9', '法式 ', '');
