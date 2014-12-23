@@ -25,6 +25,10 @@ class RequestHandler(tornado.web.RequestHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(data, cls=utils.JSONEncoder))
         self.finish()
+        
+class AppException(Exception):
+    '''Application Logic Exception'''
+    pass
     
 class Application(tornado.web.Application):
     
