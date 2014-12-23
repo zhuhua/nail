@@ -5,22 +5,28 @@ Created on 2014-12-23
 @author: zhuhua
 '''
 from uuid import uuid4
-from datetime import datetime
-from simpletor.torndb import torndb, Transactional, Row
+from simpletor.torndb import  Transactional
+
+import hashlib
+import models
+
+def sha1pass(password):
+    '''Password Hash'''
+    sha1 = hashlib.sha1()
+    sha1.update(password)
+    return sha1.hexdigest()
 
 @Transactional()
 def register(mobile, password):
     '''User Register'''
-    account = torndb.get('SELECT * FROM account WHERE mobile=%s', mobile)
+    account = models.accountDAO.findByMobile(mobile)
     if account is not None:
         raise Exception('手机号%s已存在' % mobile)
+
+    account = models.Account()
+    account.id = uuid4().hex
+    account.mobile = mobile
+    account.password = sha1pass(password)
     
-    sql = '''
-    INSERT INTO account(id, mobile, password, nick, avatar, reg_time, last_login) 
-    VALUES (%(id)s, %(mobile)s, %(password)s, %(nick)s, %(avatar)s, %(reg_time)s, %(last_login)s)
-    '''
-    now = datetime.now()
-    account = Row(id=uuid4().hex, mobile=mobile, password=password, nick='', avatar='', reg_time=now, last_login=now)
-    torndb.execute(sql, **account)
-    
-    return True
+    models.accountDAO.save(account)
+    return account
