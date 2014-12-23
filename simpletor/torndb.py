@@ -275,7 +275,7 @@ class Transactional:
     def __call__(self, method):
         
         def __method(*args):
-            torndb._db.autocommit(False)
+
             try:
                 self.result = method(*args)
                 torndb._db.commit()

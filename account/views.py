@@ -7,6 +7,8 @@ Created on 2014年12月18日
 from simpletor import application
 from simpletor.torndb import torndb, Transactional
 
+import services
+
 @application.RequestMapping("/login")
 class Login(application.RequestHandler):
     
@@ -16,7 +18,15 @@ class Login(application.RequestHandler):
         password = self.get_argument('password', strip=True)
         account = torndb.get('SELECT * FROM account WHERE mobile=%s AND password=%s', mobile, password)
         self.render_json(account)
-
+        
+@application.RequestMapping("/register")
+class Register(application.RequestHandler):
+    
+    def post(self):
+        mobile = self.get_argument('mobile', strip=True)
+        password = self.get_argument('password', strip=True)
+        services.register(mobile, password)
+        
 # @application.RequestMapping("/account")
 # class AccountHandler(application.RequestHandler):
 #     
