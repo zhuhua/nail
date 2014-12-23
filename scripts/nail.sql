@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2014-12-18 17:35:10
+Date: 2014-12-23 17:30:55
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -20,17 +20,16 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `account`;
 CREATE TABLE `account` (
-  `id` int(11) NOT NULL,
+  `id` varchar(32) NOT NULL,
   `mobile` varchar(16) NOT NULL,
   `password` varchar(48) NOT NULL,
   `nick` varchar(24) DEFAULT NULL,
-  `avatar` varchar(255) NOT NULL,
+  `avatar` varchar(255) DEFAULT NULL,
   `reg_time` datetime NOT NULL,
-  `last_login` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of account
 -- ----------------------------
-INSERT INTO `account` VALUES ('1', '13812345678', '123456', 'zh', '111', '2014-12-18 17:13:33', '2014-12-18 17:13:36');
+INSERT INTO `account` VALUES ('5524a72a504f40aa86f95ae43bedc14f', '13812345678', '7c4a8d09ca3762af61e59520943dc26494f8941b', '', '', '2014-12-23 17:22:51');
