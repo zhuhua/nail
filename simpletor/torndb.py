@@ -245,6 +245,9 @@ class Row(dict):
             return self[name]
         except KeyError:
             raise AttributeError(name)
+        
+    def __setattr__(self, name, value):
+        self[name] = value
 
 if MySQLdb is not None:
     # Fix the access conversions to properly recognize unicode/binary
