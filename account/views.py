@@ -16,7 +16,7 @@ class Login(application.RequestHandler):
     def get(self):
         mobile = self.get_argument('mobile', strip=True)
         password = self.get_argument('password', strip=True)
-        account = torndb.get('SELECT * FROM account WHERE mobile=%s AND password=%s', mobile, password)
+        account = torndb.get('SELECT * FROM account WHERE mobile=%s', mobile)
         self.render_json(account)
         
 @application.RequestMapping("/register")

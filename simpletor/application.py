@@ -26,7 +26,7 @@ class RequestHandler(tornado.web.RequestHandler):
         self.write(json.dumps(data, cls=utils.JSONEncoder))
         self.finish()
         
-class AppException(Exception):
+class AppError(Exception):
     '''Application Logic Exception'''
     pass
     

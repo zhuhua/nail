@@ -5,8 +5,11 @@ Created on 2014-12-23
 @author: zhuhua
 '''
 from uuid import uuid4
-from simpletor.torndb import  Transactional
+from datetime import datetime
+from simpletor.torndb import Transactional
+from simpletor.application import AppError
 
+import time
 import hashlib
 import models
 
@@ -19,14 +22,38 @@ def sha1pass(password):
 @Transactional()
 def register(mobile, password):
     '''User Register'''
-    account = models.accountDAO.findByMobile(mobile)
-    if account is not None:
-        raise Exception('手机号%s已存在' % mobile)
+    user = models.userDAO.findByMobile(mobile)
+    if user is not None:
+        raise AppError('手机号%s已存在' % mobile)
 
-    account = models.Account()
-    account.id = uuid4().hex
-    account.mobile = mobile
-    account.password = sha1pass(password)
+    user = models.User()
+    user.mobile = mobile
+    user.password = sha1pass(password)
     
-    models.accountDAO.save(account)
-    return account
+    models.userDAO.save(user)
+    return user
+
+@Transactional()
+def login(mobile, password):
+    '''Login'''
+    user = models.userDAO.findByMobile(mobile)
+    if user is None:
+        raise AppError('手机号不存在')
+    
+    if user.password != sha1pass(password):
+        raise AppError('密码错误')
+    
+    user_id = user.id
+    token = models.loginTokenDAO.findByUser(user_id)
+    
+    if token is None:
+        token = models.LoginToken()
+        token.user_id = user_id
+        models.loginTokenDAO.save(token)
+    else:
+        token.token = uuid4().hex
+        token.expire = time.time() + 86400 * 30
+        token.last_login = datetime.now()
+        models.loginTokenDAO.update(token)
+        
+    return token
