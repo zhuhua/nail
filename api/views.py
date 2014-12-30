@@ -7,7 +7,7 @@ Created on 2014年12月18日
 from simpletor import application
 from simpletor.torndb import torndb, Transactional
 
-import services
+from user import services
 
 @application.RequestMapping("/login")
 class Login(application.RequestHandler):
