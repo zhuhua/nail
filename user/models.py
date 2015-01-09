@@ -89,4 +89,17 @@ class LoginTokenDAO:
         torndb.execute(sql, **token)
         
 loginTokenDAO = LoginTokenDAO()
-        
+
+class Artisan(Row):
+    '''
+    美甲师
+    '''
+    def __init__(self):
+        self.id = None
+        self.name = None
+        self.password = None
+        self.avg_price = 0
+        self.cert_pop = False
+        self.cert_pro = False
+        self.brief = ''
+    
