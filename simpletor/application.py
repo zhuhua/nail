@@ -47,8 +47,8 @@ class Application(tornado.web.Application):
                     handlers.append((handlerWrapper.value, handlerWrapper.handler))
                     
         templateDir = settings.template_dir
-        self.template = tornado.template.Loader(templateDir)
                 
         super(Application, self).__init__(handlers, **{
-            "static_path": settings.static_dir
+            "static_path": settings.static_dir,
+            "template_path": templateDir
         })
