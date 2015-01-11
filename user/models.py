@@ -28,20 +28,20 @@ class UserDAO:
     def save(self, user):
         sql = '''
         INSERT INTO users(mobile, password, nick, avatar, reg_time) 
-        VALUES (%(mobile)s, %(password)s, %(nick)s, %(avatar)s, %(reg_time)s)
+        VALUES (%(mobile)s, %(password)s, %(nick)s, %(avatar)s, %(reg_time)s);
         '''
         torndb.execute(sql, **user)
         
     def findByMobile(self, mobile):
         sql = '''
-        SELECT * FROM users u WHERE u.mobile = %s
+        SELECT * FROM users u WHERE u.mobile = %s;
         '''
         return torndb.get(sql, mobile)
         
     def update(self, user):
         sql = '''
         UPDATE users u SET u.password = %(password)s, u.nick = %(nick)s, u.avater = %(avatar)s
-        WHERE u.id = %(id)s
+        WHERE u.id = %(id)s;
         '''
         torndb.execute(sql, **user)
         
@@ -65,41 +65,27 @@ class LoginTokenDAO:
     def save(self, token):
         sql = '''
         INSERT INTO login_token(user_id, token, expire, last_login) 
-        VALUES (%(user_id)s, %(token)s, %(expire)s, %(last_login)s)
+        VALUES (%(user_id)s, %(token)s, %(expire)s, %(last_login)s);
         '''
         torndb.execute(sql, **token)
         
     def find(self, token):
         sql = '''
-        SELECT * FROM login_token l WHERE l.token = %s
+        SELECT * FROM login_token l WHERE l.token = %s;
         '''
         return torndb.get(sql, token)
         
     def findByUser(self, user_id):
         sql = '''
-        SELECT * FROM login_token l WHERE l.user_id = %s
+        SELECT * FROM login_token l WHERE l.user_id = %s;
         '''
         return torndb.get(sql, user_id)
         
     def update(self, token):
         sql = '''
-        UPDATE login_token t SET t.token = %(token)s, t.expire = %(expire)s, t.last_login = %(last_login)s
-        WHERE t.id = %(id)s
+        UPDATE login_token t SET token = %(token)s, expire = %(expire)s, last_login = %(last_login)s
+        WHERE t.id = %(id)s;
         '''
         torndb.execute(sql, **token)
         
 loginTokenDAO = LoginTokenDAO()
-
-class Artisan(Row):
-    '''
-    美甲师
-    '''
-    def __init__(self):
-        self.id = None
-        self.name = None
-        self.password = None
-        self.avg_price = 0
-        self.cert_pop = False
-        self.cert_pro = False
-        self.brief = ''
-    
