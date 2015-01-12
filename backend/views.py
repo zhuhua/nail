@@ -30,8 +30,9 @@ class Add(application.RequestHandler):
 @application.RequestMapping("/manage/artist/([0-9]+)")
 class Update(application.RequestHandler):
     
-    def get(self, *args, **keds):
-        self.render('artisan/artist.html')
+    def get(self, artisan_id):
+        artisan = artisan_service.get(artisan_id)
+        self.render('artisan/artist.html', item=artisan)
         
     def post(self):
         self.render('artisan/artist.html')

@@ -28,8 +28,8 @@ def register(name, mobile, password, **profile):
         
     models.artisanDAO.save(artisan)
     
-def get(artist_id):
-    return models.artisanDAO.find(artist_id)
+def get(artisan_id):
+    return models.artisanDAO.find(artisan_id)
     
 @Transactional()
 def update_profile(artisan_id, **profile):
