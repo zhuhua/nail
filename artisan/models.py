@@ -51,4 +51,10 @@ class ArtisanDAO:
         '''
         torndb.execute(sql, **artist)
         
+    def paging(self, first, maxitem):
+        sql = '''
+        SELECT * FROM artisan a LIMIT %s OFFSET %s;
+        '''
+        torndb.execute(sql, [maxitem, first])
+        
 artisanDAO = ArtisanDAO()

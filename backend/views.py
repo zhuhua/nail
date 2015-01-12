@@ -10,11 +10,11 @@ from artisan import services as artisan_service
 
 import settings
 
-@application.RequestMapping("/manage/artist")
-class Add(application.RequestHandler):
+@application.RequestMapping("/manage/artisan")
+class AddArtisan(application.RequestHandler):
     
     def get(self):
-        self.render('artisan/artist.html')
+        self.render('artisan/add_artisan.html')
         
     def post(self):
         name = self.get_argument('name', strip=True)
@@ -27,24 +27,24 @@ class Add(application.RequestHandler):
         self.write('finish')
         
 
-@application.RequestMapping("/manage/artist/([0-9]+)")
-class Update(application.RequestHandler):
+@application.RequestMapping("/manage/artisan/([0-9]+)")
+class EditArtisan(application.RequestHandler):
     
     def get(self, artisan_id):
         artisan = artisan_service.get(artisan_id)
-        self.render('artisan/artist.html', item=artisan)
+        self.render('artisan/edit_artisan.html', item=artisan)
         
     def post(self):
-        self.render('artisan/artist.html')
+        self.render('artisan/edit_artisan.html')
         
         
-@application.RequestMapping("/manage/artisan")
-class artisan(application.RequestHandler):
+@application.RequestMapping("/manage/artisans")
+class ListArtisan(application.RequestHandler):
     
     def get(self):
-        self.render('artisan/artist.html')
+        self.render('artisan/artisan.html')
         
     def post(self):
-        self.render('artisan/artist.html')
+        self.render('artisan/artisan.html')
         
     

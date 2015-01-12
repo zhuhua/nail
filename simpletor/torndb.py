@@ -28,6 +28,7 @@ import itertools
 import logging
 import os
 import time
+import re
 
 try:
     import MySQLdb.constants
