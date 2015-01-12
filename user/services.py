@@ -8,16 +8,10 @@ from uuid import uuid4
 from datetime import datetime
 from simpletor.torndb import Transactional
 from simpletor.application import AppError
+from simpletor.utils import sha1pass
 
 import time
-import hashlib
 import models
-
-def sha1pass(password):
-    '''Password Hash'''
-    sha1 = hashlib.sha1()
-    sha1.update(password)
-    return sha1.hexdigest()
 
 @Transactional()
 def register(mobile, password):

@@ -7,21 +7,19 @@
 {% end %}
 {% block content %}
 <div style="width:80%;margin:0 auto;padding:10px 50px 10px 50px">
-	<form action="#">
+	<form method="post">
 		<label class="control-label">姓名</label>
-		<input type="text" placeholder="姓名" class="m-wrap span8">
-		<label class="control-label">密码</label>
-		<input type="text" placeholder="密码" class="m-wrap span8">
+		<input type="text" name="name" placeholder="姓名" class="m-wrap span8" />
 		<label class="control-label">手机号</label>
-		<input type="text" placeholder="手机号" class="m-wrap span8">
+		<input type="text" name="mobile" placeholder="手机号" class="m-wrap span8" />
 		<label class="control-label">性别</label>
-		男<input type="radio" class="m-wrap span8">
-		女<input type="radio" class="m-wrap span8">
-		<label class="control-label">简介</label>
+		男<input type="radio" name="gender" class="m-wrap span8" checked />
+		女<input type="radio" name="gender" class="m-wrap span8" />
+		<label class="control-label" name="brief">简介</label>
 		<textarea class="span8 m-wrap" rows="3"></textarea>
 		<div class="submit-btn">
-			<a href="#" class="btn green">提交</a>
-			<a href="#" class="btn">取消</a>
+			<input type="submit" class="btn green" value="提交" />
+			<input type="reset" class="btn" value="取消" />
 		</div>
 	</form>
 </div>

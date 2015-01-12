@@ -276,10 +276,10 @@ class Transactional:
     
     def __call__(self, method):
         
-        def __method(*args):
+        def __method(*args, **kwds):
 
             try:
-                self.result = method(*args)
+                self.result = method(*args, **kwds)
                 torndb._db.commit()
             except Exception, e:
                 torndb._db.rollback()

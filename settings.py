@@ -16,4 +16,6 @@ db_name='nail'
 db_user='root'
 db_password='123456'
 
+DEUATLT_PASS = '123456'
+
 port = 8888
