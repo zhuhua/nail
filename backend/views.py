@@ -24,7 +24,7 @@ class AddArtisan(application.RequestHandler):
         brief = self.get_argument('brief', default='', strip=True)
         
         artisan_service.register(name, mobile, password, s=gender, brief=brief)
-        self.write('finish')
+        self.redirect('/manage/artisans')
         
 
 @application.RequestMapping("/manage/artisan/([0-9]+)")
@@ -42,9 +42,7 @@ class EditArtisan(application.RequestHandler):
 class ListArtisan(application.RequestHandler):
     
     def get(self):
-        self.render('artisan/artisan.html')
-        
-    def post(self):
-        self.render('artisan/artisan.html')
+        items = artisan_service.paging(1, 10)
+        self.render('artisan/list_artisan.html', items=items)
         
     

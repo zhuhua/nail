@@ -53,8 +53,8 @@ class ArtisanDAO:
         
     def paging(self, first, maxitem):
         sql = '''
-        SELECT * FROM artisan a LIMIT %s OFFSET %s;
+        SELECT * FROM artisan a ORDER BY a.create_time DESC LIMIT %s OFFSET %s;
         '''
-        torndb.execute(sql, [maxitem, first])
+        return torndb.query(sql, maxitem, first)
         
 artisanDAO = ArtisanDAO()

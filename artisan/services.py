@@ -53,3 +53,7 @@ def update_profile(artisan_id, **profile):
     
     models.artisanDAO.update(artisan)
     
+def paging(page, size):
+    artisan = models.artisanDAO.paging(0, 10)
+    return artisan
+    

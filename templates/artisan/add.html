@@ -1,0 +1,57 @@
+{% extends "../base_col_2.html" %} {% block title %}添加美甲师{% end %} {%
+block breadcrumb %}
+<li><a href="#">Horzontal & Sidebar Menu</a></li>
+{% end %} {% block content %}
+<div class="row-fluid">
+	<div class="portlet box">
+		<div class="portlet-body form">
+			<!-- BEGIN FORM-->
+			<form class="form-horizontal" method="post">
+				<div class="control-group">
+					<label class="control-label">姓名</label>
+					<div class="controls">
+						<input type="text" name="name" placeholder="姓名" class="m-wrap span6" />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">手机号</label>
+					<div class="controls">
+						<input type="text" name="mobile" placeholder="手机号" class="m-wrap span4" />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">性别</label>
+					<div class="controls">
+						<label class="radio">
+							<div class="radio">
+								<span>
+									<input type="radio" name="gender" value="1" checked />
+								</span>
+							</div> 男
+						</label> <label class="radio">
+							<div class="radio">
+								<span class="checked">
+									<input type="radio" name="gender" value="0" />
+								</span>
+							</div> 女
+						</label>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">简介</label>
+					<div class="controls">
+						<textarea class="m-wrap span8" rows="3" name="brief"></textarea>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="controls">
+						<input type="submit" class="btn green" value="提交" />
+						<input type="reset" class="btn" value="取消" />
+					</div>
+				</div>
+			</form>
+			<!-- END FORM-->
+		</div>
+	</div>
+</div>
+{% end %}
