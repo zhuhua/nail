@@ -95,3 +95,12 @@ def get_image(img_name, thumb=False):
         ext = img_name[img_name.rfind('.'):]
         img_name = img_name.replace(ext, "_s.%s" % ext[1:])
     return "/img/%s" % img_name
+
+def get_image_file(img_name, thumb=False):
+    ext = img_name[img_name.rfind('.'):]
+    if thumb:
+        img_name = img_name.replace(ext, "_s.%s" % ext[1:])
+        
+    f = open("%s/%s" % (settings.img_dir, img_name), "rb")
+    return ext, f.read()
+    

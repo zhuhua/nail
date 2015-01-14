@@ -1,0 +1,66 @@
+{% extends "../base_col_2.html" %} {% block title %}添加美甲师{% end %}
+
+{% block css %}
+<link href="/static/css/dropzone.css" rel="stylesheet">
+{% end %}
+
+{% block js %}
+<script src="/static/js/dropzone.js"></script>
+<script type="text/javascript">
+var display = function(url) {
+	var img = $("<img />");
+	img.attr("src", url);
+	img.css("width", "100%");
+	img.css("height", "100%");
+	img.css("max-width", "100%");
+	img.css("max-height", "100%");
+	$("#preview").empty();
+	$("#preview").append(img);
+	$("#avatar").val(url);
+};
+
+
+Dropzone.options.upload = {
+	paramName: "file", // The name that will be used to transfer the file
+	maxFilesize: 5, // MB
+	acceptedFiles: "image/*",
+	init: function(file, resp) {
+		this.on("success", function(file, resp) { 
+			display(resp.url);
+		});
+	}
+};
+
+</script>
+{% end %}
+
+{% block breadcrumb %}
+<li><a href="#">Horzontal & Sidebar Menu</a></li>
+{% end %}
+
+{% block content %}
+<div class="row-fluid">
+	<div class="span6">
+		<form class="form-horizontal" method="post">
+			<div class="control-group">
+				<label class="control-label">预览</label>
+				<div id="preview" class="controls box" style="height:300px;border:1px solid #999;padding:10px;">
+				</div>
+				<input id="avatar" type="hidden" name="avatar" />
+			</div>
+			<div class="control-group">
+				<div class="controls">
+					<input type="submit" class="btn green" value="提交" />
+					<input type="reset" class="btn" value="取消" />
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="span6">
+		<!-- BEGIN FORM-->
+		<form action="/upload_image" id="upload" class="dropzone">
+		</form>
+		<!-- END FORM-->
+	</div>
+</div>
+{% end %}

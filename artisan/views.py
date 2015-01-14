@@ -50,8 +50,9 @@ class Paging(application.RequestHandler):
 class UploadAvatar(application.RequestHandler):
     
     def get(self, artisan_id):
-        self.render('artisan/upload_avatar.html')
+        self.render('artisan/avatar.html')
         
-    def post(self):
-        print ''
-        self.write('')
+    def post(self, artisan_id):
+        avatar = self.get_argument('avatar', strip=True)
+        artisan_service.update_profile(artisan_id, avatar=avatar)
+        self.redirect('/manage/artisan/%s' % artisan_id)
