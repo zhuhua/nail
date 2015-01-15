@@ -9,7 +9,7 @@ from simpletor.torndb import torndb, Transactional
 
 from user import services
 
-@application.RequestMapping("/login")
+@application.RequestMapping("/api/login")
 class Login(application.RequestHandler):
     
     @Transactional()

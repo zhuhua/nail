@@ -50,5 +50,6 @@ class Application(tornado.web.Application):
                 
         super(Application, self).__init__(handlers, **{
             "static_path": settings.static_dir,
+            "cookie_secret" : "61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o/Vo=",
             "template_path": templateDir
         })

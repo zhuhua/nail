@@ -10,7 +10,7 @@ from artisan import services as artisan_service
 
 import settings
 
-@application.RequestMapping("/manage/artisan")
+@application.RequestMapping("/artisan")
 class Add(application.RequestHandler):
     
     def get(self):
@@ -24,10 +24,10 @@ class Add(application.RequestHandler):
         brief = self.get_argument('brief', default='', strip=True)
         
         artisan_service.register(name, mobile, password, s=gender, brief=brief)
-        self.redirect('/manage/artisans')
+        self.redirect('/artisans')
         
 
-@application.RequestMapping("/manage/artisan/([0-9]+)")
+@application.RequestMapping("/artisan/([0-9]+)")
 class Edit(application.RequestHandler):
     
     def get(self, artisan_id):
@@ -38,7 +38,7 @@ class Edit(application.RequestHandler):
         self.render('artisan/edit.html')
         
         
-@application.RequestMapping("/manage/artisans")
+@application.RequestMapping("/artisans")
 class Paging(application.RequestHandler):
     
     def get(self):
@@ -46,7 +46,7 @@ class Paging(application.RequestHandler):
         self.render('artisan/list.html', items=items)
         
 
-@application.RequestMapping("/manage/artisan/([0-9]+)/avatar")
+@application.RequestMapping("/artisan/([0-9]+)/avatar")
 class UploadAvatar(application.RequestHandler):
     
     def get(self, artisan_id):
@@ -55,4 +55,4 @@ class UploadAvatar(application.RequestHandler):
     def post(self, artisan_id):
         avatar = self.get_argument('avatar', strip=True)
         artisan_service.update_profile(artisan_id, avatar=avatar)
-        self.redirect('/manage/artisan/%s' % artisan_id)
+        self.redirect('/artisan/%s' % artisan_id)

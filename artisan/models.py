@@ -24,18 +24,19 @@ class Artisan(Row):
         self.cert_pro = False
         self.brief = ''
         self.create_time = datetime.now()
+        self.last_login = datetime.now()
     
 class ArtisanDAO:
     '''
     Artist DAO
     '''
-    def save(self, artist):
+    def save(self, artisan):
         sql = '''
-        INSERT INTO artisan (name, password, gender, mobile, avatar, level, avg_price, cert_pop, cert_pro, brief, create_time) 
-        VALUES (%(name)s, %(password)s, %(gender)s, %(mobile)s, %(avatar)s, %(level)s, %(avg_price)s, %(cert_pop)s, %(cert_pro)s, %(brief)s, %(create_time)s);
+        INSERT INTO artisan (name, password, gender, mobile, avatar, level, avg_price, cert_pop, cert_pro, brief, create_time, last_lgoin) 
+        VALUES (%(name)s, %(password)s, %(gender)s, %(mobile)s, %(avatar)s, %(level)s, %(avg_price)s, %(cert_pop)s, %(cert_pro)s, %(brief)s, %(create_time)s, %(last_lgoin)s);
         '''
-        torndb.execute(sql, **artist)
-        return artist
+        torndb.execute(sql, **artisan)
+        return artisan
     
     def find(self, artist_id):
         sql = '''
@@ -43,13 +44,13 @@ class ArtisanDAO:
         '''
         return torndb.get(sql, artist_id)
         
-    def update(self, artist):
+    def update(self, artisan):
         sql = '''
         UPDATE artisan a SET 
-        name = %(name)s, password = %(password)s, gender = %(gender)s, mobile = %(mobile)s, avatar = %(avatar)s, avg_price = %(avg_price)s, cert_pop = %(cert_pop)s, cert_pro = %(cert_pop)s, brief = %(brief)s 
+        name = %(name)s, password = %(password)s, gender = %(gender)s, mobile = %(mobile)s, avatar = %(avatar)s, avg_price = %(avg_price)s, cert_pop = %(cert_pop)s, cert_pro = %(cert_pop)s, brief = %(brief)s, last_lgoin = %(last_lgoin)s 
         WHERE a.id = %(id)s 
         '''
-        torndb.execute(sql, **artist)
+        torndb.execute(sql, **artisan)
         
     def paging(self, first, maxitem):
         sql = '''

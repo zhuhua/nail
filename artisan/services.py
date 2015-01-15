@@ -7,6 +7,7 @@ Created on 2015-1-11
 from simpletor.torndb import Transactional
 from simpletor.application import AppError
 from simpletor.utils import sha1pass
+from datetime import datetime
 
 import models
 
@@ -27,6 +28,22 @@ def register(name, mobile, password, **profile):
         artisan.brief = brief
         
     models.artisanDAO.save(artisan)
+    
+@Transactional()
+def login(artisan_id, password):
+    '''
+    登录
+    '''
+    artisan = models.artisanDAO.find(artisan_id)
+    if artisan is None:
+        raise AppError('用户名错误')
+    
+    if artisan.password != sha1pass(password):
+        raise AppError('密码错误')
+    
+    artisan.last_login = datetime.now()
+    models.artisanDAO.update(artisan)
+    return artisan
     
 def get(artisan_id):
     return models.artisanDAO.find(artisan_id)

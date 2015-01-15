@@ -5,44 +5,49 @@ Created on 2014-12-24
 @author: zhuhua
 '''
 from simpletor import application
+from artisan import services as artisan_serv
 
-from artisan import services as artisan_service
+import services as manager_serv
+import re
 
-import settings
-
-@application.RequestMapping("/manage/artisan")
-class AddArtisan(application.RequestHandler):
+@application.RequestMapping("/login")
+class Login(application.RequestHandler):
     
     def get(self):
-        self.render('artisan/add_artisan.html')
+        self.render('login.html')
         
     def post(self):
-        name = self.get_argument('name', strip=True)
-        mobile = self.get_argument('mobile', strip=True)
-        password = settings.DEUATLT_PASS
-        gender = self.get_argument('gender', default=0, strip=True)
-        brief = self.get_argument('brief', default='', strip=True)
+        login_id = self.get_argument('username', strip=True)
+        password = self.get_argument('password', strip=True)
         
-        artisan_service.register(name, mobile, password, s=gender, brief=brief)
-        self.redirect('/manage/artisans')
+        user, role = '', ''
+        home = ''
         
+        if re.match('[0-9]*', login_id).group() == '':
+            user, role = self.manager_login(login_id, password)
+            home = '/manager'
+        else:
+            user, role = self.artisan_login(login_id, password)
+            home = '/artisan/%s' % user.id
 
-@application.RequestMapping("/manage/artisan/([0-9]+)")
-class EditArtisan(application.RequestHandler):
-    
-    def get(self, artisan_id):
-        artisan = artisan_service.get(artisan_id)
-        self.render('artisan/edit_artisan.html', item=artisan)
+        self.set_secure_cookie('id', str(user.id))
+        self.set_secure_cookie('name', user.name)
+        self.set_secure_cookie('role', role)
+        
+        self.redirect(home)
+        
+    def manager_login(self, username, password):
+        manager = manager_serv.login(username, password)
+        return manager, manager.role
+
+    def artisan_login(self, artisan_id, password):
+        artisan = artisan_serv.login(artisan_id, password)
+        return artisan, 'ROLE_ARTISAN'
+        
+@application.RequestMapping("/logout")
+class Logout(application.RequestHandler):
+    def get(self):
+        self.clear_all_cookies()
         
     def post(self):
-        self.render('artisan/edit_artisan.html')
-        
-        
-@application.RequestMapping("/manage/artisans")
-class ListArtisan(application.RequestHandler):
-    
-    def get(self):
-        items = artisan_service.paging(1, 10)
-        self.render('artisan/list_artisan.html', items=items)
-        
-    
+        self.get()
