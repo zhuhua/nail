@@ -7,11 +7,11 @@ Created on 2014年12月18日
 import os
 import json
 import hashlib
-from io import BytesIO
-from PIL import Image
 import cStringIO
-import base64
 import settings
+
+from PIL import Image
+from io import BytesIO
 
 from datetime import date, datetime
 
@@ -30,65 +30,66 @@ def sha1pass(password):
     sha1.update(password)
     return sha1.hexdigest()
 
-def resizeImage(info, data, sizes):
-    '''缩放图片'''
-    data_io = BytesIO(base64.b64decode(data))
-    md5 = hashlib.md5()
-    md5.update(data_io.read())
-    name = md5.hexdigest()
-    data_io.seek(0)
 
-    img = Image.open(data_io)
-    fmt = info.split("/")[1]
+def crop(img, sizes):
+    '''裁切'''
+    fmt = img.format
     w, h = img.size
+    aspect = w;
+    x, y = 0, 0
+    
+    if w > h:
+        aspect = h;
+        x = (w - aspect) / 2;
+    else:
+        y = (h - aspect) / 2;
+        
+    img = img.crop((x, y, aspect, aspect))
     
     images = []
     for width, height in sizes:
-        
-        img_new = None
-        if w > width and w > h:
-            new_w = width
-            new_h = int(float(width) / w * h)
-            img_new = img.resize((new_w, new_h), Image.ANTIALIAS)
-        elif h > height and w < h:
-            new_w = int(float(height) * w / h)
-            new_h = height
-            img_new = img.resize((new_w, new_h), Image.ANTIALIAS)
-        else:
-            img_new = img.resize((w, h), Image.ANTIALIAS)
-
+        img_new = img.resize((width, height), Image.ANTIALIAS)
         output = cStringIO.StringIO()
-        img_new.save(output, fmt.upper(), quality = 95)
+        img_new.save(output, fmt, quality = 95)
         img_data = output.getvalue()
         output.close()
         images.append(img_data)
         del img_new
         
     del img
-    return name, fmt, images
+    return images
 
-def save_image(info, data, sizes=[(260, 170), (595, 375)]):
+def save_image(filename, data, sizes=[(320, 320), (640, 640)]):
     '''保存图片到本地'''
-    name, fmt, images = resizeImage(info, data, sizes)
+    data_io = BytesIO(data)
+    md5 = hashlib.md5()
+    md5.update(data_io.read())
     
-    save_path = "%s/%s.%s" % (settings.img_dir, name, fmt)
+    name = md5.hexdigest()
+    ext = filename.split(".")[1]
+    data_io.seek(0)
+    
+    img = Image.open(data_io)
+    images = crop(img, sizes)
+    
+    save_path = "%s/%s.%s" % (settings.img_dir, name, ext)
     if os.path.isfile(save_path):
-        return '%s.%s' % (name, fmt)
+        return '%s.%s' % (name, ext)
     
     i = 0
     for image in images:
         save_path = ""
         if i == 0:
-            save_path = "%s/%s_s.%s" % (settings.img_dir, name, fmt)
+            save_path = "%s/%s_s.%s" % (settings.img_dir, name, ext)
         else:
-            save_path = "%s/%s.%s" % (settings.img_dir, name, fmt)
+            save_path = "%s/%s.%s" % (settings.img_dir, name, ext)
         
         image_file = open(save_path, 'wb')
         image_file.write(image)
         image_file.close()
         i += 1
 
-    return '%s.%s' % (name, fmt)
+    return '%s.%s' % (name, ext)
 
 def get_image(img_name, thumb=False):
     if thumb:

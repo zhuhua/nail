@@ -54,15 +54,15 @@ def update_profile(artisan_id, **profile):
     if not artisan:
         return
     
-    name = profile.pop('gender', None)
+    name = profile.pop('name', None)
     gender = profile.pop('gender', 1)
     avatar = profile.pop('avatar', None)
     brief = profile.pop('brief', None)
     
     if name:
-        artisan.name = brief
+        artisan.name = name
     if gender:
-        artisan.gender = gender
+        artisan.gender = int(gender)
     if avatar:
         artisan.avatar = avatar
     if brief:

@@ -1,0 +1,34 @@
+{% extends "../base_col_2.html" %} {% block title %}添加美甲师{% end %}
+
+{% block css %}
+<link href="/static/css/profile.css" rel="stylesheet">
+{% end %}
+
+{% block breadcrumb %}
+<li><a href="#">Horzontal & Sidebar Menu</a></li>
+{% end %} 
+
+{% block content %}
+<div class="row-fluid profile">
+	<ul class="unstyled profile-nav span3">
+		<li>
+			<img src="{{item.avatar}}" alt=""> 
+			<a href="/artisan/{{item.id}}/avatar" class="profile-edit">修改</a>
+		</li>
+		<li>
+			<a href="/artisan/{{item.id}}" >编辑个人资料</a>
+		</li>
+	</ul>
+	<div class="span9">
+		<div class="row-fluid">
+			<div class="span8 profile-info">
+				<h1>{{item.name}}</h1>
+				<p>{{item.brief}}</p>
+			</div>
+			<!--end span8-->
+		</div>
+		<!--end row-fluid-->
+	</div>
+	<!--end span9-->
+</div>
+{% end %}

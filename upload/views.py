@@ -5,7 +5,6 @@ Created on Jan 13, 2015
 '''
 from simpletor import application
 from simpletor import utils
-import settings
 
 @application.RequestMapping("/img/(.*)")
 class Image(application.RequestHandler):
@@ -23,9 +22,7 @@ class UploadAvatar(application.RequestHandler):
         filename = ''
         for file_dict in file_dict_list:
             filename = file_dict["filename"]
-            f = open("%s/%s" % (settings.img_dir, filename), "wb")
-            f.write(file_dict["body"])
-            f.close()
+            filename = utils.save_image(filename, file_dict["body"])
             
         data = dict(url="/img/%s" % filename)
         self.write(data)
