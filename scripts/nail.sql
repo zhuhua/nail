@@ -1,16 +1,16 @@
 /*
-Navicat MySQL Data Transfer
+Navicat MariaDB Data Transfer
 
 Source Server         : localhost
 Source Server Version : 50540
 Source Host           : localhost:3306
 Source Database       : nail
 
-Target Server Type    : MYSQL
+Target Server Type    : MariaDB
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2015-01-08 18:03:36
+Date: 2015-01-16 18:02:52
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -20,23 +20,35 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `artisan`;
 CREATE TABLE `artisan` (
-  `id` char(32) NOT NULL COMMENT 'uuid',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id',
   `name` varchar(100) NOT NULL COMMENT '手艺人-名称',
   `password` varchar(255) NOT NULL,
-  `gender` bit(1) NOT NULL,
+  `gender` bit(1) NOT NULL COMMENT '性别',
+  `mobile` varchar(16) NOT NULL COMMENT '手机',
   `avatar` varchar(255) NOT NULL COMMENT '头像',
   `level` tinyint(4) NOT NULL DEFAULT '0' COMMENT '等级（0-15）',
+  `brief` varchar(1000) NOT NULL COMMENT '自我介绍',
   `avg_price` float NOT NULL,
   `cert_pop` bit(1) NOT NULL DEFAULT b'0' COMMENT '明星美甲师认证',
   `cert_pro` bit(1) NOT NULL DEFAULT b'0' COMMENT '高级职业美甲师认证',
-  `brief` varchar(1000) NOT NULL COMMENT '自我介绍',
   `create_time` datetime NOT NULL,
+  `last_login` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='手艺人';
+) ENGINE=InnoDB AUTO_INCREMENT=28000011 DEFAULT CHARSET=utf8 COMMENT='手艺人';
 
 -- ----------------------------
 -- Records of artisan
 -- ----------------------------
+INSERT INTO `artisan` VALUES ('28000001', 'shouyiren', '7c4a8d09ca3762af61e59520943dc26494f8941b', '', 'ss', '/img/Grass.jpg', '1', '', '0', '\0', '\0', '2015-01-12 15:06:18', '0000-00-00 00:00:00');
+INSERT INTO `artisan` VALUES ('28000002', 'shouyiren', '7c4a8d09ca3762af61e59520943dc26494f8941b', '', 'ss', '', '1', '', '0', '\0', '\0', '2015-01-12 15:06:38', '0000-00-00 00:00:00');
+INSERT INTO `artisan` VALUES ('28000003', 'shouyiren', '7c4a8d09ca3762af61e59520943dc26494f8941b', '', 'ss', '', '1', '', '0', '\0', '\0', '2015-01-12 15:06:40', '0000-00-00 00:00:00');
+INSERT INTO `artisan` VALUES ('28000004', 'shouyiren', '7c4a8d09ca3762af61e59520943dc26494f8941b', '', 'ss', '', '1', '', '0', '\0', '\0', '2015-01-12 15:06:42', '0000-00-00 00:00:00');
+INSERT INTO `artisan` VALUES ('28000005', '是的发生', '7c4a8d09ca3762af61e59520943dc26494f8941b', '', 'ss', '/img/331838f47ff496ad525f38fc92785418.jpg', '1', 'PIL 中的 Image 模块 - oyzway - 博客园\r\n本文是节选自 PIL handbook online 并做了一些简单的翻译只能保证自己看懂,不...Image 类中的函数。0. new : 这个函数创建一幅给定模式(mode)和尺寸(size)...\r\nwww.cnblogs.com/way_te... 2011-04-20  - 百度快照 - 91%好评', '0', '\0', '\0', '2015-01-12 15:06:44', '2015-01-16 15:17:43');
+INSERT INTO `artisan` VALUES ('28000006', 'shouyiren', '7c4a8d09ca3762af61e59520943dc26494f8941b', '', 'ss', '', '1', '', '0', '\0', '\0', '2015-01-12 15:06:46', '0000-00-00 00:00:00');
+INSERT INTO `artisan` VALUES ('28000007', 'shouyiren', '7c4a8d09ca3762af61e59520943dc26494f8941b', '', 'ss', '', '1', '', '0', '\0', '\0', '2015-01-12 15:06:48', '0000-00-00 00:00:00');
+INSERT INTO `artisan` VALUES ('28000008', 'shouyiren', '7c4a8d09ca3762af61e59520943dc26494f8941b', '', 'ss', '', '1', '', '0', '\0', '\0', '2015-01-12 15:06:50', '0000-00-00 00:00:00');
+INSERT INTO `artisan` VALUES ('28000009', '哈哈哈哈', '7c4a8d09ca3762af61e59520943dc26494f8941b', '', '12345678', '', '1', '阿斯顿发生的发生打法', '0', '\0', '\0', '2015-01-12 17:06:22', '0000-00-00 00:00:00');
+INSERT INTO `artisan` VALUES ('28000010', '阿斯顿发', '7c4a8d09ca3762af61e59520943dc26494f8941b', '', '111111111111', '', '1', '爱上发生地方', '0', '\0', '\0', '2015-01-13 15:51:36', '0000-00-00 00:00:00');
 
 -- ----------------------------
 -- Table structure for category
@@ -128,6 +140,25 @@ CREATE TABLE `login_token` (
 INSERT INTO `login_token` VALUES ('1', 'c04ef209d3ed4e15b2554485f0650d0f', '1', '1422004202', '2014-12-24 17:10:01');
 
 -- ----------------------------
+-- Table structure for manager
+-- ----------------------------
+DROP TABLE IF EXISTS `manager`;
+CREATE TABLE `manager` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id',
+  `name` varchar(16) NOT NULL,
+  `password` varchar(48) NOT NULL,
+  `role` varchar(255) NOT NULL COMMENT '角色',
+  `last_login` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='管理员';
+
+-- ----------------------------
+-- Records of manager
+-- ----------------------------
+INSERT INTO `manager` VALUES ('1', 'admin', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'ROLE_ADMIN', '2015-01-15 16:55:49');
+INSERT INTO `manager` VALUES ('2', 'manager', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'ROLE_MANAGER', '2015-01-15 16:55:52');
+
+-- ----------------------------
 -- Table structure for sample
 -- ----------------------------
 DROP TABLE IF EXISTS `sample`;
@@ -139,7 +170,7 @@ CREATE TABLE `sample` (
   `sale` smallint(6) NOT NULL,
   `brief` varchar(1000) NOT NULL,
   `category_id` bigint(20) NOT NULL COMMENT '分类',
-  `artisan_id` char(32) NOT NULL COMMENT '提供服务的手艺人',
+  `artisan_id` int(11) NOT NULL COMMENT '提供服务的手艺人',
   `is_valid` bit(1) DEFAULT b'1',
   PRIMARY KEY (`id`),
   KEY `fk_category_id` (`category_id`),
@@ -178,7 +209,7 @@ CREATE TABLE `tag` (
   `name` varchar(100) NOT NULL COMMENT '标签（圣诞节，日韩，纯色，新娘，法式，创意，彩绘，糖果）',
   `is_valid` bit(1) NOT NULL DEFAULT b'1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='标签';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='标签';
 
 -- ----------------------------
 -- Records of tag
