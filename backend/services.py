@@ -23,6 +23,6 @@ def login(username, password):
     if manager.password != sha1pass(password):
         raise AppError('密码错误')
     
-    manager.last_lgoin = datetime.now()
+    manager.last_login = datetime.now()
     models.managerDAO.update(manager)
     return manager

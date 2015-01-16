@@ -13,9 +13,11 @@ import settings
 @application.RequestMapping("/artisan")
 class Add(application.RequestHandler):
     
+    @application.Security('ROLE_ADMIN', 'ROLE_MANAGER')
     def get(self):
         self.render('artisan/add.html')
         
+    @application.Security('ROLE_ADMIN')
     def post(self):
         name = self.get_argument('name', strip=True)
         mobile = self.get_argument('mobile', strip=True)

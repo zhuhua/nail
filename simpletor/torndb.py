@@ -272,10 +272,9 @@ torndb = Connection(settings.db_host, settings.db_name, user=settings.db_user, p
 
 class Transactional:
     
-    def __init__(self):
-        self.result = None
-    
     def __call__(self, method):
+        
+        self.result = None
         
         def __method(*args, **kwds):
 

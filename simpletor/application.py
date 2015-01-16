@@ -5,7 +5,6 @@ Created on 2013-3-26
 @author: zhuhua
 '''
 import tornado.web
-import tornado.template
 import json
 import utils
 import settings
@@ -21,10 +20,43 @@ class RequestMapping:
     
 class RequestHandler(tornado.web.RequestHandler):
     
+    def set_current_user(self, user):
+        user = json.dumps(user)
+        self.set_secure_cookie('user', user)
+    
+    def get_current_user(self):
+        cookie = self.get_secure_cookie('user')
+        try:
+            return json.loads(cookie)
+        except:
+            return None
+    
     def render_json(self, data):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(data, cls=utils.JSONEncoder))
         self.finish()
+        
+class Security:
+    '''
+    Security
+    '''
+    def __init__(self, *roles):
+        self.roles = roles
+        
+    def __call__(self, method):
+        
+        def __method(request, *args, **kwds):
+            
+            user = request.get_current_user()
+            if user is None:
+                request.send_error(403)
+                return
+            
+            if user['role'] not in self.roles:
+                request.send_error(403)
+                return
+            return method(request, *args, **kwds)
+        return __method
         
 class AppError(Exception):
     '''Application Logic Exception'''

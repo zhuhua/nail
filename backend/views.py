@@ -29,10 +29,9 @@ class Login(application.RequestHandler):
         else:
             user, role = self.artisan_login(login_id, password)
             home = '/artisan/%s' % user.id
-
-        self.set_secure_cookie('id', str(user.id))
-        self.set_secure_cookie('name', user.name)
-        self.set_secure_cookie('role', role)
+            
+        current_user = dict(id=user.id, name=user.name, role=role)
+        self.set_current_user(current_user)
         
         self.redirect(home)
         
