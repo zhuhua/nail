@@ -24,11 +24,17 @@ class JSONEncoder(json.JSONEncoder):
         else:
             return json.JSONEncoder.default(self, obj)
         
-def sha1pass(password):
+def md5(source):
+    '''MD5'''
+    _md5 = hashlib.md5()
+    _md5.update(source)
+    return _md5.hexdigest()
+        
+def sha1(password):
     '''Password Hash'''
-    sha1 = hashlib.sha1()
-    sha1.update(password)
-    return sha1.hexdigest()
+    _sha1 = hashlib.sha1()
+    _sha1.update(password)
+    return _sha1.hexdigest()
 
 
 def crop(img, sizes):
@@ -62,10 +68,7 @@ def crop(img, sizes):
 def save_image(filename, data, sizes=[(320, 320), (640, 640)]):
     '''保存图片到本地'''
     data_io = BytesIO(data)
-    md5 = hashlib.md5()
-    md5.update(data_io.read())
-    
-    name = md5.hexdigest()
+    name = md5(data_io.read())
     ext = filename.split(".")[1]
     data_io.seek(0)
     

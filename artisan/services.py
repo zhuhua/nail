@@ -6,7 +6,7 @@ Created on 2015-1-11
 '''
 from simpletor.torndb import Transactional
 from simpletor.application import AppError
-from simpletor.utils import sha1pass
+from simpletor.utils import sha1
 from datetime import datetime
 
 import models
@@ -15,7 +15,7 @@ import models
 def register(name, mobile, password, **profile):
     artisan = models.Artisan()
     artisan.name = name
-    artisan.password = sha1pass(password)
+    artisan.password = sha1(password)
     artisan.mobile = mobile
     artisan.gender = profile.pop('gender', 1)
     
@@ -38,7 +38,7 @@ def login(artisan_id, password):
     if artisan is None:
         raise AppError('用户名错误')
     
-    if artisan.password != sha1pass(password):
+    if artisan.password != sha1(password):
         raise AppError('密码错误')
     
     artisan.last_login = datetime.now()
