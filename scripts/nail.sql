@@ -10,7 +10,7 @@ Target Server Type    : MariaDB
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2015-01-16 18:02:52
+Date: 2015-01-19 18:04:25
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -75,9 +75,10 @@ INSERT INTO `category` VALUES ('4', '空气净化', '0000-00-00 00:00:00');
 DROP TABLE IF EXISTS `counts`;
 CREATE TABLE `counts` (
   `id` bigint(20) NOT NULL,
-  `object_id` char(32) NOT NULL,
-  `amount` int(11) NOT NULL DEFAULT '0',
-  `type` tinyint(4) NOT NULL COMMENT '类型（接单数，）',
+  `obj_id` varchar(32) NOT NULL,
+  `key` varchar(255) NOT NULL COMMENT '类型（接单数，）',
+  `value` int(11) NOT NULL DEFAULT '0',
+  `version` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='通用计数';
 
@@ -111,9 +112,9 @@ CREATE TABLE `faverite` (
 DROP TABLE IF EXISTS `gallery`;
 CREATE TABLE `gallery` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `object_id` varchar(255) NOT NULL,
-  `type` tinyint(4) NOT NULL COMMENT '图片类型，0.手艺人相册，1.样品图片，3.作品图片（订单完成实际效果图上）',
+  `obj_id` varchar(255) NOT NULL,
   `url` varchar(500) NOT NULL,
+  `create_time` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='通用相册';
 
@@ -171,7 +172,10 @@ CREATE TABLE `sample` (
   `brief` varchar(1000) NOT NULL,
   `category_id` bigint(20) NOT NULL COMMENT '分类',
   `artisan_id` int(11) NOT NULL COMMENT '提供服务的手艺人',
-  `is_valid` bit(1) DEFAULT b'1',
+  `status` bit(1) NOT NULL DEFAULT b'1',
+  `tags` varchar(255) NOT NULL,
+  `create_time` datetime NOT NULL,
+  `version` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `fk_category_id` (`category_id`),
   KEY `dj_atusab_id` (`artisan_id`),
@@ -181,23 +185,6 @@ CREATE TABLE `sample` (
 
 -- ----------------------------
 -- Records of sample
--- ----------------------------
-
--- ----------------------------
--- Table structure for sample_tag
--- ----------------------------
-DROP TABLE IF EXISTS `sample_tag`;
-CREATE TABLE `sample_tag` (
-  `id` int(11) NOT NULL,
-  `sample_id` char(32) NOT NULL,
-  `tag_id` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_sample_id` (`sample_id`),
-  CONSTRAINT `fk_sample_id` FOREIGN KEY (`sample_id`) REFERENCES `sample` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='作品标签';
-
--- ----------------------------
--- Records of sample_tag
 -- ----------------------------
 
 -- ----------------------------
