@@ -33,8 +33,32 @@ class CategoryDAO:
         '''
         return torndb.query(sql)
     
-categoryDAO = CategoryDAO
+categoryDAO = CategoryDAO()
     
+class Tag(Row):
+    '''
+    sample tag 标签（圣诞节，日韩，纯色，新娘，法式，创意，彩绘，糖果）
+    '''
+    def __init__(self):
+        self.id = None
+        self.name = None
+        self.valid = True
+
+class TagDAO():
+    def save(self, tag):
+        sql = '''
+        INSERT INTO tag(name)  VALUES (%(name)s)
+        '''
+        torndb.execute(sql, **tag)
+    
+    def delete(self, tag_id):
+        sql = '''
+        UPDATE tag SET is_valid = %s
+        '''
+        torndb.execute(sql, False)
+    
+tagDAO = TagDAO()
+ 
 class Sample(Row):
     '''
     美甲师作品
