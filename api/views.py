@@ -5,14 +5,14 @@ Created on 2014年12月18日
 @author: zhuhua
 '''
 from simpletor import application
-from simpletor.torndb import torndb, Transactional
+from simpletor.torndb import torndb, transactional
 
 from user import services
 
 @application.RequestMapping("/api/login")
 class Login(application.RequestHandler):
     
-    @Transactional()
+    @transactional
     def get(self):
         mobile = self.get_argument('mobile', strip=True)
         password = self.get_argument('password', strip=True)

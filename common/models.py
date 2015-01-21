@@ -46,6 +46,12 @@ class GalleryDAO:
         SELECT * FROM gallery g WHERE g.obj_id = %s ORDER BY g.create_time DESC
         '''
         return torndb.query(sql, obj_id)
+    
+    def delete_all(self, obj_id):
+        sql = '''
+        DELETE FROM gallery g WHERE g.obj_id = %s
+        '''
+        return torndb.get(sql, obj_id)
         
 galleryDAO = GalleryDAO()
 

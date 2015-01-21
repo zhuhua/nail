@@ -1,0 +1,110 @@
+{% extends "../base_col_2.html" %} {% block title %}添加美甲师{% end %} {%
+block breadcrumb %}
+<li><a href="#">Horzontal & Sidebar Menu</a></li>
+{% end %}
+
+{% block css %}
+<link href="/static/css/jquery.fileupload-ui.css" rel="stylesheet">
+{% end %}
+
+{% block js %}
+<script src="/static/js/jquery.iframe-transport.js"></script>
+<script src="/static/js/jquery.fileupload.js"></script>
+<script src="/static/js/jquery.fileupload-fp.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	var upload = $('#fileupload').fileupload({
+		url : "/upload_image",
+		dataType : 'json',
+		acceptFileTypes : /(\.|\/)(gif|jpe?g|png)$/i,
+		maxFileSize : 5000000, // 5 MB
+		previewMaxWidth : 100,
+		previewMaxHeight : 100,
+		previewCrop : true,
+		done: function(e, data) {
+			data.context = $('<div/>').addClass("span1").appendTo('#files');
+			var node = $('<p/>');
+			node.append($("<img/>").attr("src", data.result.url).css("max-width", "100%"));
+			node.append($("<input name='image' type='hidden'/>").val(data.result.url));
+			node.appendTo(data.context);
+		}
+	});
+});
+</script>
+
+{% end %}
+
+{% block content %}
+<div class="row-fluid">
+	<div class="portlet box">
+		<div class="portlet-body form">
+			<!-- BEGIN FORM-->
+			<form class="form-horizontal" method="post">
+				<div class="control-group">
+					<label class="control-label">作品名称</label>
+					<div class="controls">
+						<input type="text" name="name" placeholder="作品名称" class="m-wrap span6" />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">类别</label>
+					<div class="controls">
+						<select name="category_id" class="m-wrap span4">
+						{% for cate in categories %}
+						<option value="{{cate.id}}">{{cate.name}}</option>
+						{% end %}
+						</select>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">店面价</label>
+					<div class="controls">
+						<input type="text" name="tag_price" placeholder="填写价格 如299" class="m-wrap span6" />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">价格</label>
+					<div class="controls">
+						<input type="text" name="price" placeholder="填写价格 如199" class="m-wrap span6" />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">作品图片</label>
+					<div class="controls fileupload-buttonbar">
+						<div class="span12">
+							<span class="btn green fileinput-button">
+								<i class="icon-plus icon-white"></i>
+								<span>选择图片上传</span>
+								<input id="fileupload" type="file" name="file" />
+							</span>
+						</div>
+						<div id="progress" class="progress">
+					        <div class="progress-bar progress-bar-success"></div>
+					    </div>
+					    <div id="files" class="span12"></div>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">简介</label>
+					<div class="controls">
+						<textarea class="m-wrap span8" rows="3" name="brief"></textarea>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">标签</label>
+					<div class="controls">
+						<input type="text" name="tags" placeholder="这里填写标签 空格分开" class="m-wrap span6" />
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="controls">
+						<input type="submit" class="btn green" value="提交" />
+						<input type="reset" class="btn" value="取消" />
+					</div>
+				</div>
+			</form>
+			<!-- END FORM-->
+		</div>
+	</div>
+</div>
+{% end %}

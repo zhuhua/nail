@@ -5,9 +5,9 @@ Created on 2015-1-11
 @author: Zhuhua
 '''
 from datetime import datetime
-from simpletor.torndb import torndb, Row
+from simpletor import torndb
 
-class Artisan(Row):
+class Artisan(torndb.Row):
     '''
     Artist
     '''
@@ -30,32 +30,35 @@ class ArtisanDAO:
     '''
     Artist DAO
     '''
+    @torndb.insert
     def save(self, artisan):
         sql = '''
         INSERT INTO artisan (name, password, gender, mobile, avatar, level, avg_price, cert_pop, cert_pro, brief, create_time, last_login) 
         VALUES (%(name)s, %(password)s, %(gender)s, %(mobile)s, %(avatar)s, %(level)s, %(avg_price)s, %(cert_pop)s, %(cert_pro)s, %(brief)s, %(create_time)s, %(last_login)s);
         '''
-        torndb.execute(sql, **artisan)
-        return artisan
+        return sql
     
-    def find(self, artist_id):
+    @torndb.get
+    def find(self, artisan_id):
         sql = '''
         SELECT * FROM artisan a WHERE a.id = %s;
         '''
-        return torndb.get(sql, artist_id)
+        return sql
         
-    def update(self, artisan):
+    @torndb.update
+    def update(self, **artisan):
         sql = '''
         UPDATE artisan a SET 
         name = %(name)s, password = %(password)s, gender = %(gender)s, mobile = %(mobile)s, avatar = %(avatar)s, avg_price = %(avg_price)s, cert_pop = %(cert_pop)s, cert_pro = %(cert_pop)s, brief = %(brief)s, last_login = %(last_login)s 
         WHERE a.id = %(id)s 
         '''
-        torndb.execute(sql, **artisan)
+        return sql
         
-    def paging(self, first, maxitem):
+    @torndb.select
+    def paging(self, fr, mx):
         sql = '''
         SELECT * FROM artisan a ORDER BY a.create_time DESC LIMIT %s OFFSET %s;
         '''
-        return torndb.query(sql, maxitem, first)
+        return sql
         
 artisanDAO = ArtisanDAO()

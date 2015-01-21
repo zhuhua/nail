@@ -6,14 +6,14 @@ Created on 2014-12-23
 '''
 from uuid import uuid4
 from datetime import datetime
-from simpletor.torndb import Transactional
+from simpletor.torndb import transactional
 from simpletor.application import AppError
-from simpletor.utils import sha1pass
+from simpletor.utils import sha1
 
 import time
 import models
 
-@Transactional()
+@transactional
 def register(mobile, password):
     '''User Register'''
     user = models.userDAO.findByMobile(mobile)
@@ -22,19 +22,19 @@ def register(mobile, password):
 
     user = models.User()
     user.mobile = mobile
-    user.password = sha1pass(password)
+    user.password = sha1(password)
     
     models.userDAO.save(user)
     return user
 
-@Transactional()
+@transactional
 def login(mobile, password):
     '''Login'''
     user = models.userDAO.findByMobile(mobile)
     if user is None:
         raise AppError('手机号不存在')
     
-    if user.password != sha1pass(password):
+    if user.password != sha1(password):
         raise AppError('密码错误')
     
     user_id = user.id

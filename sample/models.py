@@ -4,11 +4,10 @@ Created on Jan 19, 2015
 
 @author: zhuhua
 '''
-import time
 from datetime import datetime
-from simpletor.torndb import torndb, Row
+from simpletor import torndb
 
-class Category(Row):
+class Category(torndb.Row):
     '''
     作品类别
     '''
@@ -21,21 +20,23 @@ class CategoryDAO:
     '''
     作品类别数据访问接口
     '''
+    @torndb.get
     def find(self, category_id):
         sql = '''
         SELECT * FROM category c WHERE c.id = %s;
         '''
-        return torndb.query(sql, category_id)
+        return sql
     
+    @torndb.select
     def all(self):
         sql = '''
         SELECT * FROM category;
         '''
-        return torndb.query(sql)
+        return sql
     
-categoryDAO = CategoryDAO
+categoryDAO = CategoryDAO()
     
-class Sample(Row):
+class Sample(torndb.Row):
     '''
     美甲师作品
     '''
@@ -44,25 +45,30 @@ class Sample(Row):
         self.name = ''
         self.price = 0.0
         self.tag_price = 0.0
-        self.sale = 0.0
+        self.sale = 0
         self.brief = ''
         self.category_id = None
         self.artisan_id = None
         self.status = 0
         self.tags = ''
         self.create_time = datetime.now()
-        self.version = time.time() * 1000
         
 class SampleDAO:
     '''
     美甲师作品数据访问接口
-    '''
+    '''    
     def save(self, sample):
         sql = '''
-        INSERT INTO sample (name, price, tag_price, sale, brief, category_id, artisan_id, status, tags, create_time, version) 
-        VALUES (%(name)s, %(price)s, %(tag_price)s, %(sale)s, %(brief)s, %(category_id)s, %(artisan_id)s, %(status)s, %(tags)s, %(create_time)s, %(version)s);
+        INSERT INTO sample (name, price, tag_price, sale, brief, category_id, artisan_id, status, tags, create_time) 
+        VALUES (%(name)s, %(price)s, %(tag_price)s, %(sale)s, %(brief)s, %(category_id)s, %(artisan_id)s, %(status)s, %(tags)s, %(create_time)s);
         '''
-        return torndb.execute(sql, **sample)
+        return sql
+    
+    def find(self, sample_id):
+        sql = '''
+        SELECT * FROM sample s WHERE s.id = %s;
+        '''
+        return sql
         
     def update(self, sample):
         sql = '''
@@ -70,6 +76,6 @@ class SampleDAO:
         SET name = %(name)s, price = %(price)s, tag_price = %(tag_price)s, sale = %(sale)s, brief = %(brief)s, category_id = %(category_id)s, status = %(status)s, tags = %(tags)s 
         WHERE s.id = %(id)s AND s.version = %(version)s);
         '''
-        torndb.execute(sql, **sample)
+        return sql
         
-    
+sampleDAO = SampleDAO()

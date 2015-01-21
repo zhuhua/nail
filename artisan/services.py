@@ -4,14 +4,14 @@ Created on 2015-1-11
 
 @author: Zhuhua
 '''
-from simpletor.torndb import Transactional
+from simpletor.torndb import transactional
 from simpletor.application import AppError
 from simpletor.utils import sha1
 from datetime import datetime
 
 import models
 
-@Transactional()
+@transactional
 def register(name, mobile, password, **profile):
     artisan = models.Artisan()
     artisan.name = name
@@ -29,7 +29,7 @@ def register(name, mobile, password, **profile):
         
     models.artisanDAO.save(artisan)
     
-@Transactional()
+@transactional
 def login(artisan_id, password):
     '''
     登录
@@ -48,7 +48,7 @@ def login(artisan_id, password):
 def get(artisan_id):
     return models.artisanDAO.find(artisan_id)
     
-@Transactional()
+@transactional
 def update_profile(artisan_id, **profile):
     artisan = models.artisanDAO.find(artisan_id)
     if not artisan:
@@ -68,7 +68,7 @@ def update_profile(artisan_id, **profile):
     if brief:
         artisan.brief = brief
     
-    models.artisanDAO.update(artisan)
+    models.artisanDAO.update(**artisan)
     
 def paging(page, size):
     artisan = models.artisanDAO.paging(0, 10)

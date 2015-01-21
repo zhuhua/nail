@@ -8,10 +8,10 @@ import models
 
 from datetime import datetime
 from simpletor.application import AppError
-from simpletor.utils import sha1pass
-from simpletor.torndb import Transactional
+from simpletor.utils import sha1
+from simpletor.torndb import transactional
 
-@Transactional()
+@transactional
 def login(username, password):
     '''
     登录
@@ -20,7 +20,7 @@ def login(username, password):
     if manager is None:
         raise AppError('用户名错误')
     
-    if manager.password != sha1pass(password):
+    if manager.password != sha1(password):
         raise AppError('密码错误')
     
     manager.last_login = datetime.now()

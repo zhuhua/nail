@@ -4,9 +4,9 @@ Created on Jan 15, 2015
 
 @author: zhuhua
 '''
-from simpletor.torndb import torndb, Row
+from simpletor import torndb
 
-class Manager(Row):
+class Manager(torndb.Row):
     '''
     Manager
     '''
@@ -20,22 +20,22 @@ class ManagerDAO:
     '''
     Manager DAO
     '''
-    def find(self, manager_id):
+    def find(self, **kwds):
         sql = '''
         SELECT * FROM manager m WHERE m.id = %s
         '''
-        return torndb.get(sql, manager_id)
+        return sql
     
-    def findByName(self, name):
+    def findByName(self, **kwds):
         sql = '''
-        SELECT * FROM manager m WHERE m.name = %s
+        SELECT * FROM manager m WHERE m.name = %(name)s
         '''
-        return torndb.get(sql, name)
+        return sql
     
-    def update(self, manager):
+    def update(self, **kwds):
         sql = '''
         UPDATE manager m SET m.password = %(password)s, m.last_login = %(last_login)s WHERE m.id = %(id)s
         '''
-        return torndb.execute(sql, **manager)
+        return sql
     
 managerDAO = ManagerDAO()

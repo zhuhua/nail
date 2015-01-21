@@ -116,7 +116,7 @@ class Connection(object):
         """Closes the existing database connection and re-opens it."""
         self.close()
         self._db = MySQLdb.connect(**self._db_args)
-        self._db.autocommit(True)
+        self._db.autocommit(False)
 
     def iter(self, query, *parameters, **kwparameters):
         """Returns an iterator for the given query and parameters."""
@@ -235,7 +235,7 @@ class Connection(object):
             return cursor.execute(query, kwparameters or parameters)
         except OperationalError:
             logging.error("Error connecting to MySQL on %s", self.host)
-            self.close()
+            cursor.close()
             raise
 
 class Row(dict):
@@ -270,20 +270,44 @@ import settings
 
 torndb = Connection(settings.db_host, settings.db_name, user=settings.db_user, password=settings.db_password)
 
-class Transactional:
-    
-    def __call__(self, method):
-        
-        self.result = None
-        
-        def __method(*args, **kwds):
+def transactional(method):
+    result = None
+    def wrapper(*args, **kwds):
+        try:
+            result = method(*args, **kwds)
+            torndb._db.commit()
+        except Exception, e:
+            torndb._db.rollback()
+            raise e
+        return result
+    return wrapper
 
-            try:
-                self.result = method(*args, **kwds)
-                torndb._db.commit()
-            except Exception, e:
-                torndb._db.rollback()
-                raise e
-            
-            return self.result
-        return __method
+def get(method):
+    def wrapper(dao, *args, **kwds):
+        sql = method(dao, *args, **kwds)
+        return torndb.get(sql, *args, **kwds)
+    return wrapper
+    
+def select(method):
+    def wrapper(dao, *args, **kwds):
+        sql = method(dao, *args, **kwds)
+        return torndb.query(sql, *args, **kwds)
+    return wrapper
+
+def insert(method):
+    def wrapper(dao, *args, **kwds):
+        sql = method(dao, *args, **kwds)
+        return torndb.insert(sql, *args, **kwds)
+    return wrapper
+
+def update(method):
+    def wrapper(dao, *args, **kwds):
+        sql = method(dao, *args, **kwds)
+        return torndb.update(sql, *args, **kwds)
+    return wrapper
+
+def delete(method):
+    def wrapper(dao, *args, **kwds):
+        sql = method(dao, *args, **kwds)
+        return torndb.execute(sql, *args, **kwds)
+    return wrapper
