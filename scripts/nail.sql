@@ -10,7 +10,7 @@ Target Server Type    : MariaDB
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2015-01-19 18:04:25
+Date: 2015-01-22 18:01:14
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -43,8 +43,8 @@ INSERT INTO `artisan` VALUES ('28000001', 'shouyiren', '7c4a8d09ca3762af61e59520
 INSERT INTO `artisan` VALUES ('28000002', 'shouyiren', '7c4a8d09ca3762af61e59520943dc26494f8941b', '', 'ss', '', '1', '', '0', '\0', '\0', '2015-01-12 15:06:38', '0000-00-00 00:00:00');
 INSERT INTO `artisan` VALUES ('28000003', 'shouyiren', '7c4a8d09ca3762af61e59520943dc26494f8941b', '', 'ss', '', '1', '', '0', '\0', '\0', '2015-01-12 15:06:40', '0000-00-00 00:00:00');
 INSERT INTO `artisan` VALUES ('28000004', 'shouyiren', '7c4a8d09ca3762af61e59520943dc26494f8941b', '', 'ss', '', '1', '', '0', '\0', '\0', '2015-01-12 15:06:42', '0000-00-00 00:00:00');
-INSERT INTO `artisan` VALUES ('28000005', '是的发生', '7c4a8d09ca3762af61e59520943dc26494f8941b', '', 'ss', '/img/331838f47ff496ad525f38fc92785418.jpg', '1', 'PIL 中的 Image 模块 - oyzway - 博客园\r\n本文是节选自 PIL handbook online 并做了一些简单的翻译只能保证自己看懂,不...Image 类中的函数。0. new : 这个函数创建一幅给定模式(mode)和尺寸(size)...\r\nwww.cnblogs.com/way_te... 2011-04-20  - 百度快照 - 91%好评', '0', '\0', '\0', '2015-01-12 15:06:44', '2015-01-16 15:17:43');
-INSERT INTO `artisan` VALUES ('28000006', 'shouyiren', '7c4a8d09ca3762af61e59520943dc26494f8941b', '', 'ss', '', '1', '', '0', '\0', '\0', '2015-01-12 15:06:46', '0000-00-00 00:00:00');
+INSERT INTO `artisan` VALUES ('28000005', '是的发生1111', '7c4a8d09ca3762af61e59520943dc26494f8941b', '', 'ss', '/img/f2bd1421e1d66ccd4ef0ab6a155cdba1.png', '1', 'PIL 中的 Image 模块 - oyzway - 博客园\r\n本文是节选自 PIL handbook online 并做了一些简单的翻译只能保证自己看懂,不...Image 类中的函数。0. new : 这个函数创建一幅给定模式(mode)和尺寸(size)...\r\nwww.cnblogs.com/way_te... 2011-04-20  - 百度快照 - 91%好评', '0', '\0', '\0', '2015-01-12 15:06:44', '2015-01-16 15:17:43');
+INSERT INTO `artisan` VALUES ('28000006', '美甲师111', '7c4a8d09ca3762af61e59520943dc26494f8941b', '', 'ss', '/img/331838f47ff496ad525f38fc92785418.jpg', '1', '如果你看过电视里演的清代历史剧就不难注意到剧中的后妃、贵妇们的纤纤玉指，以及指尖的华贵甲饰。指尖一转，手指无不散发出尊贵、华丽的贵族气息。也许从那时起，中国的女人们就注定与美甲结下了不解之缘，也许从那时起，女人们就已通过指甲来展示自己的美丽与气质。时代在变迁，社会在发展，技术在革新，不变的是美，不变的是悠久的文化，艺术家们说：“民族的，就是世界的。”中国的美甲技术发展到今天，我们是否还应记得历史的沉积呢？中国的美甲应具有中国的民族特色，通过这款美甲的设计，用艺术的形式，寓识着美甲的历史发展，让我们还记得中国曾经有过的美甲辉煌，而我们这些现代的美甲师更有理由把历史与民族特点融入艺术创作中。', '0', '\0', '\0', '2015-01-12 15:06:46', '2015-01-22 17:57:43');
 INSERT INTO `artisan` VALUES ('28000007', 'shouyiren', '7c4a8d09ca3762af61e59520943dc26494f8941b', '', 'ss', '', '1', '', '0', '\0', '\0', '2015-01-12 15:06:48', '0000-00-00 00:00:00');
 INSERT INTO `artisan` VALUES ('28000008', 'shouyiren', '7c4a8d09ca3762af61e59520943dc26494f8941b', '', 'ss', '', '1', '', '0', '\0', '\0', '2015-01-12 15:06:50', '0000-00-00 00:00:00');
 INSERT INTO `artisan` VALUES ('28000009', '哈哈哈哈', '7c4a8d09ca3762af61e59520943dc26494f8941b', '', '12345678', '', '1', '阿斯顿发生的发生打法', '0', '\0', '\0', '2015-01-12 17:06:22', '0000-00-00 00:00:00');
@@ -116,11 +116,16 @@ CREATE TABLE `gallery` (
   `url` varchar(500) NOT NULL,
   `create_time` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='通用相册';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='通用相册';
 
 -- ----------------------------
 -- Records of gallery
 -- ----------------------------
+INSERT INTO `gallery` VALUES ('1', 'dfe3a334fc99f298ac5a6673baa44184', '/img/243f6827fe80944b6bb26e80e175c713.jpg', '2015-01-21 16:08:00');
+INSERT INTO `gallery` VALUES ('2', '048a9df698dad13008d8ce3b2caa522f', '/img/243f6827fe80944b6bb26e80e175c713.jpg', '2015-01-22 16:47:39');
+INSERT INTO `gallery` VALUES ('3', '048a9df698dad13008d8ce3b2caa522f', '/img/331838f47ff496ad525f38fc92785418.jpg', '2015-01-22 16:47:39');
+INSERT INTO `gallery` VALUES ('4', '28efd832ac6f3fa5632f9776f5b3a637', '/img/395fe57d7ee19290c7278b8c9c812cfe.jpg', '2015-01-22 16:48:50');
+INSERT INTO `gallery` VALUES ('5', '28efd832ac6f3fa5632f9776f5b3a637', '/img/ba87212acda512687138c941243e34e7.jpg', '2015-01-22 16:48:50');
 
 -- ----------------------------
 -- Table structure for login_token
@@ -156,7 +161,7 @@ CREATE TABLE `manager` (
 -- ----------------------------
 -- Records of manager
 -- ----------------------------
-INSERT INTO `manager` VALUES ('1', 'admin', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'ROLE_ADMIN', '2015-01-15 16:55:49');
+INSERT INTO `manager` VALUES ('1', 'admin', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'ROLE_ADMIN', '2015-01-22 17:21:30');
 INSERT INTO `manager` VALUES ('2', 'manager', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'ROLE_MANAGER', '2015-01-15 16:55:52');
 
 -- ----------------------------
@@ -164,7 +169,7 @@ INSERT INTO `manager` VALUES ('2', 'manager', '7c4a8d09ca3762af61e59520943dc2649
 -- ----------------------------
 DROP TABLE IF EXISTS `sample`;
 CREATE TABLE `sample` (
-  `id` char(32) NOT NULL COMMENT 'uuid',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'uuid',
   `name` varchar(100) NOT NULL COMMENT '方案-名称',
   `price` float NOT NULL,
   `tag_price` float NOT NULL COMMENT '介绍',
@@ -175,17 +180,20 @@ CREATE TABLE `sample` (
   `status` bit(1) NOT NULL DEFAULT b'1',
   `tags` varchar(255) NOT NULL,
   `create_time` datetime NOT NULL,
-  `version` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  `version` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `fk_category_id` (`category_id`),
   KEY `dj_atusab_id` (`artisan_id`),
   CONSTRAINT `dj_atusab_id` FOREIGN KEY (`artisan_id`) REFERENCES `artisan` (`id`),
   CONSTRAINT `fk_category_id` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='美甲师提供的作品方案';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='美甲师提供的作品方案';
 
 -- ----------------------------
 -- Records of sample
 -- ----------------------------
+INSERT INTO `sample` VALUES ('3', '但是发生', '111', '1111', '0', '阿斯顿发生地方', '1', '28000006', '\0', '啊士大夫 啊士大夫', '2015-01-21 16:08:00', '2015-01-21 16:08:00');
+INSERT INTO `sample` VALUES ('5', '阿斯顿发', '111', '1111', '0', '阿斯顿发生的发生打法', '1', '28000006', '\0', '彩 绘', '2015-01-22 16:47:39', '2015-01-22 16:47:39');
+INSERT INTO `sample` VALUES ('6', '啊发生的', '11', '111', '0', '阿斯顿发生的发生的', '1', '28000006', '\0', '圣诞节 特价款 糖果 创意 彩绘', '2015-01-22 16:48:50', '2015-01-22 16:48:50');
 
 -- ----------------------------
 -- Table structure for tag
@@ -194,22 +202,21 @@ DROP TABLE IF EXISTS `tag`;
 CREATE TABLE `tag` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL COMMENT '标签（圣诞节，日韩，纯色，新娘，法式，创意，彩绘，糖果）',
-  `is_valid` bit(1) NOT NULL DEFAULT b'1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='标签';
 
 -- ----------------------------
 -- Records of tag
 -- ----------------------------
-INSERT INTO `tag` VALUES ('1', '圣诞节', '');
-INSERT INTO `tag` VALUES ('2', '特价款', '');
-INSERT INTO `tag` VALUES ('3', '糖果 ', '');
-INSERT INTO `tag` VALUES ('4', '创意 ', '');
-INSERT INTO `tag` VALUES ('5', '彩绘 ', '');
-INSERT INTO `tag` VALUES ('6', '日韩 ', '');
-INSERT INTO `tag` VALUES ('7', '纯色 ', '');
-INSERT INTO `tag` VALUES ('8', '新娘 ', '');
-INSERT INTO `tag` VALUES ('9', '法式 ', '');
+INSERT INTO `tag` VALUES ('1', '圣诞节');
+INSERT INTO `tag` VALUES ('2', '特价款');
+INSERT INTO `tag` VALUES ('3', '糖果 ');
+INSERT INTO `tag` VALUES ('4', '创意 ');
+INSERT INTO `tag` VALUES ('5', '彩绘 ');
+INSERT INTO `tag` VALUES ('6', '日韩 ');
+INSERT INTO `tag` VALUES ('7', '纯色 ');
+INSERT INTO `tag` VALUES ('8', '新娘 ');
+INSERT INTO `tag` VALUES ('9', '法式 ');
 
 -- ----------------------------
 -- Table structure for users
