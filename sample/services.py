@@ -14,12 +14,16 @@ def get_categories():
     '''获取分类'''
     return models.categoryDAO.all()
 
+def get_tags():
+    '''获取标签'''
+    return models.tagDAO.all()
+
 @transactional
 def add_sample(sample):
     '''发布作品'''
     images = sample.images
     
-    sample_id = models.sampleDAO.save(sample)
+    sample_id = models.sampleDAO.save(**sample)
     
     for image in images:
         common_serv.add_to_gallery(sample_id, 'sample', image)

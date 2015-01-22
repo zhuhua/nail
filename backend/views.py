@@ -20,33 +20,34 @@ class Login(application.RequestHandler):
         login_id = self.get_argument('username', strip=True)
         password = self.get_argument('password', strip=True)
         
-        user, role = '', ''
+        user, role, avatar = '', '', ''
         home = ''
         
         if re.match('[0-9]*', login_id).group() == '':
-            user, role = self.manager_login(login_id, password)
+            user, role, avatar = self.manager_login(login_id, password)
             home = '/manager'
         else:
-            user, role = self.artisan_login(login_id, password)
+            user, role, avatar = self.artisan_login(login_id, password)
             home = '/artisan/%s' % user.id
             
-        current_user = dict(id=user.id, name=user.name, role=role)
+        current_user = dict(id=user.id, name=user.name, role=role, avatar=avatar)
         self.set_current_user(current_user)
         
         self.redirect(home)
         
     def manager_login(self, username, password):
         manager = manager_serv.login(username, password)
-        return manager, manager.role
+        return manager, manager.role, '/static/image/avatar.png'
 
     def artisan_login(self, artisan_id, password):
         artisan = artisan_serv.login(artisan_id, password)
-        return artisan, 'ROLE_ARTISAN'
+        avatar = artisan.avatar
+        if avatar is None or avatar == '':
+            avatar = '/static/image/avatar.png'
+        return artisan, 'ROLE_ARTISAN', avatar
         
 @application.RequestMapping("/logout")
 class Logout(application.RequestHandler):
     def get(self):
         self.clear_all_cookies()
-        
-    def post(self):
-        self.get()
+        self.redirect('/login')

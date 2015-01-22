@@ -1,4 +1,4 @@
-{% extends "../base_col_2.html" %} {% block title %}添加美甲师{% end %} {%
+{% extends "../base.html" %} {% block title %}添加美甲师{% end %} {%
 block breadcrumb %}
 <li><a href="#">Horzontal & Sidebar Menu</a></li>
 {% end %} {% block content %}
@@ -23,17 +23,10 @@ block breadcrumb %}
 					<label class="control-label">性别</label>
 					<div class="controls">
 						<label class="radio">
-							<div class="radio">
-								<span>
-									<input type="radio" name="gender" value="1" checked />
-								</span>
-							</div> 男
-						</label> <label class="radio">
-							<div class="radio">
-								<span class="checked">
-									<input type="radio" name="gender" value="0" />
-								</span>
-							</div> 女
+							<input type="radio" name="gender" value="1" checked /> 男
+						</label>
+						<label class="radio">
+							<input type="radio" name="gender" value="0" /> 女
 						</label>
 					</div>
 				</div>

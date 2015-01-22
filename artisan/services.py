@@ -27,7 +27,7 @@ def register(name, mobile, password, **profile):
     if brief:
         artisan.brief = brief
         
-    models.artisanDAO.save(artisan)
+    models.artisanDAO.save(**artisan)
     
 @transactional
 def login(artisan_id, password):
@@ -42,7 +42,7 @@ def login(artisan_id, password):
         raise AppError('密码错误')
     
     artisan.last_login = datetime.now()
-    models.artisanDAO.update(artisan)
+    models.artisanDAO.update(**artisan)
     return artisan
     
 def get(artisan_id):

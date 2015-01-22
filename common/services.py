@@ -32,7 +32,7 @@ def add_to_gallery(obj_id, obj_type, url):
     gallery.obj_id = obj_id
     gallery.obj_type = gallery_type
     gallery.url = url
-    models.galleryDAO.save(gallery)
+    models.galleryDAO.save(**gallery)
     
 def remove_from_gallery(gallery_id):
     '''从图库删除图片'''

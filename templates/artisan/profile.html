@@ -1,4 +1,6 @@
-{% extends "../base_col_2.html" %} {% block title %}添加美甲师{% end %}
+{% extends "../base.html" %}
+
+{% block title %}我的主页{% end %}
 
 {% block css %}
 <link href="/static/css/profile.css" rel="stylesheet">
@@ -12,17 +14,17 @@
 <div class="row-fluid profile">
 	<ul class="unstyled profile-nav span3">
 		<li>
-			<img src="{{item.avatar}}" alt=""> 
-			<a href="/artisan/{{item.id}}/avatar" class="profile-edit">修改</a>
+			<img src="{{item.avatar}}" alt="">
 		</li>
 		<li>
-			<a href="/artisan/{{item.id}}" >编辑个人资料</a>
+			<a href="/artisan/{{item.id}}/avatar" class="profile-edit">修改头像</a>
 		</li>
 	</ul>
 	<div class="span9">
 		<div class="row-fluid">
 			<div class="span8 profile-info">
 				<h1>{{item.name}}</h1>
+				<p>{{item.mobile}}</p>
 				<p>{{item.brief}}</p>
 			</div>
 			<!--end span8-->

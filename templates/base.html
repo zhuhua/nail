@@ -35,17 +35,18 @@
 					<ul class="nav pull-right">
 						<!-- BEGIN USER LOGIN DROPDOWN -->
 						<li class="dropdown user">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown"> 
-								<img alt="" src="/static/image/avatar1_small.jpg" /> <span class="username">
-									{{current_user['name']}}
-								</span>
+							<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"> 
+								<img src="{{current_user['avatar']}}" width="29" />
+								<span class="username">{{current_user['name']}}</span>
 							</a>
 							<ul class="dropdown-menu">
+								{% if current_user['role'] == 'ROLE_ARTISAN' %}
 								<li>
-									<a href="extra_profile.html"><i class="icon-user"></i> My Profile</a>
+									<a href="/artisan/{{current_user['id']}}"><i class="icon-user"></i>个人资料</a>
 								</li>
+								{% end %}
 								<li>
-									<a href="login.html"><i class="icon-key"></i> Log Out</a>
+									<a href="/logout"><i class="icon-key"></i>退出</a>
 								</li>
 							</ul>
 						</li>
@@ -62,12 +63,54 @@
 			<!-- BEGIN HORIZONTAL MENU PAGE SIDEBAR1 -->
 			<div class="page-sidebar nav-collapse collapse">
 				<ul class="page-sidebar-menu hidden-phone hidden-tablet">
-					<li class="start active">
-						<a href="javascript:;"> <i class="icon-cogs"></i> <span class="title">美甲师管理</span> <span class="selected "></span> <span class="arrow open"></span> </a>
+					{% if current_user['role'] == 'ROLE_ADMIN' %}
+					<li class="start">
+						<a href="/artisans"><i class="icon-cogs"></i>
+							<span class="title">美甲师管理</span>
+							<span class="selected "></span>
+						</a>
 					</li>
 					<li class="last">
 						<a href="login.html"> <i class="icon-user"></i> <span class="title">Login Page</span> </a>
 					</li>
+					{% end %}
+					
+					{% if current_user['role'] == 'ROLE_ARTISAN' %}
+					<li class="start">
+						<a href="/artisan/{{current_user['id']}}">
+							<i class="icon-home"></i>
+							<span class="title">主页</span>
+							<span class="selected "></span>
+						</a>
+					</li>
+					<li>
+						<a href="/artisan/{{current_user['id']}}/profile">
+							<i class="icon-cogs"></i>
+							<span class="title">编辑个人资料</span>
+							<span class="selected "></span>
+						</a>
+					</li>
+					<li>
+						<a href="/artisan/{{current_user['id']}}/profile">
+							<i class="icon-th-large"></i>
+							<span class="title">我的作品</span>
+							<span class="selected "></span>
+						</a>
+					</li>
+					<li>
+						<a href="/artisan/{{current_user['id']}}/profile">
+							<i class="icon-list-alt"></i>
+							<span class="title">我的预约</span>
+							<span class="selected "></span>
+						</a>
+					</li>
+					<li class="last">
+						<a href="login.html">
+							<i class="icon-key"></i> 
+							<span class="title">退出</span>
+						</a>
+					</li>		
+					{% end %}
 				</ul>
 			</div>
 			<!-- BEGIN PAGE -->

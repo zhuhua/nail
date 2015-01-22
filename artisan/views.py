@@ -36,7 +36,7 @@ class Paging(application.RequestHandler):
         self.render('artisan/list.html', items=items)
         
         
-@application.RequestMapping("/artisan/([0-9]+)/profile")
+@application.RequestMapping("/artisan/([0-9]+)")
 class Profile(application.RequestHandler):
     
     @application.Security('ROLE_ARTISAN')
@@ -44,7 +44,7 @@ class Profile(application.RequestHandler):
         artisan = artisan_service.get(artisan_id)
         self.render('artisan/profile.html', item=artisan)
         
-@application.RequestMapping("/artisan/([0-9]+)")
+@application.RequestMapping("/artisan/([0-9]+)/profile")
 class Edit(application.RequestHandler):
     
     @application.Security('ROLE_ARTISAN')
@@ -59,7 +59,7 @@ class Edit(application.RequestHandler):
         gender = self.get_argument('gender', default=0, strip=True)
         brief = self.get_argument('brief', default='', strip=True)
         artisan_service.update_profile(artisan_id, name=name, mobile=mobile, gender=gender, brief=brief)
-        self.redirect('/artisan/%s/profile' % artisan_id)
+        self.redirect('/artisan/%s' % artisan_id)
 
 @application.RequestMapping("/artisan/([0-9]+)/avatar")
 class UploadAvatar(application.RequestHandler):
@@ -72,4 +72,4 @@ class UploadAvatar(application.RequestHandler):
     def post(self, artisan_id):
         avatar = self.get_argument('avatar', strip=True)
         artisan_service.update_profile(artisan_id, avatar=avatar)
-        self.redirect('/artisan/%s/profile' % artisan_id)
+        self.redirect('/artisan/%s' % artisan_id)

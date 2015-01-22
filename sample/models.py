@@ -36,6 +36,27 @@ class CategoryDAO:
     
 categoryDAO = CategoryDAO()
 
+class Tag(torndb.Row):
+    '''
+    标签
+    '''
+    def __init__(self):
+        self.id = None
+        self.name = None
+        
+class TagDAO:
+    '''
+    标签数据访问接口
+    '''
+    @torndb.select
+    def all(self):
+        sql = '''
+        SELECT * FROM tag;
+        '''
+        return sql
+    
+tagDAO = TagDAO()
+
 class Sample(torndb.Row):
     '''
     美甲师作品

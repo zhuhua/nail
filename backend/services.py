@@ -24,5 +24,5 @@ def login(username, password):
         raise AppError('密码错误')
     
     manager.last_login = datetime.now()
-    models.managerDAO.update(manager)
+    models.managerDAO.update(**manager)
     return manager
