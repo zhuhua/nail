@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 '''
+<<<<<<< HEAD
 Created on Jan 20, 2015
 
 @author: zhuhua

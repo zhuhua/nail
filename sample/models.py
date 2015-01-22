@@ -35,7 +35,7 @@ class CategoryDAO:
         return sql
     
 categoryDAO = CategoryDAO()
-    
+
 class Sample(torndb.Row):
     '''
     美甲师作品

@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 '''
+<<<<<<< HEAD
 Created on Jan 20, 2015
 
 @author: zhuhua
@@ -30,5 +31,3 @@ class Add(application.RequestHandler):
         
         sample_services.add_sample(sample)
         self.redirect('/samples')
-        
-        
