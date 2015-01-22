@@ -6,10 +6,10 @@ Created on 2014-12-23
 '''
 from uuid import uuid4
 from datetime import datetime
-from simpletor.torndb import torndb, Row
+from simpletor import torndb
 import time
 
-class User(Row):
+class User(torndb.Row):
     '''
     User Account
     '''
@@ -25,29 +25,29 @@ class UserDAO:
     '''
     User Account DAO
     '''
-    def save(self, user):
+    def save(self, **user):
         sql = '''
         INSERT INTO users(mobile, password, nick, avatar, reg_time) 
         VALUES (%(mobile)s, %(password)s, %(nick)s, %(avatar)s, %(reg_time)s);
         '''
-        torndb.execute(sql, **user)
+        return sql
         
     def findByMobile(self, mobile):
         sql = '''
         SELECT * FROM users u WHERE u.mobile = %s;
         '''
-        return torndb.get(sql, mobile)
+        return sql
         
-    def update(self, user):
+    def update(self, **user):
         sql = '''
         UPDATE users u SET u.password = %(password)s, u.nick = %(nick)s, u.avater = %(avatar)s
         WHERE u.id = %(id)s;
         '''
-        torndb.execute(sql, **user)
+        return sql
         
 userDAO = UserDAO()
 
-class LoginToken(Row):
+class LoginToken(torndb.Row):
     '''
     Login Token
     '''
@@ -62,30 +62,30 @@ class LoginTokenDAO:
     '''
     LoginToken DAO
     '''
-    def save(self, token):
+    def save(self, **token):
         sql = '''
         INSERT INTO login_token(user_id, token, expire, last_login) 
         VALUES (%(user_id)s, %(token)s, %(expire)s, %(last_login)s);
         '''
-        torndb.execute(sql, **token)
+        return sql
         
     def find(self, token):
         sql = '''
         SELECT * FROM login_token l WHERE l.token = %s;
         '''
-        return torndb.get(sql, token)
+        return sql
         
     def findByUser(self, user_id):
         sql = '''
         SELECT * FROM login_token l WHERE l.user_id = %s;
         '''
-        return torndb.get(sql, user_id)
+        return sql
         
-    def update(self, token):
+    def update(self, **token):
         sql = '''
         UPDATE login_token t SET token = %(token)s, expire = %(expire)s, last_login = %(last_login)s
         WHERE t.id = %(id)s;
         '''
-        torndb.execute(sql, **token)
+        return sql
         
 loginTokenDAO = LoginTokenDAO()

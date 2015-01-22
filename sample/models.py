@@ -56,21 +56,24 @@ class Sample(torndb.Row):
 class SampleDAO:
     '''
     美甲师作品数据访问接口
-    '''    
-    def save(self, sample):
+    '''
+    @torndb.insert
+    def save(self, **sample):
         sql = '''
         INSERT INTO sample (name, price, tag_price, sale, brief, category_id, artisan_id, status, tags, create_time) 
         VALUES (%(name)s, %(price)s, %(tag_price)s, %(sale)s, %(brief)s, %(category_id)s, %(artisan_id)s, %(status)s, %(tags)s, %(create_time)s);
         '''
         return sql
     
+    @torndb.get
     def find(self, sample_id):
         sql = '''
         SELECT * FROM sample s WHERE s.id = %s;
         '''
         return sql
         
-    def update(self, sample):
+    @torndb.update
+    def update(self, **sample):
         sql = '''
         UPDATE sample s
         SET name = %(name)s, price = %(price)s, tag_price = %(tag_price)s, sale = %(sale)s, brief = %(brief)s, category_id = %(category_id)s, status = %(status)s, tags = %(tags)s 

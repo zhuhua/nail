@@ -28,7 +28,6 @@ import itertools
 import logging
 import os
 import time
-import re
 
 try:
     import MySQLdb.constants
@@ -268,16 +267,16 @@ if MySQLdb is not None:
     
 import settings
 
-torndb = Connection(settings.db_host, settings.db_name, user=settings.db_user, password=settings.db_password)
+torcon = Connection(settings.db_host, settings.db_name, user=settings.db_user, password=settings.db_password)
 
 def transactional(method):
     result = None
     def wrapper(*args, **kwds):
         try:
             result = method(*args, **kwds)
-            torndb._db.commit()
+            torcon._db.commit()
         except Exception, e:
-            torndb._db.rollback()
+            torcon._db.rollback()
             raise e
         return result
     return wrapper
@@ -285,29 +284,29 @@ def transactional(method):
 def get(method):
     def wrapper(dao, *args, **kwds):
         sql = method(dao, *args, **kwds)
-        return torndb.get(sql, *args, **kwds)
+        return torcon.get(sql, *args, **kwds)
     return wrapper
     
 def select(method):
     def wrapper(dao, *args, **kwds):
         sql = method(dao, *args, **kwds)
-        return torndb.query(sql, *args, **kwds)
+        return torcon.query(sql, *args, **kwds)
     return wrapper
 
 def insert(method):
     def wrapper(dao, *args, **kwds):
         sql = method(dao, *args, **kwds)
-        return torndb.insert(sql, *args, **kwds)
+        return torcon.insert(sql, *args, **kwds)
     return wrapper
 
 def update(method):
     def wrapper(dao, *args, **kwds):
         sql = method(dao, *args, **kwds)
-        return torndb.update(sql, *args, **kwds)
+        return torcon.update(sql, *args, **kwds)
     return wrapper
 
 def delete(method):
     def wrapper(dao, *args, **kwds):
         sql = method(dao, *args, **kwds)
-        return torndb.execute(sql, *args, **kwds)
+        return torcon.execute(sql, *args, **kwds)
     return wrapper

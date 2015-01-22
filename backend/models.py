@@ -20,19 +20,22 @@ class ManagerDAO:
     '''
     Manager DAO
     '''
-    def find(self, **kwds):
+    @torndb.get
+    def find(self, manager_id):
         sql = '''
         SELECT * FROM manager m WHERE m.id = %s
         '''
         return sql
     
-    def findByName(self, **kwds):
+    @torndb.get
+    def findByName(self, name):
         sql = '''
-        SELECT * FROM manager m WHERE m.name = %(name)s
+        SELECT * FROM manager m WHERE m.name = %s
         '''
         return sql
     
-    def update(self, **kwds):
+    @torndb.update
+    def update(self, **manager):
         sql = '''
         UPDATE manager m SET m.password = %(password)s, m.last_login = %(last_login)s WHERE m.id = %(id)s
         '''
