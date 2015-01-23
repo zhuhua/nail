@@ -20,6 +20,9 @@ class RequestMapping:
     
 class RequestHandler(tornado.web.RequestHandler):
     
+    def initialize(self):
+        self.errors = dict()
+    
     def set_current_user(self, user):
         user = json.dumps(user)
         self.set_secure_cookie('user', user)
@@ -30,7 +33,16 @@ class RequestHandler(tornado.web.RequestHandler):
             return json.loads(cookie)
         except:
             return None
-    
+        
+    def add_error(self, error):
+        if isinstance(error, AppError):
+            self.errors[error.field] = error.value
+            
+    def get_error(self, field='default'):
+        if self.errors.has_key(field):
+            return self.errors[field]
+        return ''
+            
     def render_json(self, data):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(data, cls=utils.JSONEncoder))
@@ -60,8 +72,13 @@ class Security:
         
 class AppError(Exception):
     '''Application Logic Exception'''
-    pass
-    
+    def __init__(self, message, field='default'):
+        self.value = message
+        self.field = field
+        
+    def __str__(self, *args, **kwargs):
+        return self.value
+        
 class Application(tornado.web.Application):
     
     def __init__(self):

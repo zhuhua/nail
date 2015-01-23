@@ -42,7 +42,8 @@ $(document).ready(function() {
 				<div class="control-group">
 					<label class="control-label">作品名称</label>
 					<div class="controls">
-						<input type="text" name="name" placeholder="作品名称" class="m-wrap span6" />
+						<input type="text" name="name" placeholder="作品名称" class="m-wrap span6" value="{{item.name}}" />
+						<span class="help-block">{{ handler.get_error('name') }}</span>
 					</div>
 				</div>
 				<div class="control-group">
@@ -58,13 +59,15 @@ $(document).ready(function() {
 				<div class="control-group">
 					<label class="control-label">店面价</label>
 					<div class="controls">
-						<input type="text" name="tag_price" placeholder="填写价格 如299" class="m-wrap span6" />
+						<input type="text" name="tag_price" placeholder="填写价格 如299" class="m-wrap span6" value="{{item.tag_price}}" />
+						{{ handler.get_error('tag_price') }}
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label">价格</label>
 					<div class="controls">
-						<input type="text" name="price" placeholder="填写价格 如199" class="m-wrap span6" />
+						<input type="text" name="price" placeholder="填写价格 如199" class="m-wrap span6" value="{{item.price}}" />
+						{{ handler.get_error('price') }}
 					</div>
 				</div>
 				<div class="control-group">
@@ -81,12 +84,13 @@ $(document).ready(function() {
 					        <div class="progress-bar progress-bar-success"></div>
 					    </div>
 					    <div id="files" class="span12"></div>
+					    <span class="help-block">{{ handler.get_error('images') }}</span>
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label">简介</label>
 					<div class="controls">
-						<textarea class="m-wrap span8" rows="3" name="brief"></textarea>
+						<textarea class="m-wrap span8" rows="3" name="brief">{{item.brief}}</textarea>
 					</div>
 				</div>
 				<div class="control-group">

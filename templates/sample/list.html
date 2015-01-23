@@ -1,0 +1,40 @@
+{% extends "../base.html" %} 
+
+{% block title %}我的作品{% end %}
+
+{% block breadcrumb %}
+<li><a href="#">Horzontal & Sidebar Menu</a></li>
+{% end %} 
+
+{% block content %}
+<div class="row-fluid">
+	<div>
+		<!-- BEGIN SAMPLE TABLE PORTLET-->
+		<div class="portlet box">
+			<div class="portlet-body" style="display: block;">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>姓名</th>
+							<th>注册时间</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for item in items %}
+						<tr>
+							<td>{{item.id}}</td>
+							<td>{{item.name}}</td>
+							<td class="hidden-480">{{item.create_time}}</td>
+							<td><a href="artisan/{{item.id}}" class="label label-success">编辑</a></td>
+						</tr>
+						{% end %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!-- END SAMPLE TABLE PORTLET-->
+	</div>
+</div>
+{% end %}

@@ -14,7 +14,8 @@ class Add(application.RequestHandler):
     def get(self):
         categories = sample_services.get_categories()
         tags = sample_services.get_tags()
-        self.render('sample/add.html', categories=categories, tags=tags)
+        sample = sample_models.Sample()
+        self.render('sample/add.html', item=sample, categories=categories, tags=tags)
         
     def post(self):
         sample = sample_models.Sample()
@@ -27,7 +28,15 @@ class Add(application.RequestHandler):
         sample.brief = self.get_argument('brief', strip=True)
         sample.tags = ' '.join(self.get_arguments('tags', strip=True))
         
-        sample_services.add_sample(sample)
+        try:
+            sample_services.add_sample(sample)
+        except application.AppError, e:
+            self.add_error(e)
+            categories = sample_services.get_categories()
+            tags = sample_services.get_tags()
+            self.render('sample/add.html', item=sample, categories=categories, tags=tags)
+            return
+            
         self.redirect('/samples')
         
 @application.RequestMapping("/sample/([0-9]+)")
@@ -50,3 +59,10 @@ class Edit(application.RequestHandler):
         
         sample_services.add_sample(sample)
         self.redirect('/samples')
+        
+@application.RequestMapping("/samples")
+class Paging(application.RequestHandler):
+    def get(self):
+        artisan_id = self.get_current_user()['id']
+        items, hits = sample_services.search_sample(artisan_id)
+        self.render('sample/list.html', items=items)

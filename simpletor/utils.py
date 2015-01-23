@@ -15,6 +15,14 @@ from io import BytesIO
 
 from datetime import date, datetime
 
+class StringUtils:
+    def is_empty(self, string):
+        if string is None or string == '':
+            return True
+        return False
+    
+string_utils = StringUtils() 
+
 class JSONEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime):

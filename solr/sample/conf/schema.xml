@@ -11,17 +11,17 @@
 
 	<fields>
 		<field name="id" type="int" indexed="true" stored="true" multiValued="false" required="true" />
-		<field name="name" type="string" indexed="true" stored="false" multiValued="false" />
-		<field name="price" type="float" indexed="true" stored="false" multiValued="false" />
-		<field name="tag_price" type="float" indexed="true" stored="false" multiValued="false" />
-		<field name="sale" type="int" indexed="true" stored="false" multiValued="false" />
-		<field name="category_id" type="int" indexed="true" stored="false" multiValued="false" />
-		<field name="artisan_id" type="int" indexed="true" stored="false" multiValued="false" />
-		<field name="status" type="int" indexed="true" stored="false" multiValued="false" />
-		<field name="tags" type="string" indexed="true" stored="false" multiValued="true" />
-		<field name="create_time" type="date" indexed="true" stored="false" multiValued="false" />
+		<field name="name" type="string" indexed="true" stored="true" multiValued="false" />
+		<field name="price" type="float" indexed="true" stored="true" multiValued="false" />
+		<field name="tag_price" type="float" indexed="true" stored="true" multiValued="false" />
+		<field name="sale" type="int" indexed="true" stored="true" multiValued="false" />
+		<field name="category_id" type="int" indexed="true" stored="true" multiValued="false" />
+		<field name="artisan_id" type="int" indexed="true" stored="true" multiValued="false" />
+		<field name="status" type="int" indexed="true" stored="true" multiValued="false" />
+		<field name="tags" type="string" indexed="true" stored="true" multiValued="true" />
+		<field name="create_time" type="date" indexed="true" stored="true" multiValued="false" />
 		<field name="_version_" type="long" indexed="true" stored="true" />
-		<dynamicField name ="*" type ="ignored" multiValued="true" />
+		<dynamicField name="*" type="ignored" multiValued="true"/>
 	</fields>
 
 	<uniqueKey>id</uniqueKey>
