@@ -12,11 +12,13 @@ template_dir = os.path.join(os.path.dirname(__file__), "templates")
 static_dir = os.path.join(os.path.dirname(__file__), "static")
 img_dir = os.path.join(os.path.dirname(__file__), "img")
 
-db_host='127.0.0.1'
-db_name='nail'
-db_user='root'
-db_password='123456'
+db_host = '127.0.0.1'
+db_name = 'nail'
+db_user = 'root'
+db_password = '123456'
 
 default_pass = '123456'
+
+solr = 'http://localhost:8983/solr'
 
 port = 8888
