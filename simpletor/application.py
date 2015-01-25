@@ -69,7 +69,7 @@ class Security:
                 return
             return method(request, *args, **kwds)
         return __method
-        
+            
 class AppError(Exception):
     '''Application Logic Exception'''
     def __init__(self, message, field='default'):

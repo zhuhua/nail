@@ -25,19 +25,29 @@ class UserDAO:
     '''
     User Account DAO
     '''
+    @torndb.insert
     def save(self, **user):
         sql = '''
         INSERT INTO users(mobile, password, nick, avatar, reg_time) 
         VALUES (%(mobile)s, %(password)s, %(nick)s, %(avatar)s, %(reg_time)s);
         '''
         return sql
-        
+    
+    @torndb.get
+    def find(self, user_id):
+        sql = '''
+        SELECT * FROM users u WHERE u.id = %s;
+        '''
+        return sql
+    
+    @torndb.get
     def findByMobile(self, mobile):
         sql = '''
         SELECT * FROM users u WHERE u.mobile = %s;
         '''
         return sql
         
+    @torndb.update
     def update(self, **user):
         sql = '''
         UPDATE users u SET u.password = %(password)s, u.nick = %(nick)s, u.avater = %(avatar)s
@@ -62,6 +72,7 @@ class LoginTokenDAO:
     '''
     LoginToken DAO
     '''
+    @torndb.insert
     def save(self, **token):
         sql = '''
         INSERT INTO login_token(user_id, token, expire, last_login) 
@@ -69,18 +80,21 @@ class LoginTokenDAO:
         '''
         return sql
         
+    @torndb.get
     def find(self, token):
         sql = '''
         SELECT * FROM login_token l WHERE l.token = %s;
         '''
         return sql
         
+    @torndb.get
     def findByUser(self, user_id):
         sql = '''
         SELECT * FROM login_token l WHERE l.user_id = %s;
         '''
         return sql
         
+    @torndb.update
     def update(self, **token):
         sql = '''
         UPDATE login_token t SET token = %(token)s, expire = %(expire)s, last_login = %(last_login)s

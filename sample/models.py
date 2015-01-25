@@ -98,7 +98,14 @@ class SampleDAO:
         sql = '''
         UPDATE sample s
         SET name = %(name)s, price = %(price)s, tag_price = %(tag_price)s, sale = %(sale)s, brief = %(brief)s, category_id = %(category_id)s, status = %(status)s, tags = %(tags)s 
-        WHERE s.id = %(id)s AND s.version = %(version)s);
+        WHERE s.id = %(id)s AND s.version = %(version)s;
+        '''
+        return sql
+    
+    @torndb.select
+    def all(self):
+        sql = '''
+        SELECT * FROM sample s;
         '''
         return sql
         

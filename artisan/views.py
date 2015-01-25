@@ -32,7 +32,7 @@ class Add(application.RequestHandler):
 class Paging(application.RequestHandler):
     
     def get(self):
-        items = artisan_service.paging(1, 10)
+        items = artisan_service.search_artisan()
         self.render('artisan/list.html', items=items)
         
         
@@ -41,7 +41,7 @@ class Profile(application.RequestHandler):
     
     @application.Security('ROLE_ARTISAN')
     def get(self, artisan_id):
-        artisan = artisan_service.get(artisan_id)
+        artisan = artisan_service.get_artisan(artisan_id)
         self.render('artisan/profile.html', item=artisan)
         
 @application.RequestMapping("/artisan/([0-9]+)/profile")
@@ -49,7 +49,7 @@ class Edit(application.RequestHandler):
     
     @application.Security('ROLE_ARTISAN')
     def get(self, artisan_id):
-        artisan = artisan_service.get(artisan_id)
+        artisan = artisan_service.get_artisan(artisan_id)
         self.render('artisan/edit.html', item=artisan)
         
     @application.Security('ROLE_ARTISAN')

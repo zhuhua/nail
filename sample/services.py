@@ -69,9 +69,11 @@ def get_sample(sample_id):
         
 @index(core='sample')
 @transactional
-def update_sample(sample_id, sample):
+def update_sample(sample):
     '''编辑作品'''
-    models.sampleDAO.update(sample)
+    sample_id = sample.id
+    sample.tags = (' ').join(sample.tags)
+    models.sampleDAO.update(**sample)
     
     images = sample.images
     common_serv.remove_all(sample_id, 'sample')
@@ -80,9 +82,13 @@ def update_sample(sample_id, sample):
         
     return get_sample(sample_id)
 
-def search_sample(artisan_id, page=1):
+def search_sample(page=1, dis_size=10, artisan_id='', order_by='', sort='asc'):
     solr = connect(core='sample')
-    results = solr.search('artisan_id:%s' % artisan_id)
+    query = '*:*'
+    if not artisan_id == '':
+        query = 'artisan_id:%s' % artisan_id
+    
+    results = solr.search(query)
     docs = results.docs
     samples = [get_sample(doc['id']) for doc in docs]
     return samples, results.hits

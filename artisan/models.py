@@ -55,9 +55,9 @@ class ArtisanDAO:
         return sql
         
     @torndb.select
-    def paging(self, fr, mx):
+    def all(self):
         sql = '''
-        SELECT * FROM artisan a ORDER BY a.create_time DESC LIMIT %s OFFSET %s;
+        SELECT * FROM artisan;
         '''
         return sql
         

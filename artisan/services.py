@@ -6,11 +6,13 @@ Created on 2015-1-11
 '''
 from simpletor.torndb import transactional
 from simpletor.application import AppError
+from simpletor.tornsolr import index, connect
 from simpletor.utils import sha1
 from datetime import datetime
 
 import models
 
+@index(core='artisan')
 @transactional
 def register(name, mobile, password, **profile):
     artisan = models.Artisan()
@@ -27,7 +29,8 @@ def register(name, mobile, password, **profile):
     if brief:
         artisan.brief = brief
         
-    models.artisanDAO.save(**artisan)
+    artisan_id = models.artisanDAO.save(**artisan)
+    return get_artisan(artisan_id)
     
 @transactional
 def login(artisan_id, password):
@@ -45,11 +48,13 @@ def login(artisan_id, password):
     models.artisanDAO.update(**artisan)
     return artisan
     
-def get(artisan_id):
+def get_artisan(artisan_id):
     return models.artisanDAO.find(artisan_id)
     
+@index(core='artisan')
 @transactional
-def update_profile(artisan_id, **profile):
+def update_profile(profile):
+    artisan_id = profile['id']
     artisan = models.artisanDAO.find(artisan_id)
     if not artisan:
         return
@@ -67,10 +72,21 @@ def update_profile(artisan_id, **profile):
         artisan.avatar = avatar
     if brief:
         artisan.brief = brief
+        
+    if artisan.last_login is None:
+        artisan.last_login = datetime.now()
     
     models.artisanDAO.update(**artisan)
+    return get_artisan(artisan_id)
     
-def paging(page, size):
-    artisan = models.artisanDAO.paging(0, 10)
-    return artisan
+def search_artisan(page=1, dis_size=10, name='', order_by='', sort='asc'):
+    solr = connect(core='artisan')
+    query = '*:*'
+    if not name == '':
+        query = 'name:%s' % name
+    
+    results = solr.search(query)
+    docs = results.docs
+    samples = [get_artisan(doc['id']) for doc in docs]
+    return samples, results.hits
     

@@ -43,11 +43,18 @@ def login(mobile, password):
     if token is None:
         token = models.LoginToken()
         token.user_id = user_id
-        models.loginTokenDAO.save(token)
+        models.loginTokenDAO.save(**token)
     else:
         token.token = uuid4().hex
         token.expire = time.time() + 86400 * 30
         token.last_login = datetime.now()
-        models.loginTokenDAO.update(token)
+        models.loginTokenDAO.update(**token)
         
     return token
+
+def get_token(token):
+    return models.loginTokenDAO.find(token)
+
+def get_profile(user_id):
+    user = models.userDAO.find(user_id)
+    return user
