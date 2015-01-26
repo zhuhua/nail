@@ -71,5 +71,5 @@ class UploadAvatar(application.RequestHandler):
     @application.Security('ROLE_ARTISAN')
     def post(self, artisan_id):
         avatar = self.get_argument('avatar', strip=True)
-        artisan_service.update_profile(artisan_id, avatar=avatar)
+        artisan_service.update_profile(dict(id=artisan_id, avatar=avatar))
         self.redirect('/artisan/%s' % artisan_id)
