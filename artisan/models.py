@@ -17,6 +17,7 @@ class Artisan(torndb.Row):
         self.password = None
         self.gender = 1
         self.mobile = None
+        self.serv_area = ''
         self.avatar = ''
         self.level = 1
         self.avg_price = 0
@@ -33,8 +34,8 @@ class ArtisanDAO:
     @torndb.insert
     def save(self, artisan):
         sql = '''
-        INSERT INTO artisan (name, password, gender, mobile, avatar, level, avg_price, cert_pop, cert_pro, brief, create_time, last_login) 
-        VALUES (%(name)s, %(password)s, %(gender)s, %(mobile)s, %(avatar)s, %(level)s, %(avg_price)s, %(cert_pop)s, %(cert_pro)s, %(brief)s, %(create_time)s, %(last_login)s);
+        INSERT INTO artisan (name, password, gender, mobile, serv_area, avatar, level, avg_price, cert_pop, cert_pro, brief, create_time, last_login) 
+        VALUES (%(name)s, %(password)s, %(gender)s, %(mobile)s, %(serv_area)s, %(avatar)s, %(level)s, %(avg_price)s, %(cert_pop)s, %(cert_pro)s, %(brief)s, %(create_time)s, %(last_login)s);
         '''
         return sql
     
@@ -49,7 +50,7 @@ class ArtisanDAO:
     def update(self, **artisan):
         sql = '''
         UPDATE artisan a SET 
-        name = %(name)s, password = %(password)s, gender = %(gender)s, mobile = %(mobile)s, avatar = %(avatar)s, avg_price = %(avg_price)s, cert_pop = %(cert_pop)s, cert_pro = %(cert_pop)s, brief = %(brief)s, last_login = %(last_login)s 
+        name = %(name)s, password = %(password)s, gender = %(gender)s, mobile = %(mobile)s, serv_area = %(serv_area)s, avatar = %(avatar)s, avg_price = %(avg_price)s, cert_pop = %(cert_pop)s, cert_pro = %(cert_pop)s, brief = %(brief)s, last_login = %(last_login)s 
         WHERE a.id = %(id)s 
         '''
         return sql

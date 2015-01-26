@@ -7,11 +7,25 @@ Created on 2015-1-11
 from simpletor.torndb import transactional
 from simpletor.application import AppError
 from simpletor.tornsolr import index, connect
-from simpletor.utils import sha1
+from simpletor.utils import sha1, validate_utils
 from datetime import datetime
 
 import models
 
+def validate_artisan(artisan):
+    '''Artisan 表单验证'''
+    if validate_utils.is_empty_str(artisan.name):
+        raise AppError('请填写姓名', field='name')
+    
+    if validate_utils.is_empty_str(artisan.mobile):
+        raise AppError('请填写手机号', field='mobile')
+    
+    if not validate_utils.is_mobile(artisan.mobile):
+        raise AppError('请填写正确的手机号', field='mobile')
+    
+    if validate_utils.is_empty_str(artisan.serv_area):
+        raise AppError('请填写服务区域', field='serv_area')
+    
 @index(core='artisan')
 @transactional
 def register(name, mobile, password, **profile):
@@ -53,31 +67,10 @@ def get_artisan(artisan_id):
     
 @index(core='artisan')
 @transactional
-def update_profile(profile):
-    artisan_id = profile['id']
-    artisan = models.artisanDAO.find(artisan_id)
-    if not artisan:
-        return
-    
-    name = profile.pop('name', None)
-    gender = profile.pop('gender', 1)
-    avatar = profile.pop('avatar', None)
-    brief = profile.pop('brief', None)
-    
-    if name:
-        artisan.name = name
-    if gender:
-        artisan.gender = int(gender)
-    if avatar:
-        artisan.avatar = avatar
-    if brief:
-        artisan.brief = brief
-        
-    if artisan.last_login is None:
-        artisan.last_login = datetime.now()
-    
+def update_profile(artisan):
+    validate_artisan(artisan)
     models.artisanDAO.update(**artisan)
-    return get_artisan(artisan_id)
+    return get_artisan(artisan.id)
     
 def search_artisan(page=1, dis_size=10, name='', order_by='', sort='asc'):
     solr = connect(core='artisan')

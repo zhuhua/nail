@@ -9,21 +9,29 @@ import json
 import hashlib
 import cStringIO
 import settings
+import re
 
 from PIL import Image
 from io import BytesIO
 
 from datetime import date, datetime
 
-class StringUtils:
-    def is_empty(self, string):
+class ValidateUtils:
+    '''验证工具类'''
+    def is_empty_str(self, string):
         if string is None or string == '':
             return True
         return False
     
-string_utils = StringUtils() 
+    def is_mobile(self, string):
+        return re.match('^1[3-8][0-9]\d{8}$', string)
+    
+    
+    
+validate_utils = ValidateUtils() 
 
 class JSONEncoder(json.JSONEncoder):
+    '''Json 编码器'''
     def default(self, obj):
         if isinstance(obj, datetime):
             return obj.strftime('%Y-%m-%d %H:%M:%S')

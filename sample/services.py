@@ -7,7 +7,7 @@ Created on Jan 20, 2015
 from simpletor.torndb import transactional
 from simpletor.application import AppError
 from simpletor.tornsolr import index, connect
-from simpletor.utils import string_utils
+from simpletor.utils import validate_utils
 from common import services as common_serv
 import models
 
@@ -21,10 +21,10 @@ def get_tags():
 
 def validate_sample(sample):
     '''表单验证'''
-    if string_utils.is_empty(sample.name):
+    if validate_utils.is_empty_str(sample.name):
         raise AppError('请填写名称', field='name')
     
-    if string_utils.is_empty(sample.tag_price):
+    if validate_utils.is_empty_str(sample.tag_price):
         raise AppError('请填写店面价', field='tag_price')
     
     try:
@@ -32,7 +32,7 @@ def validate_sample(sample):
     except:
         raise AppError('店面价为小数', field='tag_price')
     
-    if string_utils.is_empty(sample.price):
+    if validate_utils.is_empty_str(sample.price):
         raise AppError('请填写价格', field='price')
     
     try:
@@ -40,7 +40,7 @@ def validate_sample(sample):
     except:
         raise AppError('价格为小数', field='price')
     
-    if string_utils.is_empty(sample.brief):
+    if validate_utils.is_empty_str(sample.brief):
         raise AppError('请填写描述', field='brief')
     
     if len(sample.images) == 0:
