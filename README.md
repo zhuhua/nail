@@ -6,11 +6,11 @@ Nail make up mobile app
 ##用户部分
 
 ###注册接口
--/api/user/register  
+* /api/user/register  
 ####参数 
--mobile 手机
--password 密码
--checkcode 验证码
+* mobile 手机
+* password 密码
+* checkcode 验证码
 
 ###登陆
 /api/user/login
