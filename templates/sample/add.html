@@ -1,7 +1,5 @@
-{% extends "../base.html" %} {% block title %}添加美甲师{% end %} {%
-block breadcrumb %}
-<li><a href="#">Horzontal & Sidebar Menu</a></li>
-{% end %}
+{% extends "../base.html" %} 
+{% block title %}发布作品{% end %}
 
 {% block css %}
 <link href="/static/css/jquery.fileupload-ui.css" rel="stylesheet">
@@ -98,7 +96,7 @@ $(document).ready(function() {
 					<div class="controls">
 						{% for tag in tags %}
 						<label class="checkbox">
-							<input type="checkbox" name="tags" value="{{tag.name}}" checked />{{tag.name}}
+							<input type="checkbox" name="tags" value="{{tag.name}}" />{{tag.name}}
 						</label>
 						{% end %}
 					</div>

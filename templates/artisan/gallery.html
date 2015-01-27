@@ -1,0 +1,66 @@
+{% extends "../base.html" %} 
+{% block title %}我的相册{% end %}
+
+{% block css %}
+<link href="/static/css/jquery.fileupload-ui.css" rel="stylesheet">
+{% end %}
+
+{% block js %}
+<script src="/static/js/jquery.iframe-transport.js"></script>
+<script src="/static/js/jquery.fileupload.js"></script>
+<script src="/static/js/jquery.fileupload-fp.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	var upload = $('#fileupload').fileupload({
+		url : "/upload_image",
+		dataType : 'json',
+		acceptFileTypes : /(\.|\/)(gif|jpe?g|png)$/i,
+		maxFileSize : 5000000, // 5 MB
+		previewMaxWidth : 100,
+		previewMaxHeight : 100,
+		previewCrop : true,
+		done: function(e, data) {
+			var url = $("<input type='hidden' name='url'/>");
+			url.val(data.result.url);
+			var form = $("#gallery_form");
+			form.append(url);
+			form.submit();
+		}
+	});
+});
+</script>
+{% end %}
+
+{% block content %}
+	<div class="row-fluid">
+		<form id="gallery_form" method="post">
+			<div class="span12">
+				<span class="btn green fileinput-button">
+					<i class="icon-plus icon-white"></i> 
+					<span>选择图片上传</span>
+					<input id="fileupload" type="file" name="file" />
+				</span>
+			</div>
+			<div id="progress" class="progress">
+				<div class="progress-bar progress-bar-success"></div>
+			</div>
+		</form>
+	</div>
+	{% for row in items %}
+	<div class="row-fluid">
+		{% for item in row %}
+		<div class="span2">
+			<div class="item">
+				<div class="zoom">
+					<img src="{{item.url}}" alt="Photo" style="max-width:100%">
+					<div class="zoom-icon"></div>
+				</div>
+				<div class="details">
+					<a href="/gallery/{{item.id}}" class="icon"><i class="icon-remove"></i></a>
+				</div>
+			</div>
+		</div>
+		{% end %}
+	</div>
+	{% end %}
+{% end %}

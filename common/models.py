@@ -35,14 +35,14 @@ class GalleryDAO:
         sql = '''
         SELECT * FROM gallery g WHERE g.id = %s
         '''
-        return torndb.get(sql, gallery_id)
+        return sql
     
     @torndb.delete
     def delete(self, gallery_id):
         sql = '''
-        DELETE FROM gallery g WHERE g.id = %s
+        DELETE FROM gallery WHERE id = %s
         '''
-        return torndb.get(sql, gallery_id)
+        return sql
         
     @torndb.select
     def findByObjId(self, obj_id):
@@ -88,7 +88,7 @@ class CountsDAO:
         sql = '''
         SELECT * FROM count c WHERE c.obj_id = %s AND c.key = %s;
         '''
-        return torndb.get(sql, obj_id, key)
+        return sql
     
     @torndb.select
     def findByObjId(self, obj_id):

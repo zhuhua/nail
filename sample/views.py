@@ -45,10 +45,11 @@ class Edit(application.RequestHandler):
     def get(self, sample_id):
         categories = sample_services.get_categories()
         tags = sample_services.get_tags()
-        self.render('sample/add.html', categories=categories, tags=tags)
+        sample = sample_services.get_sample(sample_id)
+        self.render('sample/edit.html', item=sample, categories=categories, tags=tags)
         
     def post(self, sample_id):
-        sample = sample_models.Sample()
+        sample = sample_services.get_sample(sample_id)
         sample.name = self.get_argument('name', strip=True)
         sample.category_id = self.get_argument('category_id', strip=True)
         sample.tag_price = self.get_argument('tag_price', strip=True)
@@ -57,11 +58,11 @@ class Edit(application.RequestHandler):
         sample.brief = self.get_argument('brief', strip=True)
         sample.tags = ' '.join(self.get_arguments('tags', strip=True))
         
-        sample_services.add_sample(sample)
+        sample_services.update_sample(sample)
         self.redirect('/samples')
         
 @application.RequestMapping("/samples")
-class Paging(application.RequestHandler):
+class List(application.RequestHandler):
     def get(self):
         artisan_id = self.get_current_user()['id']
         items, hits = sample_services.search_sample(artisan_id)

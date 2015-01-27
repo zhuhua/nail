@@ -72,7 +72,6 @@ def get_sample(sample_id):
 def update_sample(sample):
     '''编辑作品'''
     sample_id = sample.id
-    sample.tags = (' ').join(sample.tags)
     models.sampleDAO.update(**sample)
     
     images = sample.images

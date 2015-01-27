@@ -7,7 +7,7 @@ Nail make up mobile app
 
 ###注册接口
 * /api/user/register  
-####参数 
+参数
 * mobile 手机
 * password 密码
 * checkcode 验证码

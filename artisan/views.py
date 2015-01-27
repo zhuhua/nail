@@ -7,6 +7,7 @@ Created on 2014-12-24
 from simpletor import application
 
 from artisan import services as artisan_service
+from common import services as common_service
 
 import settings
 
@@ -70,15 +71,38 @@ class Edit(application.RequestHandler):
             
         self.redirect('/artisan/%s' % artisan_id)
 
-@application.RequestMapping("/artisan/([0-9]+)/avatar")
-class UploadAvatar(application.RequestHandler):
+@application.RequestMapping("/gallery")
+class UploadToGallery(application.RequestHandler):
     
     @application.Security('ROLE_ARTISAN')
-    def get(self, artisan_id):
-        self.render('artisan/avatar.html')
+    def get(self):
+        artisan_id = self.get_current_user()['id']
+        gallery = common_service.get_gallery(artisan_id, 'artisan')
+        i, tmp, items = 0, [], []
+        for item in gallery:
+            tmp.append(item)
+            if i % 6 == 5:
+                items.append(tmp)
+                tmp = []
+            i += 1
+        items.append(tmp)
+        self.render('artisan/gallery.html', items=items)
         
     @application.Security('ROLE_ARTISAN')
-    def post(self, artisan_id):
-        avatar = self.get_argument('avatar', strip=True)
-        artisan_service.update_profile(dict(id=artisan_id, avatar=avatar))
-        self.redirect('/artisan/%s' % artisan_id)
+    def post(self):
+        artisan_id = self.get_current_user()['id']
+        url = self.get_argument('url', strip=True)
+        common_service.add_to_gallery(artisan_id, 'artisan', url)
+        
+        artisan = artisan_service.get_artisan(artisan_id)
+        artisan.avatar = url
+        artisan_service.update_profile(artisan)
+        self.redirect('/gallery')
+        
+@application.RequestMapping("/gallery/([0-9]+)")
+class RemoveFromGallery(application.RequestHandler):
+    
+    @application.Security('ROLE_ARTISAN')
+    def get(self, gallery_id):
+        common_service.remove_from_gallery(gallery_id)
+        self.redirect('/gallery')

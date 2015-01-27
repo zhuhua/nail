@@ -91,7 +91,14 @@
 						</a>
 					</li>
 					<li>
-						<a href="/artisan/{{current_user['id']}}/profile">
+						<a href="/gallery">
+							<i class="icon-th-large"></i>
+							<span class="title">相册</span>
+							<span class="selected "></span>
+						</a>
+					</li>
+					<li>
+						<a href="/samples">
 							<i class="icon-th-large"></i>
 							<span class="title">我的作品</span>
 							<span class="selected "></span>
@@ -121,14 +128,14 @@
 					<div class="row-fluid">
 						<div class="span12">
 							<!-- BEGIN PAGE TITLE & BREADCRUMB -->
-							<h3 class="page-title">{% block title %}{% end %}</small></h3>
+							<h3 class="page-title"></h3>
 							<ul class="breadcrumb">
 								<li>
 									<i class="icon-home"></i>
-									<a href="index.html">Home</a>
+									<a href="index.html">主页</a>
 									<i class="icon-angle-right"></i>
 								</li>
-								{% block breadcrumb %}{% end %}
+								<li><a href="javascript:void(0)">{% block title %}{% end %}</a></li>
 							</ul>
 							<!-- END PAGE TITLE & BREADCRUMB-->
 						</div>
