@@ -276,7 +276,6 @@ def transactional(method):
             result = method(*args, **kwds)
             torcon._db.commit()
         except Exception, e:
-            print method
             torcon._db.rollback()
             raise e
         return result
