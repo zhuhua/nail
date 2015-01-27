@@ -56,7 +56,7 @@ class Login(application.RequestHandler):
 @application.RequestMapping("/api/user/profile") 
 class UserProfile(application.RequestHandler):
     @Api(auth=True)
-    def post(self):
+    def get(self):
         user_id = self.get_current_user()['id']
         user = user_service.get_profile(user_id)
         self.render_json(user)
