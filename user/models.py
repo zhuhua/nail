@@ -50,7 +50,7 @@ class UserDAO:
     @torndb.update
     def update(self, **user):
         sql = '''
-        UPDATE users u SET u.password = %(password)s, u.nick = %(nick)s, u.avater = %(avatar)s
+        UPDATE users u SET u.password = %(password)s, u.nick = %(nick)s, u.avatar = %(avatar)s
         WHERE u.id = %(id)s;
         '''
         return sql

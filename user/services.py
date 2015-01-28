@@ -17,14 +17,15 @@ import models
 def register(mobile, password):
     '''User Register'''
     if not validate_utils.is_mobile(mobile):
-        raise AppError(u'请填写正确的手机号' % mobile)
+        raise AppError(u'请填写正确的手机号' % mobile, field='mobile')
     
     user = models.userDAO.findByMobile(mobile)
     if user is not None:
-        raise AppError(u'手机号%s已存在' % mobile)
+        raise AppError(u'手机号%s已存在' % mobile, field='mobile')
 
     user = models.User()
     user.mobile = mobile
+    user.nick = mobile
     user.password = sha1(password)
     
     models.userDAO.save(**user)
@@ -35,10 +36,10 @@ def login(mobile, password):
     '''Login'''
     user = models.userDAO.findByMobile(mobile)
     if user is None:
-        raise AppError(u'手机号不存在')
+        raise AppError(u'手机号不存在', field='mobile')
     
     if user.password != sha1(password):
-        raise AppError(u'密码错误')
+        raise AppError(u'密码错误', field='password')
     
     user_id = user.id
     token = models.loginTokenDAO.findByUser(user_id)
@@ -54,6 +55,14 @@ def login(mobile, password):
         models.loginTokenDAO.update(**token)
         
     return token
+
+@transactional
+def update_profile(user):
+    '''更新用户信息'''
+    if validate_utils.is_empty_str(user.nick):
+        raise AppError('请填写昵称', field='nick')
+    
+    models.userDAO.update(**user)
 
 def get_token(token):
     return models.loginTokenDAO.find(token)

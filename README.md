@@ -20,7 +20,23 @@ Nail make up mobile app
 		返回登陆token
 
 ###获取个人信息
-	/api/user/profile GET Header Token: <token>
+	/api/user/profile GET Header [Authorization: <token>]
+	
+###更新个人信息
+	/api/user/profile POST Header [Authorization: <token>]
+	参数 
+		nick 昵称
+	
+###修改密码
+	/api/user/passwd POST Header [Authorization: <token>]
+	参数 
+		old_pwd 原密码
+		password 新密码
+	
+###更新头像
+	/api/user/avatar GET Header [Authorization: <token>]
+	参数 
+		file 图片文件
 
 ##美甲师部分
 

@@ -44,7 +44,7 @@ class RequestHandler(tornado.web.RequestHandler):
         return ''
             
     def render_json(self, data):
-        self.set_header('Content-Type', 'application/json')
+        self.set_header('Content-Type', 'application/json;charset=UTF-8')
         self.write(json.dumps(data, cls=utils.JSONEncoder))
         self.finish()
         
