@@ -8,7 +8,7 @@ from uuid import uuid4
 from datetime import datetime
 from simpletor.torndb import transactional
 from simpletor.application import AppError
-from simpletor.utils import sha1
+from simpletor.utils import sha1, validate_utils
 
 import time
 import models
@@ -16,15 +16,18 @@ import models
 @transactional
 def register(mobile, password):
     '''User Register'''
+    if not validate_utils.is_mobile(mobile):
+        raise AppError(u'请填写正确的手机号' % mobile)
+    
     user = models.userDAO.findByMobile(mobile)
     if user is not None:
-        raise AppError('手机号%s已存在' % mobile)
+        raise AppError(u'手机号%s已存在' % mobile)
 
     user = models.User()
     user.mobile = mobile
     user.password = sha1(password)
     
-    models.userDAO.save(user)
+    models.userDAO.save(**user)
     return user
 
 @transactional
@@ -32,10 +35,10 @@ def login(mobile, password):
     '''Login'''
     user = models.userDAO.findByMobile(mobile)
     if user is None:
-        raise AppError('手机号不存在')
+        raise AppError(u'手机号不存在')
     
     if user.password != sha1(password):
-        raise AppError('密码错误')
+        raise AppError(u'密码错误')
     
     user_id = user.id
     token = models.loginTokenDAO.findByUser(user_id)

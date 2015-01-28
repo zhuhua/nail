@@ -42,6 +42,10 @@ class Register(application.RequestHandler):
         mobile = self.get_argument('mobile', strip=True)
         password = self.get_argument('password', strip=True)
         checkcode = self.get_argument('checkcode', strip=True)
+        
+        if not checkcode == '111111':
+            raise application.AppError('验证码错误')
+        
         user_service.register(mobile, password)
 
 @application.RequestMapping("/api/user/login")
