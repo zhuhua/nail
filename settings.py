@@ -19,6 +19,7 @@ db_password = '123456'
 
 default_pass = '123456'
 
-solr = 'http://localhost:8983/solr'
+solr = 'http://127.0.0.1:8983/solr'
+redis = '127.0.0.1'
 
 port = 8888

@@ -103,3 +103,87 @@ class LoginTokenDAO:
         return sql
         
 loginTokenDAO = LoginTokenDAO()
+
+class Address(torndb.Row):
+    '''常用地址'''
+    def __init__(self):
+        self.id = None
+        self.user_id = None
+        self.location = ''
+        self.detail = ''
+        self.create_time = datetime.now()
+        
+class AddressDAO:
+    '''常用地址数据接口'''
+    @torndb.insert
+    def save(self, **address):
+        sql = '''
+        INSERT INTO address(user_id, location, detail, create_time) 
+        VALUES (%(user_id)s, %(location)s, %(detail)s, %(create_time)s);
+        '''
+        return sql
+    
+    @torndb.get
+    def find(self, address_id):
+        sql = '''
+        SELECT * FROM address a WHERE a.id = %s;
+        '''
+        return sql
+        
+    @torndb.select
+    def find_by_user(self, user_id):
+        sql = '''
+        SELECT * FROM address a WHERE a.user_id = %s ORDER BY a.create_time DESC;
+        '''
+        return sql
+    
+    @torndb.delete
+    def delete(self, address_id):
+        sql = '''
+        DELETE FROM address WHERE id = %s;
+        '''
+        return sql
+    
+addressDAO = AddressDAO()
+        
+class Favorite(torndb.Row):
+    '''收藏'''
+    def __init__(self):
+        self.id = None
+        self.user_id = None
+        self.object_id = None
+        self.type = None
+        self.create_time = datetime.now()
+        
+class FavoriteDAO:
+    '''收藏数据接口'''
+    @torndb.insert
+    def save(self, **favorite):
+        sql = '''
+        INSERT INTO favorite(user_id, object_id, type, create_time) 
+        VALUES (%(user_id)s, %(object_id)s, %(type)s, %(create_time)s);
+        '''
+        return sql
+        
+    @torndb.get
+    def find(self, favorite_id):
+        sql = '''
+        SELECT * FROM favorite f WHERE f.id = %s;
+        '''
+        return sql
+    
+    @torndb.select
+    def find_by_user(self, user_id, fav_type, limit=10, offset=0):
+        sql = '''
+        SELECT * FROM favorite f WHERE f.user_id = %s AND f.type = %s ORDER BY f.create_time DESC LIMIT %s OFFSET %s;
+        '''
+        return sql
+    
+    @torndb.delete
+    def delete(self, favorite_id):
+        sql = '''
+        DELETE FROM favorite WHERE id = %s;
+        '''
+        return sql
+        
+favoriteDAO = FavoriteDAO()

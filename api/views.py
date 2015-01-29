@@ -91,6 +91,70 @@ class UploadAvatar(application.RequestHandler):
         user_service.update_profile(user)
         self.render_json(user)
         
+@application.RequestMapping("/api/user/address")
+class AddAddress(application.RequestHandler):
+    '''添加常用地址'''
+    @Api(auth=True)
+    def post(self):
+        user_id = self.user_id
+        address = user_service.models.Address()
+        address.user_id = user_id
+        address.location = self.get_argument('location', strip=True)
+        address.detail = self.get_argument('detail', strip=True)
+        user_service.add_address(address)
+        self.render_json(user_service.get_addresses(user_id))
+        
+@application.RequestMapping("/api/user/addresses")
+class Addresses(application.RequestHandler):
+    '''常用地址列表'''
+    @Api(auth=True)
+    def get(self):
+        user_id = self.user_id
+        self.render_json(user_service.get_addresses(user_id))
+        
+@application.RequestMapping("/api/user/address/([0-9]+)")
+class DelAddress(application.RequestHandler):
+    '''删除常用地址'''
+    @Api(auth=True)
+    def post(self, address_id):
+        user_id = self.user_id
+        user_service.del_address(user_id, address_id)
+        self.render_json(user_service.get_addresses(user_id))
+        
+@application.RequestMapping("/api/user/favorite")
+class AddFavorite(application.RequestHandler):
+    '''添加收藏'''
+    @Api(auth=True)
+    def post(self):
+        user_id = self.user_id
+        favorite = user_service.models.Favorite()
+        favorite.user_id = user_id
+        fav_type = self.get_argument('type', strip=True)
+        favorite.type = fav_type
+        favorite.object_id = self.get_argument('object_id', strip=True)
+        user_service.add_favorite(favorite)
+        self.render_json(user_service.get_favorites(user_id, fav_type))
+        
+@application.RequestMapping("/api/user/favorites")
+class Favorites(application.RequestHandler):
+    '''收藏列表'''
+    @Api(auth=True)
+    def get(self):
+        user_id = self.user_id
+        fav_type = self.get_argument('type', strip=True)
+        page = int(self.get_argument('page', strip=True))
+        page_size = int(self.get_argument('page_size', strip=True))
+        self.render_json(user_service.get_favorites(user_id, fav_type, page, page_size))
+        
+@application.RequestMapping("/api/user/favorite/([0-9]+)")
+class DelFavorite(application.RequestHandler):
+    '''删除收藏'''
+    @Api(auth=True)
+    def post(self, favorite_id):
+        user_id = self.user_id
+        fav_type = user_service.del_favorite(user_id, favorite_id)
+        self.render_json(user_service.get_favorites(user_id, fav_type))
+        
 #######  ARTISAN ##################################
 @application.RequestMapping("/api/artisans")
 class Artisans(application.RequestHandler):
