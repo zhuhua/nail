@@ -4,41 +4,22 @@ Created on Jan 28, 2015
 
 @author: lisong
 '''
+import datetime
 from simpletor import application
-from sample import models as sample_models
-from sample import services as sample_services
+from trade import services as trade_services
 
-@application.RequestMapping("/sample")
+@application.RequestMapping("/appointment/status")
 class Add(application.RequestHandler):
     
     def get(self):
-        categories = sample_services.get_categories()
-        tags = sample_services.get_tags()
-        sample = sample_models.Sample()
-        self.render('sample/add.html', item=sample, categories=categories, tags=tags)
-        
-    def post(self):
-        sample = sample_models.Sample()
-        sample.name = self.get_argument('name', strip=True)
-        sample.artisan_id = self.get_current_user()['id']
-        sample.category_id = self.get_argument('category_id', strip=True)
-        sample.tag_price = self.get_argument('tag_price', strip=True)
-        sample.price = self.get_argument('price', strip=True)
-        sample.images = self.get_arguments('image', strip=True)
-        sample.brief = self.get_argument('brief', strip=True)
-        sample.tags = ' '.join(self.get_arguments('tags', strip=True))
-        
-        try:
-            sample_services.add_sample(sample)
-        except application.AppError, e:
-            self.add_error(e)
-            categories = sample_services.get_categories()
-            tags = sample_services.get_tags()
-            self.render('sample/add.html', item=sample, categories=categories, tags=tags)
-            return
-            
-        self.redirect('/samples')
-        
+        artisan_id = self.get_argument('artisan_id', strip=True)
+        appt_date = self.get_argument('appt_date', strip=True)
+        tmp_date = appt_date.split("-")
+        appt_date = datetime.date(int(tmp_date[0]), int(tmp_date[1]), int(tmp_date[2]))
+        apptss = trade_services.appointment_status(artisan_id, appt_date);
+        self.render_json(apptss)
+
+'''
 @application.RequestMapping("/sample/([0-9]+)")
 class Edit(application.RequestHandler):
     
@@ -67,3 +48,4 @@ class List(application.RequestHandler):
         artisan_id = self.get_current_user()['id']
         items, hits = sample_services.search_sample(artisan_id)
         self.render('sample/list.html', items=items)
+        '''
