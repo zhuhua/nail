@@ -11,10 +11,25 @@ from simpletor.utils import validate_utils
 from common import services as common_serv
 import models
 import settings
+import datetime
 
-def appointment(artisan_id):
+def appointment_status(artisan_id, appt_date):
+    if appt_date < datetime.date.today():
+        raise AppError("超出可预约时间范围")
+    appts = models.appointmentDAO.find(artisan_id, appt_date);
+    appt_hours = list()
+    appt_status = dict()
+    appt_status['artisan_id'] = artisan_id
+    appt_status['appt_date'] = appt_date
+    for a in appts:
+        appt_hours.append(a.appt_hour)
     for x in range(settings.appointmentRange[0], settings.appointmentRange[1] + 1):
-        pass
+        status = True
+        if x in appt_hours:
+            status = False
+        appt_status[x] = status
+
+    return appt_status
 
 @transactional
 def close_appointment(artisan_id, appt_date, appt_hour):
