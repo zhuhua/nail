@@ -6,7 +6,7 @@ Created on 2013-3-26
 '''
 import os
 
-installed_apps = ['api', 'artisan', 'upload', 'backend', 'sample']
+installed_apps = ['api', 'artisan', 'upload', 'backend', 'sample', 'trade']
 
 template_dir = os.path.join(os.path.dirname(__file__), "templates")
 static_dir = os.path.join(os.path.dirname(__file__), "static")
@@ -23,3 +23,5 @@ solr = 'http://127.0.0.1:8983/solr'
 redis = '127.0.0.1'
 
 port = 8888
+
+appointmentRange = (10,21) #预约时间范围

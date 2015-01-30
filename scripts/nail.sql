@@ -281,5 +281,82 @@ CREATE TABLE `users` (
 -- ----------------------------
 -- Records of users
 -- ----------------------------
+<<<<<<< HEAD
 INSERT INTO `users` VALUES ('1', '13812345678', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'asdfa', '/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg', '2014-12-24 17:02:44');
 INSERT INTO `users` VALUES ('2', '13845678945', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'asdf', '', '2015-01-28 11:53:38');
+=======
+INSERT INTO `users` VALUES ('1', '13812345678', '7c4a8d09ca3762af61e59520943dc26494f8941b', '', '', '2014-12-24 17:02:44');
+
+-- ----------------------------
+-- Table structure for order
+-- ----------------------------
+DROP TABLE IF EXISTS `order`;
+CREATE TABLE `order` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL COMMENT '购卖者ID',
+  `buyer_name` varchar(255) NOT NULL COMMENT '买家姓名',
+  `address` varchar(1000) NOT NULL COMMENT '买家地址',
+  `telephone` varchar(21) NOT NULL COMMENT '买家电话',
+  `title` varchar(255) NOT NULL COMMENT '订单名称',
+  `order_no` varchar(64) NOT NULL COMMENT '订单号',
+  `trade_no` varchar(64) NOT NULL COMMENT '交易号',
+  `status` int(11) NOT NULL COMMENT '订单状态（）',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` datetime NOT NULL COMMENT '更新时间',
+  `display_buyer` tinyint(4) NOT NULL COMMENT '显示给买家（买家未删除）',
+  `display_seller` tinyint(4) NOT NULL COMMENT '显示给卖家（卖家未删除）',
+  `is_reviewed` tinyint(4) NOT NULL COMMENT '订单是否被评价',
+  `artisan_id` int(11) NOT NULL COMMENT '手艺人ID',
+  `artisan_name` varchar(255) NOT NULL COMMENT '手艺人名称',
+  `sample_id` int(11) NOT NULL COMMENT '样品',
+  `sample_name` varchar(255) NOT NULL COMMENT '样品名称',
+  `cover` varchar(255) NOT NULL COMMENT '订单图片',
+  `tag_price` float NOT NULL COMMENT '店面价',
+  `price` float NOT NULL COMMENT '价格',
+  PRIMARY KEY (`id`),
+  KEY `fk_order_artisan_id` (`artisan_id`),
+  KEY `fk_order_user_id` (`user_id`),
+  KEY `fk_order_sample_id` (`sample_id`),
+  CONSTRAINT `fk_order_artisan_id` FOREIGN KEY (`artisan_id`) REFERENCES `artisan` (`id`),
+  CONSTRAINT `fk_order_sample_id` FOREIGN KEY (`sample_id`) REFERENCES `sample` (`id`),
+  CONSTRAINT `fk_order_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单';
+
+-- ----------------------------
+-- Table structure for appointment
+-- ----------------------------
+DROP TABLE IF EXISTS `appointment`;
+CREATE TABLE `appointment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `artisan_id` int(11) NOT NULL COMMENT '手艺人ID',
+  `sample_id` int(11) DEFAULT NULL COMMENT '样品ID',
+  `user_id` int(11) DEFAULT NULL COMMENT '预约发起人',
+  `appt_date` date NOT NULL COMMENT '预约日期',
+  `appt_hour` int(11) NOT NULL COMMENT '预约时间 ',
+  `order_no` varchar(64) DEFAULT NULL COMMENT '预约订单号',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `artisan_id` (`artisan_id`,`appt_date`,`appt_hour`),
+  KEY `fk_appointment_sample_id` (`sample_id`),
+  KEY `fk_appointment_user_id` (`user_id`),
+  CONSTRAINT `fk_appointment_artisan_id` FOREIGN KEY (`artisan_id`) REFERENCES `artisan` (`id`),
+  CONSTRAINT `fk_appointment_sample_id` FOREIGN KEY (`sample_id`) REFERENCES `sample` (`id`),
+  CONSTRAINT `fk_appointment_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='手艺人预约情况';
+
+-- ----------------------------
+-- Table structure for order_log
+-- ----------------------------
+DROP TABLE IF EXISTS `order_log`;
+CREATE TABLE `order_log` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `trader_id` int(11) NOT NULL,
+  `trader_type` varchar(255) NOT NULL,
+  `action` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `create_time` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_order_log_order_id` (`order_id`),
+  CONSTRAINT `fk_order_log_order_id` FOREIGN KEY (`order_id`) REFERENCES `order` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单流转日志';
+>>>>>>> branch 'master' of https://github.com/zhuhua/nail.git
