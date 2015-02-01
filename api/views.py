@@ -193,13 +193,14 @@ class Samples(application.RequestHandler):
     '''获取美甲师作品列表'''
     @Api()
     def get(self):
+        category_id = self.get_argument('category_id', default='1', strip=True)
         order_by = self.get_argument('order_by', default='', strip=True)
         sort = self.get_argument('sort', default='asc', strip=True)
         page = self.get_argument('page', default=1, strip=True)
-        dis_size = self.get_argument('dis_size', default=10, strip=True)
+        page_size = self.get_argument('page_size', default=10, strip=True)
         artisan_id = self.get_argument('artisan_id', default='', strip=True)
         
-        samples, hits = sample_service.search_sample(page, dis_size, artisan_id)
+        samples, hits = sample_service.search_sample(category_id, page=page, page_size=page_size, artisan_id=artisan_id, order_by=order_by, sort=sort)
         self.render_json(samples)
      
 @application.RequestMapping("/api/sample/([0-9]+)")

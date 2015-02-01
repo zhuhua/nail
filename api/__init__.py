@@ -21,5 +21,6 @@ class Api():
             try:
                 method(handler, *args, **kwds)
             except application.AppError, e:
+                handler.set_status(400)
                 handler.render_json(dict(message=e.value))
         return __method
