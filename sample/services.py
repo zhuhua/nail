@@ -81,7 +81,7 @@ def update_sample(sample):
         
     return get_sample(sample_id)
 
-def search_sample(category_id, page=1, dis_size=10, artisan_id='', order_by='', sort='asc'):
+def search_sample(category_id, page=1, page_size=10, artisan_id='', order_by='', sort='asc'):
     solr = connect(core='sample')
     query = 'category_id:%s' % category_id
     if not artisan_id == '':
