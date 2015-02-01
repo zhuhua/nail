@@ -85,7 +85,7 @@ def search_sample(category_id, page=1, page_size=10, artisan_id='', order_by='',
     solr = connect(core='sample')
     query = 'category_id:%s' % category_id
     if not artisan_id == '':
-        query += 'AND artisan_id:%s' % artisan_id
+        query += ' AND artisan_id:%s' % artisan_id
     
     results = solr.search(query)
     docs = results.docs
