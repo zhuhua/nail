@@ -164,9 +164,9 @@ class Artisans(application.RequestHandler):
         order_by = self.get_argument('order_by', default='', strip=True)
         sort = self.get_argument('sort', default='asc', strip=True)
         page = self.get_argument('page', default=1, strip=True)
-        dis_size = self.get_argument('dis_size', default=10, strip=True)
+        page_size = self.get_argument('page_size', default=10, strip=True)
         name = self.get_argument('name', default = '', strip=True)
-        artisans = artisan_service.search_artisan(page, dis_size, name, order_by, sort)
+        artisans = artisan_service.search_artisan(page, page_size, name, order_by, sort)
         self.render_json(artisans)
         
 @application.RequestMapping("/api/artisan/([0-9]+)")
