@@ -47,6 +47,69 @@ class OrderDAO:
         '''
         return sql
     
+    @torndb.get
+    def find_by_order_no(self, order_no):
+        sql = '''
+        SELECT * FROM order o WHERE o.order_no = %s;
+        '''
+        return sql
+    
+    @torndb.get
+    def count_orders_by_seller(self, artisan_id):
+        sql = '''
+        SELECT COUNT(id) FROM order o WHERE o.artisan_id = %s AND o.display_seller = true;
+        '''
+        return sql
+    
+    @torndb.select
+    def find_orders_by_seller(self, artisan_id, max_results, first_result):
+        sql = '''
+        SELECT * FROM order o WHERE o.artisan_id = %s AND o.display_seller = true LIMIT %s OFFSET %s;
+        '''
+        return sql
+    
+    @torndb.get
+    def count_orders_by_seller_status(self, artisan_id, status):
+        sql = '''
+        SELECT COUNT(id) FROM order o WHERE o.artisan_id = %s AND o.status = %s AND o.display_seller = true;
+        '''
+        return sql
+    
+    @torndb.select
+    def find_orders_by_seller_status(self, artisan_id, status, max_results, first_result):
+        sql = '''
+        SELECT * FROM order o WHERE o.artisan_id = %s AND o.status = %s AND o.display_seller = true LIMIT %s OFFSET %s;
+        '''
+        return sql
+    
+    @torndb.get
+    def count_orders_by_buyer(self, user_id):
+        sql = '''
+        SELECT COUNT(id) FROM order o WHERE o.user_id = %s AND o.display_buyer = true;
+        '''
+        return sql
+    
+    @torndb.select
+    def find_orders_by_buyer(self, user_id, max_results, first_result):
+        sql = '''
+        SELECT * FROM order o WHERE o.user_id = %s AND o.display_buyer = true LIMIT %s OFFSET %s;
+        '''
+        return sql
+    
+    @torndb.get
+    def count_orders_by_buyer_status(self, artisan_id, status):
+        sql = '''
+        SELECT COUNT(id) FROM order o WHERE o.user_id = %s AND o.status = %s AND o.display_buyer = true;
+        '''
+        return sql
+    
+    @torndb.select
+    def find_orders_by_buyer_status(self, user_id, status, max_results, first_result):
+        sql = '''
+        SELECT * FROM order o WHERE o.user_id = %s AND o.status = %s AND o.display_buyer = true LIMIT %s OFFSET %s;
+        '''
+        return sql
+    
     @torndb.select
     def all(self):
         sql = '''
