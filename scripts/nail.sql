@@ -221,7 +221,7 @@ INSERT INTO `manager` VALUES ('2', 'manager', '7c4a8d09ca3762af61e59520943dc2649
 -- ----------------------------
 -- Table structure for order
 -- ----------------------------
-DROP TABLE IF EXISTS `order`;
+DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `order` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL COMMENT '购卖者ID',
