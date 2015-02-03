@@ -10,6 +10,7 @@ import hashlib
 import cStringIO
 import settings
 import re
+import random
 
 from PIL import Image
 from io import BytesIO
@@ -124,3 +125,8 @@ def get_image_file(img_name, thumb=False):
     f = open("%s/%s" % (settings.img_dir, img_name), "rb")
     return ext, f.read()
     
+def generate_order_no():
+    return '%s%s' % (datetime.now().strftime('%Y%m%d%H%M%S'), generate_random(0, 1000))
+
+def generate_random(start, end):
+    return int(random.Random().random() * (end - start)) + start
