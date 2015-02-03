@@ -7,6 +7,7 @@ Created on 2015-1-11
 from simpletor.torndb import transactional
 from simpletor.application import AppError
 from simpletor.tornsolr import index, connect
+from simpletor.tornredis import cacheable, cacheevict
 from simpletor.utils import sha1, validate_utils
 from datetime import datetime
 
@@ -62,9 +63,11 @@ def login(artisan_id, password):
     models.artisanDAO.update(**artisan)
     return artisan
     
+@cacheable('#artisan_id', prefix='ARTISAN')
 def get_artisan(artisan_id):
     return models.artisanDAO.find(artisan_id)
     
+@cacheevict('#artisan.id', prefix='ARTISAN')
 @index(core='artisan')
 @transactional
 def update_profile(artisan):

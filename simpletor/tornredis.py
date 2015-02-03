@@ -7,6 +7,7 @@ Created on Jan 28, 2015
 import redis
 import settings
 import inspect
+import cPickle
 
 connect = redis.Redis(host=settings.redis, port=6379, db=1)
 
@@ -71,10 +72,10 @@ class cacheable(cache):
             
             result = connect.get(key)
             if result:
-                return result
+                return cPickle.loads(result)
             
             result = method(*args, **kwds)
-            connect.set(key, result)
+            connect.set(key, cPickle.dumps(result))
             return result
         return wrapper
     

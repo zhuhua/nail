@@ -7,6 +7,7 @@ Created on Jan 20, 2015
 from simpletor.torndb import transactional
 from simpletor.application import AppError
 from simpletor.tornsolr import index, connect
+from simpletor.tornredis import cacheable, cacheevict
 from simpletor.utils import validate_utils
 from common import services as common_serv
 import models
@@ -59,6 +60,7 @@ def add_sample(sample):
     
     return get_sample(sample_id)
         
+@cacheable('#sample_id', prefix='SAMPLE')
 def get_sample(sample_id):
     '''获取作品'''
     sample = models.sampleDAO.find(sample_id)
@@ -67,6 +69,7 @@ def get_sample(sample_id):
     sample.tags = sample.tags.split(' ')
     return sample
         
+@cacheevict('#sample.id', prefix='SAMPLE')
 @index(core='sample')
 @transactional
 def update_sample(sample):
