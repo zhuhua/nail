@@ -9,7 +9,6 @@ import settings
 import inspect
 
 connect = redis.Redis(host=settings.redis, port=6379, db=1)
-PATTERN = '%s_%s'
 
 class cache:
     '''CACHAE 基类'''
@@ -18,6 +17,7 @@ class cache:
         self.key_args = None
         self.is_k_exp = False
         self._arg_dict = dict()
+        self.pattern = "%s_%s"
         
         if key.startswith('#'):
             self.key_args = key.replace('#', '').split('.')
@@ -48,15 +48,15 @@ class cache:
         key = ''
         if self.is_k_exp:
             if len(self.key_args) == 1:
-                key = PATTERN % (self.prefix, self._arg_dict[self.key_args[0]])
+                key = self.pattern % (self.prefix, self._arg_dict[self.key_args[0]])
             else:
                 arg_obj = self._arg_dict[self.key_args[0]]
                 if isinstance(arg_obj, dict):
-                    key = PATTERN % (self.prefix, arg_obj[self.key_args[1]])
+                    key = self.pattern % (self.prefix, arg_obj[self.key_args[1]])
                 else:
-                    key = PATTERN % (self.prefix, getattr(arg_obj, self.key_args[1]))
+                    key = self.pattern % (self.prefix, getattr(arg_obj, self.key_args[1]))
         else:
-            key = PATTERN % (self.prefix, self.key)
+            key = self.pattern % (self.prefix, self.key)
             
         return key
 
