@@ -22,7 +22,7 @@ order_operate_description = ('pay', 'send', 'arrived', 'finish')
 
 def appointment_status(artisan_id, appt_date):
     if appt_date < date.today():
-        raise AppError("超出可预约时间范围")
+        raise AppError(u"超出可预约时间范围")
     appts = models.appointmentDAO.find(artisan_id, appt_date);
     appt_hours = list()
     appt_status = dict()
@@ -41,7 +41,7 @@ def appointment_status(artisan_id, appt_date):
 @transactional
 def close_appointment(artisan_id, appt_date, appt_hour):
     if appt_hour < settings.appointmentRange[0] or appt_hour > settings.appointmentRange[1]:
-        raise AppError("超出可预约时间范围")
+        raise AppError(u"超出可预约时间范围")
     appt = models.Appointment()
     appt.artisan_id = artisan_id
     appt.appt_date = appt_date
@@ -50,19 +50,19 @@ def close_appointment(artisan_id, appt_date, appt_hour):
     models.appointmentDAO.save(**appt)
 
 @transactional
-def create_order(user_id, sample_id, order_from, address, appt_date, appt_hour):
+def create_order(user_id, sample_id, address, appt_date, appt_hour, order_from = None, remark = None):
     if appt_date < date.today() or appt_hour < settings.appointmentRange[0] or appt_hour > settings.appointmentRange[1]:
-        raise AppError("超出可预约时间范围")
+        raise AppError(u"超出可预约时间范围")
     
     user = user_serv.get_profile(user_id)
     sample = sample_serv.get_sample(sample_id)
     if sample == None:
-        raise AppError("作品不存在(id:%s)" % (sample_id))
+        raise AppError(u"作品不存在(id:%s)" % (sample_id))
     
     artisan_id = sample.artisan_id
     artisan = artisan_serv.get_artisan(artisan_id)
     if artisan == None:
-        raise AppError("手艺人不存在(id:%s)" % (artisan_id))
+        raise AppError(u"手艺人不存在(id:%s)" % (artisan_id))
     order = models.Order()
     order.address = address
     order.artisan_id = sample.artisan_id
@@ -76,6 +76,7 @@ def create_order(user_id, sample_id, order_from, address, appt_date, appt_hour):
     order_no = generate_order_no()
     order.order_no = order_no
     order.price = sample.price
+    order.remark = remark
     order.sample_id = sample_id
     order.sample_name = sample.name
     order.status = 0;
@@ -91,10 +92,19 @@ def create_order(user_id, sample_id, order_from, address, appt_date, appt_hour):
     return get_order_orderno(order_no)
     
 def get_order(order_id):
-    return models.orderDAO.find(order_id)
+    order = models.orderDAO.find(order_id)
+    if order == None:
+        raise AppError(u"订单不存在(id:%s)" % (order_id))
+    return order
 
 def get_order_orderno(order_no):
-    return models.orderDAO.find_by_order_no(order_no)
+    order = models.orderDAO.find_by_order_no(order_no)
+    if order == None:
+        print order_no, type(order_no)
+        message = u"订单不存在(order_no:%s)" % (order_no)
+        print message
+        raise AppError(message)
+    return order
 
 def seller_orders(artisan_id, status = None, page = 1, page_size = 10):
     first_result = (page - 1) * page_size

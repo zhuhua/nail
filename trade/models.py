@@ -34,8 +34,7 @@ class Order(torndb.Row):
         self.cover = None
         self.tag_price = None
         self.price = None
-        self.date = None
-        self.hour = None
+        self.remark = None
         
 class OrderDAO:
     '''
@@ -44,40 +43,40 @@ class OrderDAO:
     @torndb.get
     def find(self, order_id):
         sql = '''
-        SELECT * FROM order o WHERE o.id = %s;
+        SELECT * FROM orders o WHERE o.id = %s;
         '''
         return sql
     
     @torndb.get
     def find_by_order_no(self, order_no):
         sql = '''
-        SELECT * FROM order o WHERE o.order_no = %s;
+        SELECT * FROM orders o WHERE o.order_no = %s;
         '''
         return sql
     
     @torndb.get
     def count_orders_by_seller(self, artisan_id, status = None):
         sql = '''
-        SELECT COUNT(id) FROM order o 
+        SELECT COUNT(id) FROM orders o 
         WHERE o.artisan_id = %s AND o.status = %s AND o.display_seller = true;
         '''
         if status == None:
             sql = '''
-            SELECT COUNT(id) FROM order o 
+            SELECT COUNT(id) FROM orders o 
             WHERE o.artisan_id = %s AND o.display_seller = true;
             '''
         return sql
     
     @torndb.select
-    def find_orders_by_seller(self, artisan_id, status = None, max_results, first_result):
+    def find_orders_by_seller(self, artisan_id, status = None, max_results = 0, first_result = 10):
         sql = '''
-        SELECT * FROM order o 
+        SELECT * FROM orders o 
         WHERE o.artisan_id = %s AND o.status = %s AND o.display_seller = true 
         LIMIT %s OFFSET %s;
         '''
         if status == None:
             sql = '''
-            SELECT * FROM order o 
+            SELECT * FROM orders o 
             WHERE o.artisan_id = %s AND o.display_seller = true 
             LIMIT %s OFFSET %s;
             '''
@@ -87,27 +86,27 @@ class OrderDAO:
     @torndb.get
     def count_orders_by_buyer(self, artisan_id, status = None):
         sql = '''
-        SELECT COUNT(id) FROM order o 
+        SELECT COUNT(id) FROM orders o 
         WHERE o.user_id = %s AND o.status = %s AND o.display_buyer = true;
         '''
         if status == None:
             sql = '''
-            SELECT COUNT(id) FROM order o 
+            SELECT COUNT(id) FROM orders o 
             WHERE o.user_id = %s AND o.display_buyer = true;
             '''
             
         return sql
     
     @torndb.select
-    def find_orders_by_buyer(self, user_id, status = None, max_results, first_result):
+    def find_orders_by_buyer(self, user_id, status = None, max_results = 0, first_result = 10):
         sql = '''
-        SELECT * FROM order o 
+        SELECT * FROM orders o 
         WHERE o.user_id = %s AND o.status = %s AND o.display_buyer = true 
         LIMIT %s OFFSET %s;
         '''
         if status == None:
             sql = '''
-            SELECT * FROM order o 
+            SELECT * FROM orders o 
             WHERE o.user_id = %s AND o.display_buyer = true LIMIT %s OFFSET %s;
             '''
         return sql
@@ -148,7 +147,7 @@ class OrderDAO:
             has_params = True
             
         sql = '''
-        SELECT COUNT(id) FROM order o;
+        SELECT COUNT(id) FROM orders o;
         '''
         if has_params:
             sql = '%s WHERE %s' % (sql, ' '.join(params))
@@ -156,7 +155,7 @@ class OrderDAO:
     
     @torndb.select
     def find_orders_by_admin(self, buyer = None, seller = None, status = None, 
-                              start_date = None, end_date = None, max_results, first_result):
+                              start_date = None, end_date = None, max_results = 0, first_result = 10):
         params = list()
         has_params = False
         if buyer == None:
@@ -190,7 +189,7 @@ class OrderDAO:
             has_params = True
             
         sql = '''
-        SELECT COUNT(id) FROM order o;
+        SELECT COUNT(id) FROM orders o;
         '''
         if has_params:
             sql = '%s WHERE %s LIMIT %%s OFFSET %%s' % (sql, ' '.join(params))
