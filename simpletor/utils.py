@@ -132,3 +132,11 @@ def generate_order_no():
 def generate_random(start, end):
     return int(random.Random().random() * (end - start)) + start
 
+def str2time(date_str, pattern = "%Y-%m-%d"):
+    return time.strptime(date_str, pattern)
+
+def str2date(date_str, pattern = "%Y-%m-%d"):
+    return date.strptime(date_str, pattern)
+                         
+def str2datetime(date_str, pattern = "%Y-%m-%d"):
+    return datetime.strptime(date_str, pattern)
