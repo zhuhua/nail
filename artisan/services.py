@@ -65,7 +65,10 @@ def login(artisan_id, password):
     
 @cacheable('#artisan_id', prefix='ARTISAN')
 def get_artisan(artisan_id):
-    return models.artisanDAO.find(artisan_id)
+    artisan = models.artisanDAO.find(artisan_id)
+    if artisan is None:
+        raise AppError(u'该美甲师不存在')
+    return artisan
     
 @cacheevict('#artisan.id', prefix='ARTISAN')
 @index(core='artisan')

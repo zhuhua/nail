@@ -64,6 +64,9 @@ def add_sample(sample):
 def get_sample(sample_id):
     '''获取作品'''
     sample = models.sampleDAO.find(sample_id)
+    if sample is None:
+        raise AppError(u'该作品不存在')
+    
     images = common_serv.get_gallery(sample_id, 'sample')
     sample.images = images
     sample.tags = sample.tags.split(' ')

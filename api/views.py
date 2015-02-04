@@ -5,13 +5,14 @@ Created on 2014年12月18日
 @author: zhuhua
 '''
 from simpletor import application
-from simpletor.utils import sha1, save_image
+from simpletor.utils import sha1, save_image, validate_utils
 
 from user import services as user_service
 from artisan import services as artisan_service
 from sample import services as sample_service
 from common import services as common_service
 from api import Api
+import utils
 
 #######  USER ##################################
 @application.RequestMapping("/api/user/register")
@@ -27,6 +28,18 @@ class Register(application.RequestHandler):
             raise application.AppError('验证码错误')
         
         user_service.register(mobile, password)
+        self.finish()
+        
+@application.RequestMapping("/api/user/checkcode")
+class Checkcode(application.RequestHandler):
+    '''注册'''
+    @Api()
+    def post(self):
+        mobile = self.get_argument('mobile', strip=True)
+        if not validate_utils.is_mobile(mobile):
+            raise application.AppError(u'请填写正确的手机号' % mobile, field='mobile')
+        
+        utils.checkcode.send(mobile)
         self.finish()
 
 @application.RequestMapping("/api/user/login")
@@ -146,13 +159,18 @@ class Favorites(application.RequestHandler):
         page_size = int(self.get_argument('page_size', strip=True))
         self.render_json(user_service.get_favorites(user_id, fav_type, page, page_size))
         
-@application.RequestMapping("/api/user/favorite/([0-9]+)")
+@application.RequestMapping("/api/user/favorite/delete")
 class DelFavorite(application.RequestHandler):
     '''删除收藏'''
     @Api(auth=True)
-    def post(self, favorite_id):
+    def post(self):
         user_id = self.user_id
-        fav_type = user_service.del_favorite(user_id, favorite_id)
+        favorite = user_service.models.Favorite()
+        favorite.user_id = user_id
+        fav_type = self.get_argument('type', strip=True)
+        favorite.type = fav_type
+        favorite.object_id = self.get_argument('object_id', strip=True)
+        user_service.del_favorite(user_id, favorite)
         self.render_json(user_service.get_favorites(user_id, fav_type))
         
 #######  ARTISAN ##################################
