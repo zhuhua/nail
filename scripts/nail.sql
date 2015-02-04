@@ -10,7 +10,7 @@ Target Server Type    : MariaDB
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2015-01-30 10:51:20
+Date: 2015-02-04 17:30:44
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -20,14 +20,14 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `address`;
 CREATE TABLE `address` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `location` varchar(255) NOT NULL,
   `detail` varchar(255) NOT NULL COMMENT '0, 收藏手艺人 1, 收藏样品',
   `create_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   KEY `fk_user_id` (`user_id`),
-  CONSTRAINT `address_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `account` (`id`)
+  CONSTRAINT `address_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='收藏关系';
 
 -- ----------------------------
@@ -120,7 +120,7 @@ INSERT INTO `category` VALUES ('4', '空气净化', '0000-00-00 00:00:00');
 -- ----------------------------
 DROP TABLE IF EXISTS `counts`;
 CREATE TABLE `counts` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `obj_id` varchar(32) NOT NULL,
   `key` varchar(255) NOT NULL COMMENT '类型（接单数，）',
   `value` int(11) NOT NULL DEFAULT '0',
@@ -137,14 +137,14 @@ CREATE TABLE `counts` (
 -- ----------------------------
 DROP TABLE IF EXISTS `favorite`;
 CREATE TABLE `favorite` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `object_id` char(32) NOT NULL,
   `type` int(11) NOT NULL COMMENT '0, 收藏手艺人 1, 收藏样品',
   `create_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   KEY `fk_user_id` (`user_id`),
-  CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `account` (`id`)
+  CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='收藏关系';
 
 -- ----------------------------
@@ -221,7 +221,7 @@ INSERT INTO `manager` VALUES ('2', 'manager', '7c4a8d09ca3762af61e59520943dc2649
 -- ----------------------------
 -- Table structure for order
 -- ----------------------------
-DROP TABLE IF EXISTS `orders`;
+DROP TABLE IF EXISTS `order`;
 CREATE TABLE `order` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL COMMENT '购卖者ID',
