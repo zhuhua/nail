@@ -219,10 +219,10 @@ INSERT INTO `manager` VALUES ('1', 'admin', '7c4a8d09ca3762af61e59520943dc26494f
 INSERT INTO `manager` VALUES ('2', 'manager', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'ROLE_MANAGER', '2015-01-15 16:55:52');
 
 -- ----------------------------
--- Table structure for order
+-- Table structure for orders
 -- ----------------------------
-DROP TABLE IF EXISTS `order`;
-CREATE TABLE `order` (
+DROP TABLE IF EXISTS `orders`;
+CREATE TABLE `orders` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL COMMENT '购卖者ID',
   `buyer_name` varchar(255) NOT NULL COMMENT '买家姓名',
@@ -244,6 +244,7 @@ CREATE TABLE `order` (
   `cover` varchar(255) NOT NULL COMMENT '订单图片',
   `tag_price` float NOT NULL COMMENT '店面价',
   `price` float NOT NULL COMMENT '价格',
+  `remark` varchar(1000) COMMENT '买家备注',
   PRIMARY KEY (`id`),
   KEY `fk_order_artisan_id` (`artisan_id`),
   KEY `fk_order_user_id` (`user_id`),
@@ -253,9 +254,7 @@ CREATE TABLE `order` (
   CONSTRAINT `fk_order_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单';
 
--- ----------------------------
--- Records of order
--- ----------------------------
+
 
 -- ----------------------------
 -- Table structure for order_log
