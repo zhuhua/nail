@@ -11,6 +11,7 @@ import cStringIO
 import settings
 import re
 import random
+import time
 
 from PIL import Image
 from io import BytesIO
@@ -126,7 +127,8 @@ def get_image_file(img_name, thumb=False):
     return ext, f.read()
     
 def generate_order_no():
-    return '%s%s' % (datetime.now().strftime('%Y%m%d%H%M%S'), generate_random(0, 1000))
+    return '%d' % (int(time.time() * 1000 * 1000))
 
 def generate_random(start, end):
     return int(random.Random().random() * (end - start)) + start
+
