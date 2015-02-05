@@ -254,22 +254,20 @@ CREATE TABLE `orders` (
   CONSTRAINT `fk_order_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单';
 
-
-
 -- ----------------------------
 -- Table structure for order_log
 -- ----------------------------
 DROP TABLE IF EXISTS `order_log`;
 CREATE TABLE `order_log` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `trader_id` int(11) NOT NULL,
-  `trader_type` varchar(255) NOT NULL,
-  `action` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `create_time` datetime NOT NULL,
+  `trader_id` int(11) NOT NULL COMMENT '交易者ID',
+  `trader_type` varchar(255) NOT NULL COMMENT '交易者类型',
+  `trader_action` int(11) NOT NULL COMMENT '交易动作',
+  `order_id` int(11) NOT NULL COMMENT '交易订单ID',
+  `create_time` datetime NOT NULL COMMENT '动作发生时间',
   PRIMARY KEY (`id`),
   KEY `fk_order_log_order_id` (`order_id`),
-  CONSTRAINT `fk_order_log_order_id` FOREIGN KEY (`order_id`) REFERENCES `order` (`id`)
+  CONSTRAINT `fk_order_log_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单流转日志';
 
 -- ----------------------------
