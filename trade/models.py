@@ -31,6 +31,8 @@ class Order(torndb.Row):
         self.artisan_name = None
         self.sample_id = None
         self.sample_name = None
+        self.sample_tag_price = None
+        self.sample_price = None
         self.cover = None
         self.tag_price = None
         self.price = None
@@ -194,22 +196,33 @@ class OrderDAO:
         if has_params:
             sql = '%s WHERE %s LIMIT %%s OFFSET %%s' % (sql, ' '.join(params))
         return sql
-    
+    @torndb.insert
     def save(self, **order):
         sql = '''
         INSERT INTO orders (user_id, buyer_name, address, 
         telephone, title, order_no, trade_no, status, create_time, 
         update_time, display_buyer, display_seller, is_reviewed, 
-        artisan_id, artisan_name, sample_id, sample_name, cover, 
-        tag_price) 
-        VALUES ('%(user_id)s', '%(buyer_name)s', '%(address)s', 
-        '%(telephone)s', '%(title)s', '%(order_no)s', 
-        '%(trade_no)s', '%(status)s', '%(create_time)s', 
-        '%(update_time)s', '%(display_buyer)s', '%(display_seller)s', 
-        '%(is_reviewed)s', '%(artisan_id)s', '%(artisan_name)s', 
-        '%(sample_id)s', '%(sample_name)s', '%(cover)s', '%(tag_price)s', '%(price)s');
+        artisan_id, artisan_name, sample_id, sample_name,sample_tag_price, 
+        sample_price, cover, tag_price) 
+        VALUES (%(user_id)s, %(buyer_name)s, %(address)s, 
+        %(telephone)s, %(title)s, %(order_no)s, 
+        %(trade_no)s, %(status)s, %(create_time)s, 
+        %(update_time)s, %(display_buyer)s, %(display_seller)s, 
+        %(is_reviewed)s, %(artisan_id)s, %(artisan_name)s, 
+        %(sample_id)s, %(sample_name)s, %(sample_tag_price)s, %(sample_price)s, 
+        %(cover)s, %(tag_price)s, %(price)s);
         '''
         
+        return sql
+    
+    @torndb.update
+    def update(self, **order):
+        sql = '''
+        UPDATE orders SET status = %(status)s, update_time = %(update_time)s, 
+        display_buyer = %(display_buyer)s, display_seller = %(display_seller)s, 
+        is_reviewed = %(is_reviewed)s, tag_price = %(tag_price)s, price = %(price)s);
+        WHERE order_id = %(order_id)s
+        '''
         return sql
     
 orderDAO = OrderDAO()
@@ -220,16 +233,30 @@ class OrderLog(torndb.Row):
     '''
     def __init__(self):
         self.id = None
-        self.name = None
+        self.trader_id = None
+        self.trader_type = None
+        self.trader_action = None
+        self.order_id = None
+        self.create_time = datetime.now()
         
 class OrderLogDAO:
     '''
     订单流转数据访问接口
     '''
-    @torndb.select
-    def all(self):
+    @torndb.insert
+    def save(self, **orderLog):
         sql = '''
-        SELECT * FROM tag;
+        INSERT INTO order_log (trader_id, trader_type, trader_action, 
+        order_id, create_time) 
+        VALUES (%(trader_id)s, %(trader_type)s, %(trader_action)s, 
+        %(order_id)s, %(create_time)s);
+        '''
+        return sql
+    
+    @torndb.select
+    def find(self, order_id):
+        sql = '''
+        SELECT * FROM order_log WHERE order_id = %s;
         '''
         return sql
     
