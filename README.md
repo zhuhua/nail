@@ -21,6 +21,14 @@ Nail make up mobile app
 
 ###获取个人信息
 	/api/user/profile GET Header [Authorization: <token>]
+	返回 用户对象
+	{
+	    "reg_time": 注册时间
+	    "mobile": 手机号
+	    "nick": 昵称
+	    "avatar": 头像
+	    "id": ID
+	}
 	
 ###更新个人信息
 	/api/user/profile POST Header [Authorization: <token>]

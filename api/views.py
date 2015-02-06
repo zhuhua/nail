@@ -59,6 +59,7 @@ class UserProfile(application.RequestHandler):
     def get(self):
         user_id = self.user_id
         user = user_service.get_profile(user_id)
+        user.pop('password')
         self.render_json(user)
     
     @Api(auth=True)
