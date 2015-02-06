@@ -9,7 +9,12 @@ from simpletor.application import AppError
 from simpletor.tornsolr import index, connect
 from simpletor.tornredis import cacheable, cacheevict
 from simpletor.utils import validate_utils
-from common import services as common_serv
+from common import services as common_services
+
+sample_count = {
+    'sale': 0
+}
+
 import models
 
 def get_categories():
@@ -56,7 +61,10 @@ def add_sample(sample):
 
     sample_id = models.sampleDAO.save(**sample)
     for image in images:
-        common_serv.add_to_gallery(sample_id, 'sample', image)
+        common_services.add_to_gallery(sample_id, 'sample', image)
+        
+    for k, v in sample_count.iteritems():
+        common_services.update_count(sample.id, 'sample', k, v)
     
     return get_sample(sample_id)
         
@@ -67,9 +75,13 @@ def get_sample(sample_id):
     if sample is None:
         raise AppError(u'该作品不存在')
     
-    images = common_serv.get_gallery(sample_id, 'sample')
+    images = common_services.get_gallery(sample_id, 'sample')
     sample.images = images
     sample.tags = sample.tags.split(' ')
+    
+    counts = common_services.get_counts(sample_id, 'artisan')
+    sample.counts = counts
+    
     return sample
         
 @index(core='sample')
@@ -81,19 +93,30 @@ def update_sample(sample):
     models.sampleDAO.update(**sample)
     
     images = sample.images
-    common_serv.remove_all(sample_id, 'sample')
+    common_services.remove_all(sample_id, 'sample')
     for image in images:
-        common_serv.add_to_gallery(sample_id, 'sample', image)
+        common_services.add_to_gallery(sample_id, 'sample', image)
+        
+    for k, v in sample.counts.iteritems():
+        common_services.update_count(sample.id, 'sample', k, v)
         
     return get_sample(sample_id)
 
-def search_sample(category_id, page=1, page_size=10, artisan_id='', order_by='', sort='asc'):
+def search_sample(page=1, page_size=10, category_id='*', artisan_id=None, order_by='create_time', sort='desc'):
+    page = int(page)
+    page_size = int(page_size)
+    
     solr = connect(core='sample')
     query = 'category_id:%s' % category_id
-    if not artisan_id == '':
+    if artisan_id is not None:
         query += ' AND artisan_id:%s' % artisan_id
+        
+    results = solr.search(query, **{
+        'start': (page - 1) * page_size,
+        'rows': page_size,
+        'sort': '%s %s' % (order_by, sort)
+    })
     
-    results = solr.search(query)
     docs = results.docs
     samples = [get_sample(doc['id']) for doc in docs]
     return samples, results.hits

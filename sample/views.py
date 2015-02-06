@@ -65,5 +65,5 @@ class Edit(application.RequestHandler):
 class List(application.RequestHandler):
     def get(self):
         artisan_id = self.get_current_user()['id']
-        items, hits = sample_services.search_sample(artisan_id)
+        items, hits = sample_services.search_sample(artisan_id=artisan_id)
         self.render('sample/list.html', items=items)

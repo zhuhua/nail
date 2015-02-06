@@ -96,13 +96,20 @@ def update_profile(artisan):
     
     return get_artisan(artisan.id)
     
-def search_artisan(page=1, dis_size=10, name='', order_by='', sort='asc'):
+def search_artisan(page=1, page_size=10, name='', order_by='', sort='asc'):
+    page = int(page)
+    page_size = int(page_size)
+    
     solr = connect(core='artisan')
     query = '*:*'
     if not name == '':
         query = 'name:%s' % name
-    
-    results = solr.search(query)
+        
+    results = solr.search(query, **{
+        'start': (page - 1) * page_size,
+        'rows': page_size,
+        'sort': '%s %s' % (order_by, sort)
+    })
     docs = results.docs
     samples = [get_artisan(doc['id']) for doc in docs]
     return samples, results.hits
