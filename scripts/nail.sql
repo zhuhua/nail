@@ -216,12 +216,11 @@ CREATE TABLE `manager` (
 -- ----------------------------
 INSERT INTO `manager` VALUES ('1', 'admin', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'ROLE_ADMIN', '2015-01-22 17:21:30');
 INSERT INTO `manager` VALUES ('2', 'manager', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'ROLE_MANAGER', '2015-01-15 16:55:52');
-
 -- ----------------------------
--- Table structure for order
+-- Table structure for orders
 -- ----------------------------
-DROP TABLE IF EXISTS `order`;
-CREATE TABLE `order` (
+DROP TABLE IF EXISTS `orders`;
+CREATE TABLE `orders` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL COMMENT '购卖者ID',
   `buyer_name` varchar(255) NOT NULL COMMENT '买家姓名',
@@ -240,9 +239,12 @@ CREATE TABLE `order` (
   `artisan_name` varchar(255) NOT NULL COMMENT '手艺人名称',
   `sample_id` int(11) NOT NULL COMMENT '样品',
   `sample_name` varchar(255) NOT NULL COMMENT '样品名称',
-  `cover` varchar(255) NOT NULL COMMENT '订单图片',
+  `sample_tag_price` float NOT NULL COMMENT '样品店面价',
+  `sample_price` float NOT NULL COMMENT '样品价格',
+  `cover` varchar(500) NOT NULL COMMENT '订单图片',
   `tag_price` float NOT NULL COMMENT '店面价',
-  `price` float NOT NULL COMMENT '价格',
+  `price` float NOT NULL COMMENT '实际消费',
+  `remark` varchar(1000) COMMENT '买家备注',
   PRIMARY KEY (`id`),
   KEY `fk_order_artisan_id` (`artisan_id`),
   KEY `fk_order_user_id` (`user_id`),
@@ -253,23 +255,19 @@ CREATE TABLE `order` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单';
 
 -- ----------------------------
--- Records of order
--- ----------------------------
-
--- ----------------------------
 -- Table structure for order_log
 -- ----------------------------
 DROP TABLE IF EXISTS `order_log`;
 CREATE TABLE `order_log` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `trader_id` int(11) NOT NULL,
-  `trader_type` varchar(255) NOT NULL,
-  `action` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `create_time` datetime NOT NULL,
+  `trader_id` int(11) NOT NULL COMMENT '交易者ID',
+  `trader_type` varchar(255) NOT NULL COMMENT '交易者类型',
+  `trader_action` int(11) NOT NULL COMMENT '交易动作',
+  `order_id` int(11) NOT NULL COMMENT '交易订单ID',
+  `create_time` datetime NOT NULL COMMENT '动作发生时间',
   PRIMARY KEY (`id`),
   KEY `fk_order_log_order_id` (`order_id`),
-  CONSTRAINT `fk_order_log_order_id` FOREIGN KEY (`order_id`) REFERENCES `order` (`id`)
+  CONSTRAINT `fk_order_log_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单流转日志';
 
 -- ----------------------------
