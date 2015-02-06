@@ -30,11 +30,13 @@ class Add(application.RequestHandler):
         self.redirect('/artisans')
                 
 @application.RequestMapping("/artisans")
-class Paging(application.RequestHandler):
+class List(application.RequestHandler):
     
     def get(self):
-        items = artisan_service.search_artisan()
-        self.render('artisan/list.html', items=items)
+        page = self.get_argument('page', '1', strip=True)
+        page_size = 10
+        items, hits = artisan_service.search_artisan(page=page, page_size=page_size)
+        self.render('artisan/list.html', items=items, page=page, page_size=page_size, total=hits)
         
         
 @application.RequestMapping("/artisan/([0-9]+)")

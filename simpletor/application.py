@@ -48,6 +48,21 @@ class RequestHandler(tornado.web.RequestHandler):
         self.write(json.dumps(data, cls=utils.JSONEncoder))
         self.finish()
         
+    def paging(self, page, page_size, total):
+        page, page_size, total = int(page), int(page_size), int(total)
+        pages = total / page_size if total % page_size == 0 else total / page_size + 1
+        prev = page if page - 1 == 0 else page - 1
+        _next = pages if page + 1 > pages else page + 1
+        template = '''
+            <ul>
+                <li><a href="?page=%s">上一页</a></li>
+                <li><span>第%s页</span></li>
+                <li><span>共%s页</span></li>
+                <li><a href="?page=%s">下一页</a></li>
+            </ul>
+        '''
+        return template % (prev, page, pages, _next)
+        
 class Security:
     '''
     Security

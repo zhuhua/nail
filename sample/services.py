@@ -102,14 +102,17 @@ def update_sample(sample):
         
     return get_sample(sample_id)
 
-def search_sample(page=1, page_size=10, category_id='*', artisan_id=None, order_by='create_time', sort='desc'):
+def search_sample(page=1, page_size=10, category_id='*', artisan_id=None, tag=None, order_by='create_time', sort='desc'):
     page = int(page)
     page_size = int(page_size)
     
     solr = connect(core='sample')
-    query = 'category_id:%s' % category_id
-    if artisan_id is not None:
+    query = 'category_id:%s AND status:0' % category_id
+    if not artisan_id == '':
         query += ' AND artisan_id:%s' % artisan_id
+        
+    if not tag == '':
+        query += ' AND tags:%s' % tag
         
     results = solr.search(query, **{
         'start': (page - 1) * page_size,

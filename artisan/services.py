@@ -96,7 +96,7 @@ def update_profile(artisan):
     
     return get_artisan(artisan.id)
     
-def search_artisan(page=1, page_size=10, name='', order_by='', sort='asc'):
+def search_artisan(page=1, page_size=10, name='', order_by='create_time', sort='desc'):
     page = int(page)
     page_size = int(page_size)
     
@@ -111,6 +111,6 @@ def search_artisan(page=1, page_size=10, name='', order_by='', sort='asc'):
         'sort': '%s %s' % (order_by, sort)
     })
     docs = results.docs
-    samples = [get_artisan(doc['id']) for doc in docs]
-    return samples, results.hits
+    artisans = [get_artisan(doc['id']) for doc in docs]
+    return artisans, results.hits
     

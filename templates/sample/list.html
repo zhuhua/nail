@@ -16,8 +16,8 @@
 					<thead>
 						<tr>
 							<th>#</th>
-							<th>姓名</th>
-							<th>注册时间</th>
+							<th>作品名称</th>
+							<th>创建时间</th>
 							<th>操作</th>
 						</tr>
 					</thead>
@@ -32,6 +32,15 @@
 						{% end %}
 					</tbody>
 				</table>
+				<div class="row-fluid">
+					<div class="span8"></div>
+					<div class="span4">
+						<div class="dataTables_paginate paging_bootstrap pagination">
+							{% autoescape None %}
+							{{ handler.paging(page, page_size, total) }}
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<!-- END SAMPLE TABLE PORTLET-->

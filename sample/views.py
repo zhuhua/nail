@@ -64,6 +64,8 @@ class Edit(application.RequestHandler):
 @application.RequestMapping("/samples")
 class List(application.RequestHandler):
     def get(self):
+        page = self.get_argument('page', '1', strip=True)
+        page_size = 10
         artisan_id = self.get_current_user()['id']
-        items, hits = sample_services.search_sample(artisan_id=artisan_id)
-        self.render('sample/list.html', items=items)
+        items, hits = sample_services.search_sample(artisan_id=artisan_id, page=page, page_size=page_size)
+        self.render('sample/list.html', items=items, page=page, page_size=page_size, total=hits)
