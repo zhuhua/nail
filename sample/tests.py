@@ -12,5 +12,9 @@ if __name__ == '__main__':
     
     for item in items:
         sample = services.get_sample(item.id)
-        services.update_sample(sample)
+        sample.tags = ' '.join(sample.tags)
+        try:
+            services.update_sample(sample)
+        except Exception, e:
+            print e
     
