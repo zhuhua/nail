@@ -20,6 +20,7 @@
 		<field name="status" type="int" indexed="true" stored="true" multiValued="false" />
 		<field name="tags" type="string" indexed="true" stored="true" multiValued="true" />
 		<field name="create_time" type="date" indexed="true" stored="true" multiValued="false" />
+		<dynamicField name="counts_*" type="int" multiValued="false" stored="true"  />
 		<field name="_version_" type="long" indexed="true" stored="true" />
 		<dynamicField name="*" type="ignored" multiValued="true"/>
 	</fields>

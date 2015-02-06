@@ -19,6 +19,7 @@
 		<field name="cert_pro" type="int" indexed="true" stored="false" multiValued="false" />
 		<field name="create_time" type="date" indexed="true" stored="false" multiValued="false" />
 		<field name="last_login" type="date" indexed="true" stored="false" multiValued="false" />
+		<dynamicField name="counts_*" type="int" multiValued="false" stored="true"  />
 		<field name="_version_" type="long" indexed="true" stored="true" />
 		<dynamicField name="*" type="ignored" multiValued="true" />
 	</fields>
