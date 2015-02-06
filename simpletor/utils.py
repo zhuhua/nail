@@ -17,6 +17,7 @@ from PIL import Image
 from io import BytesIO
 
 from datetime import date, datetime
+import application
 
 class ValidateUtils:
     '''验证工具类'''
@@ -133,10 +134,25 @@ def generate_random(start, end):
     return int(random.Random().random() * (end - start)) + start
 
 def str2time(date_str, pattern = "%Y-%m-%d"):
-    return time.strptime(date_str, pattern)
+    d = None
+    try:
+        d = time.strptime(date_str, pattern)
+    except ValueError:
+        raise application.AppError('日期转换出错')
+    return d
 
 def str2date(date_str, pattern = "%Y-%m-%d"):
-    return datetime.strptime(date_str, pattern).date()
-                         
+    d = None
+    try:
+        d = datetime.strptime(date_str, pattern).date()
+    except ValueError:
+        raise application.AppError('日期转换出错')
+    return d
+
 def str2datetime(date_str, pattern = "%Y-%m-%d"):
-    return datetime.strptime(date_str, pattern)
+    d = None
+    try:
+        d = datetime.strptime(date_str, pattern)
+    except ValueError:
+        raise application.AppError('日期转换出错')
+    return d
