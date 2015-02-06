@@ -2,15 +2,15 @@
 Navicat MariaDB Data Transfer
 
 Source Server         : localhost
-Source Server Version : 50540
+Source Server Version : 50541
 Source Host           : localhost:3306
 Source Database       : nail
 
 Target Server Type    : MariaDB
-Target Server Version : 50540
+Target Server Version : 50541
 File Encoding         : 65001
 
-Date: 2015-02-04 17:30:44
+Date: 2015-02-06 17:27:22
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -103,17 +103,16 @@ DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL COMMENT '类型（美甲，美足，美睫，护理）',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='作品分类';
 
 -- ----------------------------
 -- Records of category
 -- ----------------------------
-INSERT INTO `category` VALUES ('1', '美甲', '0000-00-00 00:00:00');
-INSERT INTO `category` VALUES ('2', '美睫', '0000-00-00 00:00:00');
-INSERT INTO `category` VALUES ('3', '手足护理', '0000-00-00 00:00:00');
-INSERT INTO `category` VALUES ('4', '空气净化', '0000-00-00 00:00:00');
+INSERT INTO `category` VALUES ('1', '美甲');
+INSERT INTO `category` VALUES ('2', '美睫');
+INSERT INTO `category` VALUES ('3', '手足护理');
+INSERT INTO `category` VALUES ('4', '空气净化');
 
 -- ----------------------------
 -- Table structure for counts
@@ -122,8 +121,8 @@ DROP TABLE IF EXISTS `counts`;
 CREATE TABLE `counts` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `obj_id` varchar(32) NOT NULL,
-  `key` varchar(255) NOT NULL COMMENT '类型（接单数，）',
-  `value` int(11) NOT NULL DEFAULT '0',
+  `count_key` varchar(255) NOT NULL COMMENT '类型（接单数，）',
+  `count_value` int(11) NOT NULL DEFAULT '0',
   `version` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='通用计数';
@@ -219,10 +218,10 @@ INSERT INTO `manager` VALUES ('1', 'admin', '7c4a8d09ca3762af61e59520943dc26494f
 INSERT INTO `manager` VALUES ('2', 'manager', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'ROLE_MANAGER', '2015-01-15 16:55:52');
 
 -- ----------------------------
--- Table structure for orders
+-- Table structure for order
 -- ----------------------------
-DROP TABLE IF EXISTS `orders`;
-CREATE TABLE `orders` (
+DROP TABLE IF EXISTS `order`;
+CREATE TABLE `order` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL COMMENT '购卖者ID',
   `buyer_name` varchar(255) NOT NULL COMMENT '买家姓名',
@@ -241,12 +240,9 @@ CREATE TABLE `orders` (
   `artisan_name` varchar(255) NOT NULL COMMENT '手艺人名称',
   `sample_id` int(11) NOT NULL COMMENT '样品',
   `sample_name` varchar(255) NOT NULL COMMENT '样品名称',
-  `sample_tag_price` float NOT NULL COMMENT '样品店面价',
-  `sample_price` float NOT NULL COMMENT '样品价格',
   `cover` varchar(255) NOT NULL COMMENT '订单图片',
   `tag_price` float NOT NULL COMMENT '店面价',
-  `price` float NOT NULL COMMENT '实际消费',
-  `remark` varchar(1000) COMMENT '买家备注',
+  `price` float NOT NULL COMMENT '价格',
   PRIMARY KEY (`id`),
   KEY `fk_order_artisan_id` (`artisan_id`),
   KEY `fk_order_user_id` (`user_id`),
@@ -257,19 +253,23 @@ CREATE TABLE `orders` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单';
 
 -- ----------------------------
+-- Records of order
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for order_log
 -- ----------------------------
 DROP TABLE IF EXISTS `order_log`;
 CREATE TABLE `order_log` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `trader_id` int(11) NOT NULL COMMENT '交易者ID',
-  `trader_type` varchar(255) NOT NULL COMMENT '交易者类型',
-  `trader_action` int(11) NOT NULL COMMENT '交易动作',
-  `order_id` int(11) NOT NULL COMMENT '交易订单ID',
-  `create_time` datetime NOT NULL COMMENT '动作发生时间',
+  `trader_id` int(11) NOT NULL,
+  `trader_type` varchar(255) NOT NULL,
+  `action` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `create_time` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_order_log_order_id` (`order_id`),
-  CONSTRAINT `fk_order_log_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`)
+  CONSTRAINT `fk_order_log_order_id` FOREIGN KEY (`order_id`) REFERENCES `order` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单流转日志';
 
 -- ----------------------------
@@ -298,7 +298,7 @@ CREATE TABLE `sample` (
   KEY `dj_atusab_id` (`artisan_id`),
   CONSTRAINT `dj_atusab_id` FOREIGN KEY (`artisan_id`) REFERENCES `artisan` (`id`),
   CONSTRAINT `fk_category_id` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COMMENT='美甲师提供的作品方案';
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COMMENT='美甲师提供的作品方案';
 
 -- ----------------------------
 -- Records of sample
@@ -324,6 +324,13 @@ INSERT INTO `sample` VALUES ('21', '在在重中之重', '1111', '11', '0', 'asd
 INSERT INTO `sample` VALUES ('22', '在在', '1111', '11', '0', 'asdf', '1', '28000006', '0', '圣诞节 特价款 糖果 创意 彩绘 日韩 纯色 新娘 法式', '2015-01-23 16:26:20', '2015-01-23 16:26:20');
 INSERT INTO `sample` VALUES ('23', '阿斯顿发', '199', '299', '0', '阿斯顿发生的', '1', '28000006', '0', '圣诞节 特价款 糖果 创意 彩绘 日韩 纯色 新娘 法式', '2015-01-23 18:01:23', '2015-01-23 18:01:23');
 INSERT INTO `sample` VALUES ('24', 'asdfasd', '11', '111', '0', 'asdfasd', '3', '28000006', '0', '圣诞节 特价款 糖果 创意 彩绘 日韩 纯色 新娘 法式', '2015-01-27 17:13:20', '2015-01-27 17:13:20');
+INSERT INTO `sample` VALUES ('25', '作品111', '0', '0', '0', '阿斯顿发生打法撒三大', '1', '28000006', '0', '圣诞节 特价款 创意 彩绘 日韩', '2015-02-06 14:51:31', '2015-02-06 14:51:31');
+INSERT INTO `sample` VALUES ('26', '艾弗森的发生的', '444', '21', '0', '阿斯顿发生的发生的', '2', '28000006', '0', '特价款 糖果 创意', '2015-02-06 15:09:37', '2015-02-06 15:09:37');
+INSERT INTO `sample` VALUES ('27', '2222222222222222222222222', '222', '222', '0', '2222', '1', '28000006', '0', '圣诞节 特价款', '2015-02-06 16:58:30', '2015-02-06 17:01:37');
+INSERT INTO `sample` VALUES ('28', '333333333333', '222', '222', '0', '阿斯顿发生的', '1', '28000006', '0', '圣诞节 特价款', '2015-02-06 17:03:20', '2015-02-06 17:03:20');
+INSERT INTO `sample` VALUES ('29', '444444444444', '222', '222', '0', '阿斯顿发生的发生地方', '1', '28000006', '0', '圣诞节 特价款', '2015-02-06 17:05:05', '2015-02-06 17:05:05');
+INSERT INTO `sample` VALUES ('30', '5555555555', '222', '222', '0', '阿斯顿发生地方', '1', '28000006', '0', '圣诞节 特价款', '2015-02-06 17:05:51', '2015-02-06 17:05:51');
+INSERT INTO `sample` VALUES ('31', '6666666666', '1111', '11', '0', '阿斯顿发生的', '1', '28000006', '0', '圣诞节 特价款', '2015-02-06 17:06:43', '2015-02-06 17:06:43');
 
 -- ----------------------------
 -- Table structure for tag
