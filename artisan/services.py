@@ -11,7 +11,13 @@ from simpletor.tornredis import cacheable, cacheevict
 from simpletor.utils import sha1, validate_utils
 from datetime import datetime
 
+from common import services as common_services
 import models
+
+artisan_count = {
+    'sample': 0,
+    'sale': 0
+}
 
 def validate_artisan(artisan):
     '''Artisan 表单验证'''
@@ -45,6 +51,10 @@ def register(name, mobile, password, **profile):
         artisan.brief = brief
         
     artisan_id = models.artisanDAO.save(**artisan)
+    
+    for k, v in artisan_count.iteritems():
+        common_services.update_count(artisan_id, 'artisan', k, v)
+    
     return get_artisan(artisan_id)
     
 @transactional
@@ -68,14 +78,22 @@ def get_artisan(artisan_id):
     artisan = models.artisanDAO.find(artisan_id)
     if artisan is None:
         raise AppError(u'该美甲师不存在')
+    
+    counts = common_services.get_counts(artisan_id, 'artisan')
+    artisan.counts = counts
+    
     return artisan
     
-@cacheevict('#artisan.id', prefix='ARTISAN')
 @index(core='artisan')
 @transactional
+@cacheevict('#artisan.id', prefix='ARTISAN')
 def update_profile(artisan):
     validate_artisan(artisan)
     models.artisanDAO.update(**artisan)
+    
+    for k, v in artisan_count.iteritems():
+        common_services.update_count(artisan.id, 'artisan', k, v)
+    
     return get_artisan(artisan.id)
     
 def search_artisan(page=1, dis_size=10, name='', order_by='', sort='asc'):

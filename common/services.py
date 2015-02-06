@@ -72,13 +72,13 @@ def update_count(obj_id, obj_type, key, value):
     if not counts:
         counts = models.Counts()
         counts.obj_id = obj_id
-        counts.key = key
-        counts.value = value
-        models.countsDAO.save(counts)
+        counts.count_key = key
+        counts.count_value = value
+        models.countsDAO.save(**counts)
     else:
-        counts.key = key
-        counts.value = value
-        models.countsDAO.update(counts)
+        counts.count_key = key
+        counts.count_value = value
+        models.countsDAO.update(**counts)
     
 def get_counts(obj_id, obj_type):
     '''获取对象计数'''
@@ -88,4 +88,9 @@ def get_counts(obj_id, obj_type):
     counts_type = counts_types[obj_type]
     obj_id = md5('%s_%s' % (obj_id, counts_type))
     
-    return models.countsDAO.findByObjId(obj_id)
+    rows = models.countsDAO.findByObjId(obj_id)
+    counts = dict()
+    
+    for row in rows:
+        counts[row.count_key] = row.count_value
+    return counts

@@ -88,4 +88,5 @@ class cacheevict(cache):
             self._kwds = kwds
             key = self.__get_key__()
             connect.delete(key)
+            return method(*args, **kwds)
         return wrapper

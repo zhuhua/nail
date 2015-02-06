@@ -72,9 +72,9 @@ def get_sample(sample_id):
     sample.tags = sample.tags.split(' ')
     return sample
         
-@cacheevict('#sample.id', prefix='SAMPLE')
 @index(core='sample')
 @transactional
+@cacheevict('#sample.id', prefix='SAMPLE')
 def update_sample(sample):
     '''编辑作品'''
     sample_id = sample.id

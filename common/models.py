@@ -4,7 +4,6 @@ Created on Jan 19, 2015
 
 @author: zhuhua
 '''
-import time
 from datetime import datetime
 from simpletor import torndb
 
@@ -67,33 +66,33 @@ class Counts(torndb.Row):
     def __init__(self):
         self.id = None
         self.obj_id = None
-        self.key = None
-        self.value = 0
-        self.version = time.time()
+        self.count_key = None
+        self.count_value = 0
+        self.version = datetime.now()
         
 class CountsDAO:
     '''
     通用计数数据访问接口
     '''
     @torndb.insert
-    def save(self, counts):
+    def save(self, **counts):
         sql = '''
-        INSERT INTO counts (obj_id, key, value, version) 
-        VALUES (%(obj_id)s, %(key)s, %(value)s, %(version)s);
+        INSERT INTO counts(obj_id, count_key, count_value, version) 
+        VALUES (%(obj_id)s, %(count_key)s, %(count_value)s, %(version)s);
         '''
         return sql
         
     @torndb.get
     def find(self, obj_id, key):
         sql = '''
-        SELECT * FROM count c WHERE c.obj_id = %s AND c.key = %s;
+        SELECT * FROM counts c WHERE c.obj_id = %s AND c.count_key = %s;
         '''
         return sql
     
     @torndb.select
     def findByObjId(self, obj_id):
         sql = '''
-        SELECT * FROM count c WHERE c.obj_id = %s;
+        SELECT * FROM counts c WHERE c.obj_id = %s;
         '''
         return sql
     
@@ -101,8 +100,8 @@ class CountsDAO:
     def update(self, **counts):
         sql = '''
         UPDATE counts c 
-        SET value = value + %(value)s 
-        WHERE c.obj_id = %(obj_id)s AND c.key = %(key)s;
+        SET count_value = %(count_value)s 
+        WHERE c.obj_id = %(obj_id)s AND c.count_key = %(count_key)s AND c.version = %(version)s;
         '''
         return sql
         
