@@ -43,6 +43,14 @@ Nail make up mobile app
 	参数 
 		location 位置
 		detail 详细地址
+	返回 地址对象列表
+	{
+	    "id": ID,
+	    "user_id": 用户ID,
+	    "location": 位置,
+	    "detail": 详细地址,
+	    "create_time":
+	}
 		
 ###常用地址列表
 	/api/user/addresses GET Header [Authorization: <token>]
@@ -62,6 +70,7 @@ Nail make up mobile app
 		type 类型 1 美甲师 2 美甲作品
 		page 页码 可选 默认 1
 		page_size 页大小 可选 默认 10
+	返回美甲师或者美甲对象列表
 		
 ###删除收藏
 	/api/user/favorite/delete POST Header [Authorization: <token>]
@@ -74,11 +83,12 @@ Nail make up mobile app
 ###获取美甲师列表
 	/api/artisans GET 
 	参数
-		order_by 排序字段 可选
-		sort asc|desc 可选 默认 asc
+		order_by 排序字段 可选  [ level 等级 默认，avg_price 均价， counts_sale 人气 ]
+		sort asc|desc 可选 默认 desc 范围 [asc 正序, desc 倒序]
 		page 页码 可选 默认 1
 		page_size 页大小 可选 默认 10
 		name 可选 如传入是以美甲师名字搜索
+	返回 美甲师对象列表
 
 ###获取美甲师信息
 	/api/artisan/<美甲师ID> GET
@@ -94,6 +104,10 @@ Nail make up mobile app
 	    "create_time": 创建时间,
 	    "last_login": 最近登录时间,
 	    "avatar": 头像,
+	    "counts": {
+	            "sample": 0, 作品数量
+	            "sale": 0 销量
+	    },
 	    "cert_pop": 明星美甲师,
 	    "avg_price": 均价,
 	    "id": 28000006
@@ -103,16 +117,31 @@ Nail make up mobile app
 
 ###获取标签列表
 	/api/tags GET
+	返回 标签对象列表
+	{
+	    "id": ID
+	    "name": 标签名
+	}
+	
+###获取分类列表
+	/api/categories GET
+	返回 分类对象列表
+	{
+	    "id": ID
+	    "name": 名称
+	}
 
 ###获取作品列表
 	/api/samples
 	参数
-		category_id 类别ID 可选 1:美甲 2:美睫 3:手足护理 4:空气净化 默认1
-		order_by 排序字段 可选
-		sort asc|desc 可选 默认 asc
+		category_id 类别ID 可选 [ 1:美甲 2:美睫 3:手足护理 4:空气净化 默认1 ]
+		order_by 排序字段 可选 默认 create_time  [ price 价格， counts_sale 销量 ]
+		sort asc|desc 可选 默认 desc 范围 [asc 正序, desc 倒序]
 		page 页码 可选 默认 1
 		page_size 页大小 可选 默认 10
 		artisan_id 可选 如传入则取得该美甲师的作品
+		tag 可选 参数值[标签接口得到的name]
+	返回 美甲作品对象列表
 
 ###获取作品详情
 	/api/sample<作品ID>
@@ -122,7 +151,9 @@ Nail make up mobile app
 	    "tags": 标签,
 	    "price": 价格,
 	    "brief": 作品简介,
-	    "sale": 0,
+	    "counts": {
+	        "sale": 0 销量
+	    },
 	    "artisan_id": 美甲师Id,
 	    "create_time": 创建时间,
 	    "images": 图片,

@@ -64,7 +64,7 @@ def add_sample(sample):
         common_services.add_to_gallery(sample_id, 'sample', image)
         
     for k, v in sample_count.iteritems():
-        common_services.update_count(sample.id, 'sample', k, v)
+        common_services.update_count(sample_id, 'sample', k, v)
     
     return get_sample(sample_id)
         
@@ -79,7 +79,7 @@ def get_sample(sample_id):
     sample.images = images
     sample.tags = sample.tags.split(' ')
     
-    counts = common_services.get_counts(sample_id, 'artisan')
+    counts = common_services.get_counts(sample_id, 'sample')
     sample.counts = counts
     
     return sample
@@ -102,7 +102,7 @@ def update_sample(sample):
         
     return get_sample(sample_id)
 
-def search_sample(page=1, page_size=10, category_id='*', artisan_id=None, tag=None, order_by='create_time', sort='desc'):
+def search_sample(page=1, page_size=10, category_id='*', artisan_id='', tag='', order_by='create_time', sort='desc'):
     page = int(page)
     page_size = int(page_size)
     

@@ -179,7 +179,7 @@ class Artisans(application.RequestHandler):
     '''获取美甲师列表'''
     @Api()
     def get(self):
-        order_by = self.get_argument('order_by', default='', strip=True)
+        order_by = self.get_argument('order_by', default='create_time', strip=True)
         sort = self.get_argument('sort', default='asc', strip=True)
         page = self.get_argument('page', default=1, strip=True)
         page_size = self.get_argument('page_size', default=10, strip=True)
@@ -205,6 +205,14 @@ class Tags(application.RequestHandler):
     def get(self):
         tags = sample_service.get_tags()
         self.render_json(tags)
+        
+@application.RequestMapping("/api/categories")
+class Categories(application.RequestHandler):
+    '''获取分类列表'''
+    @Api()
+    def get(self):
+        categories = sample_service.get_categories()
+        self.render_json(categories)
 
 @application.RequestMapping("/api/samples")
 class Samples(application.RequestHandler):
