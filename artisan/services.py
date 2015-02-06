@@ -82,6 +82,9 @@ def get_artisan(artisan_id):
     counts = common_services.get_counts(artisan_id, 'artisan')
     artisan.counts = counts
     
+    if len(artisan.counts) == 0:
+        artisan.counts = artisan_count
+    
     return artisan
     
 @index(core='artisan')

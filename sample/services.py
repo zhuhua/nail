@@ -82,6 +82,9 @@ def get_sample(sample_id):
     counts = common_services.get_counts(sample_id, 'sample')
     sample.counts = counts
     
+    if len(sample.counts) == 0:
+        sample.counts = sample_count
+    
     return sample
         
 @index(core='sample')
