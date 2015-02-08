@@ -1,0 +1,51 @@
+{% extends "../base.html" %} 
+
+{% block title %}订单管理{% end %}
+
+{% block breadcrumb %}
+<li><a href="#">订单管理</a></li>
+{% end %} 
+
+{% block content %}
+<div class="row-fluid">
+	<div>
+		<!-- BEGIN SAMPLE TABLE PORTLET-->
+		<div class="portlet box">
+			<div class="portlet-body" style="display: block;">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>名称</th>
+							<th>创建时间</th>
+							<th>状态</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for order in orders %}
+						<tr>
+							<td>{{order.id}}</td>
+							<td>{{order.title}}</td>
+							<td class="hidden-480">{{order.create_time}}</td>
+							<td>{{status_description[order.status]}}</td>
+							<td> &nbsp;</td>
+						</tr>
+						{% end %}
+					</tbody>
+				</table>
+				<div class="row-fluid">
+					<div class="span8"></div>
+					<div class="span4">
+						<div class="dataTables_paginate paging_bootstrap pagination">
+							{% autoescape None %}
+							{{ handler.paging(page, page_size, total) }}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- END SAMPLE TABLE PORTLET-->
+	</div>
+</div>
+{% end %}

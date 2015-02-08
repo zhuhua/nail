@@ -4,6 +4,7 @@ tests.py
 import models
 import services
 import datetime
+from simpletor import utils
 
 def test_closeAppointment():
     artisan_id = 28000009
@@ -29,6 +30,13 @@ def test_appointment_status():
     
     print apptss
 # test_appointment_status()
+
+def test_generate_random():
+    start = 1
+    end = 100
+    print utils.generate_random(start, end)
+    
+test_generate_random()
 
 if __name__ == '__main__':
 #     print datetime.date.today()

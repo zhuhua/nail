@@ -167,13 +167,19 @@ def get_order_orderno(order_no):
         raise AppError(message)
     return order
 
-def seller_orders(artisan_id, status = '', page = 1, page_size = 10):
+def seller_orders(artisan_id, status, page = 1, page_size = 10):
     first_result = (page - 1) * page_size
         # 卖家订单
-    total = models.orderDAO.count_orders_by_seller(artisan_id)
-    orders = models.orderDAO.find_orders_by_seller(artisan_id, page_size, first_result)
+    orders = None
+    total = 0
+    if status == None:
+        total = models.orderDAO.count_orders_by_seller(artisan_id)
+        orders = models.orderDAO.find_orders_by_seller(artisan_id, page_size, first_result)
+    else:
+        total = models.orderDAO.count_orders_by_seller_status(artisan_id, status)
+        orders = models.orderDAO.find_orders_by_seller_status(artisan_id, status, page_size, first_result)
     
-    return orders, total
+    return orders, total['total']
 
 def buyer_orders(user_id, status, page = 1, page_size = 10):
     first_result = (page - 1) * page_size
@@ -184,16 +190,16 @@ def buyer_orders(user_id, status, page = 1, page_size = 10):
         total = models.orderDAO.count_orders_by_buyer(user_id)
         orders = models.orderDAO.find_orders_by_buyer(user_id, page_size, first_result)
     else:
-        total = models.orderDAO.count_orders_by_buyer(user_id, status)
-        orders = models.orderDAO.find_orders_by_buyer(user_id, status, page_size, first_result)
+        total = models.orderDAO.count_orders_by_buyer_status(user_id, status)
+        orders = models.orderDAO.find_orders_by_buyer_status(user_id, status, page_size, first_result)
     
-    return orders, total
+    return orders, total['total']
 
-def admin_orders(buyer = '', seller = '', status = '', start_date = '', end_date = '', page = 1, page_size = 10):
+def admin_orders(buyer = None, seller = None, status = None, start_date = None, end_date = None, page = 1, page_size = 10):
     first_result = (page - 1) * page_size
     total = models.orderDAO.count_orders_by_admin(buyer, seller, status, start_date, end_date)
     orders = models.orderDAO.find_orders_by_admin(buyer, seller, status, start_date, end_date, page_size, first_result)
     
-    return orders, total
+    return orders, total[0]['total']
     
     
