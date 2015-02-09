@@ -23,5 +23,17 @@ class Add(application.RequestHandler):
         evaluate.professional_rank = self.get_argument('professional_rank', strip=True)
         evaluate.punctual_rank = self.get_argument('punctual_rank', strip=True)
         evaluate.rating = self.get_argument('rating', strip=True)
+        evaluate.order_no = self.get_argument('order_no', strip=True)
         
         evaluate_serv.add_evaluate(evaluate)
+
+@application.RequestMapping("/api/evaluates")
+class GetEvaluates(application.RequestHandler):
+    @Api()
+    def get(self):
+        sample_id = self.get_argument('sample_id', strip=True)
+        page = self.get_argument('page', default = 1, strip=True)
+        page_size = self.get_argument('page_size', default = 10, strip=True)
+        evaluates = evaluate_serv.get_evaluates(sample_id, page, page_size)
+        
+        self.render_json(evaluates)

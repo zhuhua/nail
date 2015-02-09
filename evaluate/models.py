@@ -30,9 +30,23 @@ class EvaluateDAO():
     评价数据访问接口
     '''
     @torndb.get
-    def find(self, object_id):
+    def find(self, evaluate_id):
         sql = '''
-        SELECT * FROM evaluate o WHERE o.object_id = %s;
+        SELECT * FROM evaluate o WHERE o.id = %s;
+        '''
+        return sql
+    
+    @torndb.get
+    def count_obj_id(self, object_id, object_type):
+        sql = '''
+        SELECT COUNT(id) AS total FROM evaluate o WHERE o.object_id = %s AND o.object_type = %s;
+        '''
+        return sql
+    
+    @torndb.select
+    def find_obj_id(self, object_id, object_type, max_results, first_result):
+        sql = '''
+        SELECT * FROM evaluate o WHERE o.object_id = %s AND o.object_type = %s LIMIT %s OFFSET %s;
         '''
         return sql
     
@@ -45,6 +59,13 @@ class EvaluateDAO():
         VALUES (%(author_id)s, %(object_id)s, %(object_type)s, 
         %(content)s,%(rating)s, %(communication_rank)s, %(professional_rank)s, 
         %(punctual_rank)s, %(create_time)s, %(is_block)s, %(is_valid)s); 
+        '''
+        return sql
+    
+    @torndb.update
+    def update(self, **evaluate):
+        sql = '''
+        UPDATE evaluate SET is_block = %(is_block)s, is_valid = %s(is_valid)% WHERE id = %(id)s
         '''
         return sql
     
