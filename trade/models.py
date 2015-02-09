@@ -7,6 +7,7 @@ Created on Jan 28, 2015
 from datetime import datetime
 from simpletor import torndb
 
+
     
 class Order(torndb.Row):
     '''
@@ -57,145 +58,132 @@ class OrderDAO:
         return sql
     
     @torndb.get
-    def count_orders_by_seller(self, artisan_id, status = None):
+    def count_orders_by_seller(self, artisan_id):
         sql = '''
-        SELECT COUNT(id) FROM orders o 
+        SELECT COUNT(id) AS total FROM orders o 
+        WHERE o.artisan_id = %s AND o.display_seller = true;
+        '''
+        return sql
+    
+    @torndb.get
+    def count_orders_by_seller_status(self, artisan_id, status):
+        sql = '''
+        SELECT COUNT(id) AS total FROM orders o 
         WHERE o.artisan_id = %s AND o.status = %s AND o.display_seller = true;
         '''
-        if status == None:
-            sql = '''
-            SELECT COUNT(id) FROM orders o 
-            WHERE o.artisan_id = %s AND o.display_seller = true;
-            '''
         return sql
     
     @torndb.select
-    def find_orders_by_seller(self, artisan_id, status = None, max_results = 0, first_result = 10):
+    def find_orders_by_seller(self, artisan_id, max_results = 0, first_result = 10):
+        sql = '''
+        SELECT * FROM orders o 
+        WHERE o.artisan_id = %s AND o.display_seller = true 
+        LIMIT %s OFFSET %s;
+        '''
+        return sql
+    
+    @torndb.select
+    def find_orders_by_seller_status(self, artisan_id, status, max_results = 0, first_result = 10):
         sql = '''
         SELECT * FROM orders o 
         WHERE o.artisan_id = %s AND o.status = %s AND o.display_seller = true 
         LIMIT %s OFFSET %s;
         '''
-        if status == None:
-            sql = '''
-            SELECT * FROM orders o 
-            WHERE o.artisan_id = %s AND o.display_seller = true 
-            LIMIT %s OFFSET %s;
-            '''
+        return sql
+    
+    @torndb.get
+    def count_orders_by_buyer(self, artisan_id):
+        sql = '''
+        SELECT COUNT(id) AS total FROM orders o 
+        WHERE o.user_id = %s AND o.display_buyer = true;
+        '''
             
         return sql
     
     @torndb.get
-    def count_orders_by_buyer(self, artisan_id, status = None):
+    def count_orders_by_buyer_status(self, artisan_id, status):
         sql = '''
-        SELECT COUNT(id) FROM orders o 
+        SELECT COUNT(id) AS total FROM orders o 
         WHERE o.user_id = %s AND o.status = %s AND o.display_buyer = true;
         '''
-        if status == None:
-            sql = '''
-            SELECT COUNT(id) FROM orders o 
-            WHERE o.user_id = %s AND o.display_buyer = true;
-            '''
-            
         return sql
     
     @torndb.select
-    def find_orders_by_buyer(self, user_id, status = None, max_results = 0, first_result = 10):
+    def find_orders_by_buyer(self, user_id, max_results = 0, first_result = 10):
+        sql = '''
+        SELECT * FROM orders o 
+        WHERE o.user_id = %s AND o.display_buyer = true LIMIT %s OFFSET %s;
+        '''
+        return sql
+    
+    @torndb.select
+    def find_orders_by_buyer_status(self, user_id, status, max_results = 0, first_result = 10):
         sql = '''
         SELECT * FROM orders o 
         WHERE o.user_id = %s AND o.status = %s AND o.display_buyer = true 
         LIMIT %s OFFSET %s;
         '''
-        if status == None:
-            sql = '''
-            SELECT * FROM orders o 
-            WHERE o.user_id = %s AND o.display_buyer = true LIMIT %s OFFSET %s;
-            '''
         return sql
     
-    @torndb.select
+    def process_params(self,buyer, seller, status, 
+                              start_date, end_date):
+        sql_params = list()
+        params = dict()
+        has_params = False
+        if buyer != None:
+            sql_params.append('o.user_id = %(user_id)s')
+            params['user_id'] = buyer
+            has_params = True
+            
+        if seller != None:
+            sql_params.append('o.artisan_id = %(artisan_id)s')
+            params['artisan_id'] = seller
+            has_params = True
+        
+        if status != None:
+            sql_params.append('o.status = %(status)s')
+            params['status'] = status
+            has_params = True
+            
+        if start_date != None:
+            sql_params.append('o.create_time > %(start_date)s')
+            params['start_date'] = start_date
+            has_params = True
+            
+        if end_date != None:
+            sql_params.append('o.create_time < %(end_date)s')
+            params['end_date'] = end_date
+            has_params = True
+            
+        return sql_params, params, has_params
+    
     def count_orders_by_admin(self, buyer = None, seller = None, status = None, 
                               start_date = None, end_date = None):
-        params = list()
-        has_params = False
-        if buyer == None:
-            params.append('%s')
-        else:
-            params.append('o.user_id = %s')
-            has_params = True
-            
-        if seller == None:
-            params.append('%s')
-        else:
-            params.append('o.artisan_id = %s')
-            has_params = True
         
-        if status == None:
-            params.append('%s')
-        else:
-            params.append('o.status = %s')
-            has_params = True
-            
-        if start_date == None:
-            params.append('%s')
-        else:
-            params.append('o.create_time > %s')
-            has_params = True
-            
-        if start_date == None:
-            params.append('%s')
-        else:
-            params.append('o.create_time < %s')
-            has_params = True
-            
+        sql_params, params, has_params = self.process_params(buyer, seller, status, start_date, end_date)
         sql = '''
-        SELECT COUNT(id) FROM orders o;
+        SELECT COUNT(id) AS total FROM orders o
         '''
         if has_params:
-            sql = '%s WHERE %s' % (sql, ' '.join(params))
-        return sql
+            sql = '%s WHERE %s' % (sql, ' '.join(sql_params))
+        
+        hits = torndb.torcon.query(sql, **params)
+        
+        return hits
     
-    @torndb.select
     def find_orders_by_admin(self, buyer = None, seller = None, status = None, 
                               start_date = None, end_date = None, max_results = 0, first_result = 10):
-        params = list()
-        has_params = False
-        if buyer == None:
-            params.append('%s')
-        else:
-            params.append('o.user_id = %s')
-            has_params = True
-            
-        if seller == None:
-            params.append('%s')
-        else:
-            params.append('o.artisan_id = %s')
-            has_params = True
-        
-        if status == None:
-            params.append('%s')
-        else:
-            params.append('o.status = %s')
-            has_params = True
-            
-        if start_date == None:
-            params.append('%s')
-        else:
-            params.append('o.create_time > %s')
-            has_params = True
-            
-        if start_date == None:
-            params.append('%s')
-        else:
-            params.append('o.create_time < %s')
-            has_params = True
-            
+        sql_params, params, has_params = self.process_params(buyer, seller, status, start_date, end_date)
+        params['first_result'] = first_result
+        params['max_result'] = max_results
         sql = '''
-        SELECT COUNT(id) FROM orders o;
+        SELECT * FROM orders o
         '''
         if has_params:
-            sql = '%s WHERE %s LIMIT %%s OFFSET %%s' % (sql, ' '.join(params))
-        return sql
+            sql = '%s WHERE %s LIMIT %%(max_result)s OFFSET %%(first_result)s' % (sql, ' '.join(sql_params))
+        orders = torndb.torcon.query(sql, **params)
+        return orders
+    
     @torndb.insert
     def save(self, **order):
         sql = '''
@@ -203,14 +191,14 @@ class OrderDAO:
         telephone, title, order_no, trade_no, status, create_time, 
         update_time, display_buyer, display_seller, is_reviewed, 
         artisan_id, artisan_name, sample_id, sample_name,sample_tag_price, 
-        sample_price, cover, tag_price) 
+        sample_price, cover, tag_price, price, remark) 
         VALUES (%(user_id)s, %(buyer_name)s, %(address)s, 
         %(telephone)s, %(title)s, %(order_no)s, 
         %(trade_no)s, %(status)s, %(create_time)s, 
         %(update_time)s, %(display_buyer)s, %(display_seller)s, 
         %(is_reviewed)s, %(artisan_id)s, %(artisan_name)s, 
         %(sample_id)s, %(sample_name)s, %(sample_tag_price)s, %(sample_price)s, 
-        %(cover)s, %(tag_price)s, %(price)s);
+        %(cover)s, %(tag_price)s, %(price)s, %(remark)s);
         '''
         
         return sql
