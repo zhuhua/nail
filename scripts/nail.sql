@@ -372,3 +372,23 @@ CREATE TABLE `users` (
 -- ----------------------------
 INSERT INTO `users` VALUES ('1', '13812345678', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'asdfa', '/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg', '2014-12-24 17:02:44');
 INSERT INTO `users` VALUES ('2', '13845678945', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'asdf', '', '2015-01-28 11:53:38');
+
+-- ----------------------------
+-- Table structure for evaluate
+-- ----------------------------
+DROP TABLE IF EXISTS `evaluate`;
+CREATE TABLE `evaluate` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `author_id` int(32) NOT NULL COMMENT '评价者ID',
+  `object_id` varchar(32) NOT NULL COMMENT '被评价者ID',
+  `object_type` varchar(255) NOT NULL COMMENT '被评价者类型',
+  `content` varchar(5000) NOT NULL COMMENT '评价内容',
+  `create_time` datetime NOT NULL COMMENT '评价时间',
+  `rating` int(11) NOT NULL COMMENT '评价品级（好评，中评，差评）',
+  `communication_rank` int(11) NOT NULL COMMENT '沟通评分',
+  `professional_rank` int(11) NOT NULL COMMENT '专业评分',
+  `punctual_rank` int(11) NOT NULL COMMENT '守时评分',
+  `is_block` tinyint(4) NOT NULL COMMENT '是否屏蔽此评价（管理可操作）',
+  `is_valid` tinyint(4) NOT NULL COMMENT '评价是否有效（用户可删除评价）',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户评价';
