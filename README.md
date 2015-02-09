@@ -169,3 +169,39 @@ Nail make up mobile app
 	    "id": 12,
 	    "tag_price": 店面价
 	}
+
+##订单部分
+
+###查看手艺人预约状态 接口 
+    /api/appointment/status GET
+    参数
+        @param artisan_id: 手艺人ID
+        @param appt_date: 预约日期 格式 2000-01-01
+
+###创建订单
+    /api/trade/create POST Header [Authorization: <token>]
+    参数
+        @param sample_id: 样品ID
+        @param address: 服务地址
+        @param appt_date: 预约日期 格式 2000-01-01
+        @param appt_hour: 预约时间
+        @param remark: 用户备注
+
+###用户交易操作 接口：
+    /api/user/trade POST Header [Authorization: <token>]
+    参数
+        @param order_no: 订单号
+        @param action: 交易操作 arrived, 用户确认手艺人已经到达; finish, 用户确认交易结束, cancel, 用户取消交易
+        @param price: 实际费用 （可选）
+
+###订单详情 接口：
+    /api/order GET Header [Authorization: <token>]
+    参数
+        @param order_no: 订单号
+
+###用户订单列表 接口
+    /api/orders GET Header [Authorization: <token>]
+    参数
+        @param status: 订单状态（不选为全部）
+        @param page: 
+        @param page_size: 

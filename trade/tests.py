@@ -5,6 +5,8 @@ import models
 import services
 import datetime
 from simpletor import utils
+from common import services as common_serv
+from simpletor.torndb import transactional
 
 def test_closeAppointment():
     artisan_id = 28000009
@@ -12,7 +14,7 @@ def test_closeAppointment():
     appt_hours = 21
     services.close_appointment(artisan_id, appt_date, appt_hours)
     
-test_closeAppointment()
+# test_closeAppointment()
     
 def test_findAppointment():
     artisan_id = 28000009
@@ -35,9 +37,16 @@ def test_generate_random():
     start = 1
     end = 100
     print utils.generate_random(start, end)
+# test_generate_random()
+@transactional
+def add_image():
+    for obj_id in range(28, 32):
+        obj_id = obj_id
+        obj_type = 'sample'
+        url = '/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg'
+        common_serv.add_to_gallery(obj_id, obj_type, url);
     
-test_generate_random()
-
+add_image()
 if __name__ == '__main__':
 #     print datetime.date.today()
 #     test_closeAppointment()

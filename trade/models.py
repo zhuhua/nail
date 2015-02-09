@@ -175,12 +175,13 @@ class OrderDAO:
                               start_date = None, end_date = None, max_results = 0, first_result = 10):
         sql_params, params, has_params = self.process_params(buyer, seller, status, start_date, end_date)
         params['first_result'] = first_result
-        params['max_result'] = max_results
+        params['max_results'] = max_results
         sql = '''
         SELECT * FROM orders o
         '''
         if has_params:
-            sql = '%s WHERE %s LIMIT %%(max_result)s OFFSET %%(first_result)s' % (sql, ' '.join(sql_params))
+            sql = '%s WHERE %s' % (sql, ' '.join(sql_params))
+        sql = '%s  LIMIT %%(max_results)s OFFSET %%(first_result)s' % (sql)
         orders = torndb.torcon.query(sql, **params)
         return orders
     
@@ -208,8 +209,8 @@ class OrderDAO:
         sql = '''
         UPDATE orders SET status = %(status)s, update_time = %(update_time)s, 
         display_buyer = %(display_buyer)s, display_seller = %(display_seller)s, 
-        is_reviewed = %(is_reviewed)s, tag_price = %(tag_price)s, price = %(price)s);
-        WHERE order_id = %(order_id)s
+        is_reviewed = %(is_reviewed)s, tag_price = %(tag_price)s, price = %(price)s
+        WHERE id = %(id)s;
         '''
         return sql
     

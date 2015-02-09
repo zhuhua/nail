@@ -17,6 +17,7 @@
 						<tr>
 							<th>#</th>
 							<th>名称</th>
+							<th>订单号</th>
 							<th>创建时间</th>
 							<th>状态</th>
 							<th>操作</th>
@@ -27,9 +28,20 @@
 						<tr>
 							<td>{{order.id}}</td>
 							<td>{{order.title}}</td>
+							<td>{{order.order_no}}</td>
 							<td class="hidden-480">{{order.create_time}}</td>
 							<td>{{status_description[order.status]}}</td>
+							{% if order.status == 1 %}
+							<td>
+							<form action="/artisan/trade" method="post" style="margin:0">
+							 <input type='hidden' name="order_no" value="{{order.order_no}}">
+							 <input type='submit'  value="出发">
+							</form>
+							</td>
+							{% else %}
 							<td> &nbsp;</td>
+							{% end %}
+							
 						</tr>
 						{% end %}
 					</tbody>
