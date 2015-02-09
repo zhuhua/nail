@@ -23,13 +23,11 @@ order_action_description = ('create', 'pay', 'send', 'arrived', 'finish', 'cance
 order_trader_type = dict(user = 'USER', artisan = 'ARTISAN', system = 'SYSTEM')
 
 def appointment_status(artisan_id, appt_date):
-    if appt_date < date.today():
-        raise AppError(u"超出可预约时间范围")
     appts = appointmentDAO.find(artisan_id, appt_date);
     appt_hours = list()
     appt_status = dict()
-    appt_status['artisan_id'] = artisan_id
-    appt_status['appt_date'] = appt_date
+#     appt_status['artisan_id'] = artisan_id
+#     appt_status['appt_date'] = appt_date
     for a in appts:
         appt_hours.append(a.appt_hour)
     for x in range(settings.appointmentRange[0], settings.appointmentRange[1] + 1):

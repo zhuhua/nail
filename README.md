@@ -192,8 +192,6 @@ Nail make up mobile app
     "19": true,
     "20": true,
     "21": true,
-    "appt_date": "2015-02-07",
-    "artisan_id": "28000009"
     }
 
 ###创建订单 接口
