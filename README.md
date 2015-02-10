@@ -355,4 +355,72 @@ Nail make up mobile app
         "update_time": "2015-02-09 14:08:02",
         "user_id": 4
     }
-    ]   
+    ]
+    
+##评价部分
+    /api/evaluate/add POST Header [Authorization: <token>]
+    参数
+    communication_rank 沟通评分 [1,5]
+    content 评价内容
+    image 图片列表(通过图片上传接口上传图片)
+    object_id 评价样品ID
+    professional_rank 专业评分 [1,5]
+    punctual_rank 守时评分 [1,5]
+    rating 评价品级 0 好评 1， 中评 2 差评
+    order_no 评价来源订单号
+    返回
+    {
+        "author_id": 4, 评价者
+        "communication_rank": 2, 沟通评分 [1,5]
+        "content": "drgdfg", 评价内容
+        "create_time": "2015-02-10 11:47:59", 评价时间
+        "id": 1,
+        "is_block": 0, 是否屏蔽 0 不屏蔽 1 屏蔽（管理员禁止显示）
+        "is_valid": 1, 是否有效 1,有效 2, 无效（用户自己删除）
+        "object_id": "28", 评价样品ID
+        "object_type": "sample", 评价类型
+        "professional_rank": 2,专业评分 [1,5]
+        "punctual_rank": 5,守时评分 [1,5]
+        "rating": 1 评价品级 0 好评 1， 中评 2 差评
+    }
+    
+###样品评价列表
+    /api/evaluates GET
+    参数
+    sample_id 样品ID
+    page
+    page_size
+    {
+    "evaluates": [
+       
+        {
+            "author_id": 4,
+            "communication_rank": 4,
+            "content": "drgdfg",
+            "create_time": "2015-02-10 17:12:16",
+            "id": 10,
+            "is_block": 0,
+            "is_valid": 1,
+            "object_id": "28",
+            "object_type": "sample",
+            "professional_rank": 0,
+            "punctual_rank": 1,
+            "rating": 1
+        },
+        {
+            "author_id": 4,
+            "communication_rank": 4,
+            "content": "drgdfg",
+            "create_time": "2015-02-10 17:15:00",
+            "id": 11,
+            "is_block": 0,
+            "is_valid": 1,
+            "object_id": "28",
+            "object_type": "sample",
+            "professional_rank": 2,
+            "punctual_rank": 5,
+            "rating": 0
+        }
+    ],
+    "total": 11
+    }

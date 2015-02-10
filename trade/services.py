@@ -133,15 +133,15 @@ def trade(trader_id, order_no, action, price = None):
             raise AppError(u"订单不支持出发操作")
         order.status = order_status_description.index('已出发')
         order.update_time = datetime.now()
-        orderLog.trader_type = order_trader_type['user']
-        real_trade_id = order.user_id
+        orderLog.trader_type = order_trader_type['artisan']
+        real_trade_id = order.artisan_id
     elif order_action_description.index(action) == order_action_description.index('arrived'):#用户确认手艺人到达
         if status != order_status_description.index('已出发'): #订单为未支付状态
             raise AppError(u"订单不支持到达操作")
         order.status = order_status_description.index('已到达')
         order.update_time = datetime.now()
-        orderLog.trader_type = order_trader_type['artisan']
-        real_trade_id = order.artisan_id
+        orderLog.trader_type = order_trader_type['user']
+        real_trade_id = order.user_id
     elif order_action_description.index(action) == order_action_description.index('finish'):#用户确认交易结束
         if status != order_status_description.index('已到达'): #订单为未支付状态
             raise AppError(u"订单不支持完成操作")
@@ -166,12 +166,28 @@ def trade(trader_id, order_no, action, price = None):
     else:
         raise AppError(u"订单操作错误")
     
-    if real_trade_id != None and real_trade_id != trader_id:
+    if real_trade_id != None and real_trade_id != long(trader_id):
         raise AppError(u"订单操作用户错误")
     models.orderDAO.update(**order)
     models.orderLogDAO.save(**orderLog)
     order = get_order(order.id)
     return order
+
+@transactional
+def review(order_no, user_id):
+    order = get_order_orderno(order_no)
+    user_id = int(user_id)
+    if order.is_reviewed == 1:
+        raise AppError(u"订单已评价")
+    if order.user_id != user_id:
+        raise AppError(u"评价订单操作用户错误")
+    if order.status != order_status_description.index('已完成'):
+        raise AppError('订单未成功不能评价', field='order_no')
+    order.is_reviewed = 1
+    
+    models.orderDAO.update(**order)
+    
+    return get_order(order.id, with_log = True)
 
 def get_order(order_id, with_log = False):
     order = models.orderDAO.find(order_id)

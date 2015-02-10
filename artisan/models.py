@@ -19,7 +19,7 @@ class Artisan(torndb.Row):
         self.mobile = None
         self.serv_area = ''
         self.avatar = ''
-        self.level = 1
+        self.level = 0
         self.avg_price = 0
         self.cert_pop = False
         self.cert_pro = False
