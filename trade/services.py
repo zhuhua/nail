@@ -207,6 +207,30 @@ def get_order_orderno(order_no, with_log = False):
         
     return order
 
+def delete_order(order_id, user_id):
+    order = get_order(order_id)
+    if order.user_id != int(user_id):
+        raise AppError(u"订单不属于此用户")
+    if not (order.status in (0, 4, 5, 6)):
+        raise AppError(u"订单不能删除")
+    order.display_buyer = 0
+    order.update_time = datetime.now()
+    
+    models.orderDAO.update(**order)
+
+    return order
+
+def delete_order_artisan(order_id, artisan_id):
+    order = get_order(order_id)
+    if order.artisan_id != int(artisan_id):
+        raise AppError(u"订单不属于此用户")
+    if not (order.status in (4,)):
+        raise AppError(u"订单不能删除")
+    order.display_seller = 0
+    order.update_time = datetime.now()
+    
+    models.orderDAO.update(**order)
+    
 def seller_orders(artisan_id, status, page = 1, page_size = 10):
     first_result = (page - 1) * page_size
         # 卖家订单

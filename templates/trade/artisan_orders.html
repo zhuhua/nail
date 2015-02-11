@@ -25,7 +25,7 @@
 					</thead>
 					<tbody>
 						{% for order in orders %}
-						<tr>
+						<tr class="iterate" next = "/artisan/order?order_id={{order.id}}">
 							<td>{{order.id}}</td>
 							<td>{{order.title}}</td>
 							<td>{{order.order_no}}</td>
@@ -36,6 +36,13 @@
 							<form action="/artisan/trade" method="post" style="margin:0">
 							 <input type='hidden' name="order_no" value="{{order.order_no}}">
 							 <input type='submit'  value="出发">
+							</form>
+							</td>
+							{% elif order.status == 4 %}
+							<td>
+							<form action="/artisan/order/delete" method="post" style="margin:0">
+							 <input type='hidden' name="order_id" value="{{order.id}}">
+							 <input type='submit'  value="删除">
 							</form>
 							</td>
 							{% else %}
@@ -60,4 +67,11 @@
 		<!-- END SAMPLE TABLE PORTLET-->
 	</div>
 </div>
+{% block js %}
+    <script type="text/javascript">
+    $('tr.iterate').click(function(){
+    	window.location.href = $(this).attr('next')
+    });
+	</script>
+{% end %}
 {% end %}

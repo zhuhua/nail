@@ -253,6 +253,15 @@ Nail make up mobile app
     买家ID
     "user_id": 4
     }
+
+###删除订单操作 接口：
+    /api/order/delete POST Header [Authorization: <token>]
+    参数
+        @param order_id: 订单ID
+        
+    返回
+     同 创建订单 接口
+     
 ###用户交易操作 接口：
     /api/user/trade POST Header [Authorization: <token>]
     参数

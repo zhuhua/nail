@@ -1,0 +1,26 @@
+{% extends "../base.html" %}
+
+{% block title %}订单详{% end %}
+
+
+{% block breadcrumb %}
+<li><a href="/artisan/orders">订单管理</a></li>
+<li><a href="#">订单详情</a></li>
+{% end %} 
+
+{% block content %}
+<div class="row-fluid profile">
+	<div class="span9">
+		<div class="row-fluid">
+			<div class="span8 profile-info">
+				<h1>{{order.title}}</h1>
+				<p>{{order.price}}</p>
+				<p>{{status_description[order.status]}}</p>
+			</div>
+			<!--end span8-->
+		</div>
+		<!--end row-fluid-->
+	</div>
+	<!--end span9-->
+</div>
+{% end %}
