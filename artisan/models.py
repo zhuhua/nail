@@ -50,7 +50,7 @@ class ArtisanDAO:
     def update(self, **artisan):
         sql = '''
         UPDATE artisan a SET 
-        name = %(name)s, password = %(password)s, gender = %(gender)s, mobile = %(mobile)s, serv_area = %(serv_area)s, avatar = %(avatar)s, avg_price = %(avg_price)s, cert_pop = %(cert_pop)s, cert_pro = %(cert_pop)s, brief = %(brief)s, last_login = %(last_login)s 
+        name = %(name)s, password = %(password)s, gender = %(gender)s, mobile = %(mobile)s, serv_area = %(serv_area)s, avatar = %(avatar)s, avg_price = %(avg_price)s, cert_pop = %(cert_pop)s, cert_pro = %(cert_pop)s, brief = %(brief)s, last_login = %(last_login)s, level = %(level)s 
         WHERE a.id = %(id)s 
         '''
         return sql

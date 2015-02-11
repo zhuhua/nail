@@ -14,7 +14,7 @@ from trade import services as trade_services
 from artisan import services as artisan_services
 
 evaluate_rating = ('好评', '中评', '差评')
-evaluate_rank_range = (1,2,3,4,5)
+evaluate_rank_range = (0, 1,2,3,4,5)
 count_score = (1, 0, -1)
 
 def is_correct_rank(rank):
