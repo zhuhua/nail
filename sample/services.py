@@ -125,4 +125,4 @@ def search_sample(page=1, page_size=10, category_id='*', artisan_id='', tag='', 
     
     docs = results.docs
     samples = [get_sample(doc['id']) for doc in docs]
-    return dict(data=samples, hits=results.hits)
+    return samples, results.hits
