@@ -115,5 +115,5 @@ def search_artisan(page=1, page_size=10, name='', order_by='create_time', sort='
     })
     docs = results.docs
     artisans = [get_artisan(doc['id']) for doc in docs]
-    return artisans, results.hits
+    return dict(data=artisans, hits=results.hits)
     
