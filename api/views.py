@@ -186,7 +186,7 @@ class Artisans(application.RequestHandler):
         page_size = self.get_argument('page_size', default=10, strip=True)
         name = self.get_argument('name', default = '', strip=True)
         artisans = artisan_service.search_artisan(page, page_size, name, order_by, sort)
-        self.render_json(artisans)
+        self.render_json(artisans[0])
         
 @application.RequestMapping("/api/artisan/([0-9]+)")
 class Artisan(application.RequestHandler):
