@@ -12,14 +12,14 @@ gallery_types = {
     'artisan': 0,
     'user': 1,
     'sample': 2,
-    'order': 3
+    'evaluate': 3
 }
 
 counts_types = {
     'artisan': 0,
     'user': 1,
     'sample': 2,
-    'order': 3
+    'evaluate': 3
 }
 
 def add_to_gallery(obj_id, obj_type, url):

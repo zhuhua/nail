@@ -93,7 +93,9 @@ def get_artisan(artisan_id):
 def update_profile(artisan):
     validate_artisan(artisan)
     models.artisanDAO.update(**artisan)
-    
+    if artisan.counts != None:
+        artisan_count.update(artisan.counts)
+        
     for k, v in artisan_count.iteritems():
         common_services.update_count(artisan.id, 'artisan', k, v)
     

@@ -6,6 +6,7 @@ Created on Jan 28, 2015
 '''
 from simpletor import application
 from simpletor.utils import str2date
+from datetime import datetime
 from api import Api
 from trade import services as trade_serv
 
@@ -51,6 +52,7 @@ class CreateTrade(application.RequestHandler):
                                         order_from, remark)
         self.render_json(order)
         
+
 @application.RequestMapping(r"/api/user/trade")
 class UserTrade(application.RequestHandler):
     @Api(auth=True)
@@ -98,6 +100,16 @@ class OrderDetail(application.RequestHandler):
         with_log = self.get_argument('with_log', default = False, strip=True)
         order = trade_serv.get_order_orderno(order_no, bool(with_log))
         self.render_json(order)
+        
+@application.RequestMapping(r"/api/order/delete")
+class DeleteTrade(application.RequestHandler):
+    @Api(auth=True)
+    def post(self):
+        user_id = self.user_id
+        order_id = self.get_argument('order_id', strip=True)
+        order = trade_serv.delete_order(order_id, user_id)
+        self.render_json(order)
+        
         
 @application.RequestMapping(r"/api/orders")
 class Orders(application.RequestHandler):
@@ -147,6 +159,19 @@ class BackendArtisanTrade(application.RequestHandler):
         
         self.redirect(r"/artisan/orders")
         
+@application.RequestMapping(r"/artisan/order/delete")
+class BackendArtisanDeleteOrder(application.RequestHandler):
+    '''
+    手艺人交易操作：
+    @param action: send, 手艺人已出发;
+    '''
+    def post(self):
+        artisan_id = self.get_current_user()['id']
+        order_id = self.get_argument('order_id', strip=True)
+        trade_serv.delete_order_artisan(order_id, artisan_id)
+        
+        self.redirect(r"/artisan/orders")
+        
 @application.RequestMapping(r"/artisan/orders")
 class BackendArtisanOrders(application.RequestHandler):
     '''
@@ -167,6 +192,28 @@ class BackendArtisanOrders(application.RequestHandler):
                     page=page, page_size=page_size, total=hits, 
                     status_description = trade_serv.order_status_description
                     )
+        
+@application.RequestMapping(r"/artisan/order")
+class BackenArtisanOrder(application.RequestHandler):
+    def get(self):
+        order_id = self.get_argument('order_id', default = None, strip=True)
+        order = trade_serv.get_order(order_id, with_log = True)
+        
+        self.render('trade/artisan_order.html', order = order,
+                    status_description = trade_serv.order_status_description)
+        
+@application.RequestMapping(r"/artisan/appointment/status")
+class ArtisanApptStatus(application.RequestHandler):
+    def get(self):
+        '''
+        查看手艺人预约状态 接口：
+        @param appt_date: 预约日期 格式 2000-01-01
+        '''
+        artisan_id = self.get_current_user()['id']
+        appt_date = self.get_argument('appt_date', default = datetime.strftime(datetime.now(),"%Y-%m-%d"), strip=True)
+        appt_date = str2date(appt_date)
+        apptss = trade_serv.appointment_status(artisan_id, appt_date);
+        self.render('artisan/apptss.html', apptss = apptss)
         
 @application.RequestMapping(r"/orders")
 class BackenAdminOrders(application.RequestHandler):
@@ -192,3 +239,11 @@ class BackenAdminOrders(application.RequestHandler):
                     page=page, page_size=page_size, total=hits, 
                     status_description = trade_serv.order_status_description
                     )
+        
+@application.RequestMapping(r"/order")
+class BackenAdminOrder(application.RequestHandler):
+    def get(self):
+        order_id = self.get_argument('order_id', default = None, strip=True)
+        order = trade_serv.get_order(order_id, with_log = True)
+        
+        self.render('trade/admin_order.html', order = order)

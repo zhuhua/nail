@@ -77,7 +77,8 @@ class OrderDAO:
     def find_orders_by_seller(self, artisan_id, max_results = 0, first_result = 10):
         sql = '''
         SELECT * FROM orders o 
-        WHERE o.artisan_id = %s AND o.display_seller = true 
+        WHERE o.artisan_id = %s AND o.display_seller = true
+        ORDER BY o.update_time DESC
         LIMIT %s OFFSET %s;
         '''
         return sql
@@ -86,7 +87,8 @@ class OrderDAO:
     def find_orders_by_seller_status(self, artisan_id, status, max_results = 0, first_result = 10):
         sql = '''
         SELECT * FROM orders o 
-        WHERE o.artisan_id = %s AND o.status = %s AND o.display_seller = true 
+        WHERE o.artisan_id = %s AND o.status = %s AND o.display_seller = true
+        ORDER BY o.update_time DESC
         LIMIT %s OFFSET %s;
         '''
         return sql
@@ -112,7 +114,9 @@ class OrderDAO:
     def find_orders_by_buyer(self, user_id, max_results = 0, first_result = 10):
         sql = '''
         SELECT * FROM orders o 
-        WHERE o.user_id = %s AND o.display_buyer = true LIMIT %s OFFSET %s;
+        WHERE o.user_id = %s AND o.display_buyer = true
+        ORDER BY o.update_time DESC
+        LIMIT %s OFFSET %s;
         '''
         return sql
     
@@ -120,7 +124,8 @@ class OrderDAO:
     def find_orders_by_buyer_status(self, user_id, status, max_results = 0, first_result = 10):
         sql = '''
         SELECT * FROM orders o 
-        WHERE o.user_id = %s AND o.status = %s AND o.display_buyer = true 
+        WHERE o.user_id = %s AND o.status = %s AND o.display_buyer = true
+        ORDER BY o.update_time DESC
         LIMIT %s OFFSET %s;
         '''
         return sql
@@ -181,7 +186,7 @@ class OrderDAO:
         '''
         if has_params:
             sql = '%s WHERE %s' % (sql, ' '.join(sql_params))
-        sql = '%s  LIMIT %%(max_results)s OFFSET %%(first_result)s' % (sql)
+        sql = '%s ORDER BY o.update_time DESC LIMIT %%(max_results)s OFFSET %%(first_result)s' % (sql)
         orders = torndb.torcon.query(sql, **params)
         return orders
     

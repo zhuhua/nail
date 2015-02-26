@@ -23,13 +23,11 @@ order_action_description = ('create', 'pay', 'send', 'arrived', 'finish', 'cance
 order_trader_type = dict(user = 'USER', artisan = 'ARTISAN', system = 'SYSTEM')
 
 def appointment_status(artisan_id, appt_date):
-    if appt_date < date.today():
-        raise AppError(u"超出可预约时间范围")
     appts = appointmentDAO.find(artisan_id, appt_date);
     appt_hours = list()
     appt_status = dict()
-    appt_status['artisan_id'] = artisan_id
-    appt_status['appt_date'] = appt_date
+#     appt_status['artisan_id'] = artisan_id
+#     appt_status['appt_date'] = appt_date
     for a in appts:
         appt_hours.append(a.appt_hour)
     for x in range(settings.appointmentRange[0], settings.appointmentRange[1] + 1):
@@ -135,15 +133,15 @@ def trade(trader_id, order_no, action, price = None):
             raise AppError(u"订单不支持出发操作")
         order.status = order_status_description.index('已出发')
         order.update_time = datetime.now()
-        orderLog.trader_type = order_trader_type['user']
-        real_trade_id = order.user_id
+        orderLog.trader_type = order_trader_type['artisan']
+        real_trade_id = order.artisan_id
     elif order_action_description.index(action) == order_action_description.index('arrived'):#用户确认手艺人到达
         if status != order_status_description.index('已出发'): #订单为未支付状态
             raise AppError(u"订单不支持到达操作")
         order.status = order_status_description.index('已到达')
         order.update_time = datetime.now()
-        orderLog.trader_type = order_trader_type['artisan']
-        real_trade_id = order.artisan_id
+        orderLog.trader_type = order_trader_type['user']
+        real_trade_id = order.user_id
     elif order_action_description.index(action) == order_action_description.index('finish'):#用户确认交易结束
         if status != order_status_description.index('已到达'): #订单为未支付状态
             raise AppError(u"订单不支持完成操作")
@@ -168,12 +166,28 @@ def trade(trader_id, order_no, action, price = None):
     else:
         raise AppError(u"订单操作错误")
     
-    if real_trade_id != None and real_trade_id != trader_id:
+    if real_trade_id != None and real_trade_id != long(trader_id):
         raise AppError(u"订单操作用户错误")
     models.orderDAO.update(**order)
     models.orderLogDAO.save(**orderLog)
     order = get_order(order.id)
     return order
+
+@transactional
+def review(order_no, user_id):
+    order = get_order_orderno(order_no)
+    user_id = int(user_id)
+    if order.is_reviewed == 1:
+        raise AppError(u"订单已评价")
+    if order.user_id != user_id:
+        raise AppError(u"评价订单操作用户错误")
+    if order.status != order_status_description.index('已完成'):
+        raise AppError('订单未成功不能评价', field='order_no')
+    order.is_reviewed = 1
+    
+    models.orderDAO.update(**order)
+    
+    return get_order(order.id, with_log = True)
 
 def get_order(order_id, with_log = False):
     order = models.orderDAO.find(order_id)
@@ -193,6 +207,30 @@ def get_order_orderno(order_no, with_log = False):
         
     return order
 
+def delete_order(order_id, user_id):
+    order = get_order(order_id)
+    if order.user_id != int(user_id):
+        raise AppError(u"订单不属于此用户")
+    if not (order.status in (0, 4, 5, 6)):
+        raise AppError(u"订单不能删除")
+    order.display_buyer = 0
+    order.update_time = datetime.now()
+    
+    models.orderDAO.update(**order)
+
+    return order
+
+def delete_order_artisan(order_id, artisan_id):
+    order = get_order(order_id)
+    if order.artisan_id != int(artisan_id):
+        raise AppError(u"订单不属于此用户")
+    if not (order.status in (4,)):
+        raise AppError(u"订单不能删除")
+    order.display_seller = 0
+    order.update_time = datetime.now()
+    
+    models.orderDAO.update(**order)
+    
 def seller_orders(artisan_id, status, page = 1, page_size = 10):
     first_result = (page - 1) * page_size
         # 卖家订单

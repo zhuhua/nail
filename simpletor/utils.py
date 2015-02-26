@@ -156,3 +156,15 @@ def str2datetime(date_str, pattern = "%Y-%m-%d"):
     except ValueError:
         raise application.AppError('日期转换出错')
     return d
+
+def get_level(score):
+    grade = 0
+    if score > 0:
+        scoreGrade = (0, 1, 2, 4, 9, 15, 31, 58, 94, 147, 211, 286, 385, 508, 656, 829, 1026, 1307, 1644, 2037, 2486, 2991, 3608, 4337, 5178, 6131,7196)
+        grade = len(scoreGrade) - 1
+        while grade > 0:
+            if score >= scoreGrade[grade]:
+                break
+            grade -= 1
+    
+    return grade;

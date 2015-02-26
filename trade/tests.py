@@ -50,4 +50,6 @@ add_image()
 if __name__ == '__main__':
 #     print datetime.date.today()
 #     test_closeAppointment()
+    message = '\u8ba2\u5355\u64cd\u4f5c\u7528\u6237\u9519\u8bef'
+    print message.decode('unicode-escape')
     pass

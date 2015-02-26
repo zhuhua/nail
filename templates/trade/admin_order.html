@@ -1,0 +1,39 @@
+{% extends "../base.html" %}
+
+{% block title %}我的主页{% end %}
+
+{% block css %}
+<link href="/static/css/profile.css" rel="stylesheet">
+{% end %}
+
+{% block breadcrumb %}
+<li><a href="#">Horzontal & Sidebar Menu</a></li>
+{% end %} 
+
+{% block content %}
+<div class="row-fluid profile">
+	<ul class="unstyled profile-nav span3">
+		<li>
+			<img src="{{item.avatar}}">
+		</li>
+		<li>
+			<a href="/artisan/{{item.id}}/avatar" class="profile-edit">修改头像</a>
+		</li>
+	</ul>
+	<div class="span9">
+		<div class="row-fluid">
+			<div class="span8 profile-info">
+				<h1>{{item.name}}</h1>
+				<p>{{item.brief}}</p>
+				<ul class="unstyled inline">
+					<li><i class="icon-map-marker"></i>{{item.serv_area}}</li>
+					<li><i class="icon-star"></i>{{item.level}}</li>
+				</ul>
+			</div>
+			<!--end span8-->
+		</div>
+		<!--end row-fluid-->
+	</div>
+	<!--end span9-->
+</div>
+{% end %}
