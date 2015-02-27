@@ -9,14 +9,13 @@ Nail make up mobile app
 	/api/user/register POST
 	参数
 		mobile 手机
-		password 密码
 		checkcode 验证码
 
 ###登陆
 	/api/user/login POST
 	参数 
 		mobile 手机
-		password 密码
+		password 密码(获取的验证码)
 		返回登陆token
 
 ###获取个人信息
