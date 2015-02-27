@@ -49,6 +49,10 @@ class Login(application.RequestHandler):
     def post(self):
         mobile = self.get_argument('mobile', strip=True)
         password = self.get_argument('password', strip=True)
+        
+        if not password == '111111':
+            raise application.AppError('验证码错误')
+        
         token = user_service.login(mobile, password)
         self.render_json(token)
        

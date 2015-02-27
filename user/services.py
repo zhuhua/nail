@@ -41,8 +41,8 @@ def login(mobile, password):
     if user is None:
         raise AppError(u'手机号不存在', field='mobile')
     
-    if user.password != sha1(password):
-        raise AppError(u'密码错误', field='password')
+#     if user.password != sha1(password):
+#         raise AppError(u'密码错误', field='password')
     
     user_id = user.id
     token = models.loginTokenDAO.findByUser(user_id)
