@@ -53,6 +53,7 @@ class Login(application.RequestHandler):
         if not password == '111111':
             raise application.AppError('验证码错误')
         
+        user_service.register(mobile, password)
         token = user_service.login(mobile, password)
         self.render_json(token)
        

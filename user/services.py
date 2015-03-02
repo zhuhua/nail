@@ -24,7 +24,8 @@ def register(mobile, password):
     
     user = models.userDAO.findByMobile(mobile)
     if user is not None:
-        raise AppError(u'手机号%s已存在' % mobile, field='mobile')
+#         raise AppError(u'手机号%s已存在' % mobile, field='mobile')
+        return user
 
     user = models.User()
     user.mobile = mobile

@@ -5,11 +5,17 @@ Nail make up mobile app
 
 ##用户部分
 
-###注册接口
+###注册接口(停用，由登录代替)
 	/api/user/register POST
 	参数
 		mobile 手机
 		checkcode 验证码
+		
+###获取验证码
+	/api/user/checkcode POST
+	参数 
+		mobile 手机
+		返回 无 （验证码由短信发送至手机）
 
 ###登陆
 	/api/user/login POST
