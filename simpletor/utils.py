@@ -69,7 +69,7 @@ def crop(img, sizes):
     else:
         y = (h - aspect) / 2;
         
-    img = img.crop((x, y, aspect, aspect))
+    img = img.crop((x, y, x + aspect, y + aspect))
     
     images = []
     for width, height in sizes:
