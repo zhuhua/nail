@@ -15,6 +15,7 @@ class Add(application.RequestHandler):
         categories = sample_services.get_categories()
         tags = sample_services.get_tags()
         sample = sample_models.Sample()
+        sample.images = []
         self.render('sample/add.html', item=sample, categories=categories, tags=tags)
         
     def post(self):

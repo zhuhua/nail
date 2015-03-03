@@ -22,6 +22,10 @@ default_pass = '123456'
 solr = 'http://127.0.0.1:8983/solr'
 redis = '127.0.0.1'
 
+sms_sname = ''
+sms_spwd = ''
+sms_sprdid = ''
+
 port = 8888
 
 appointmentRange = (10,21) #预约时间范围

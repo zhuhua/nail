@@ -50,7 +50,7 @@ class Login(application.RequestHandler):
         mobile = self.get_argument('mobile', strip=True)
         password = self.get_argument('password', strip=True)
         
-        if not password == '111111':
+        if not utils.checkcode.validate(mobile, password):
             raise application.AppError('验证码错误')
         
         user_service.register(mobile, password)

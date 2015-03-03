@@ -1,7 +1,5 @@
-{% extends "../base.html" %} {% block title %}添加美甲师{% end %} {%
-block breadcrumb %}
-<li><a href="#">Horzontal & Sidebar Menu</a></li>
-{% end %}
+{% extends "../base.html" %}
+{% block title %}编辑作品{% end %}
 
 {% block css %}
 <link href="/static/css/jquery.fileupload-ui.css" rel="stylesheet">
@@ -13,6 +11,24 @@ block breadcrumb %}
 <script src="/static/js/jquery.fileupload-fp.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
+	
+	var enable_upload = function() {
+		if ($(".icon-remove").length < 4) {
+			$("#fileupload").removeAttr("disabled");
+		} else {
+			$("#fileupload").attr("disabled", "disabled");
+		}
+	};
+	
+	var remove_img = function() {
+		$(".icon-remove").unbind("click");
+		$(".icon-remove").click(function() {
+			$(this).parent().parent().parent().parent().remove();
+			enable_upload();
+		});
+		enable_upload();
+	};
+	
 	var upload = $('#fileupload').fileupload({
 		url : "/upload_image",
 		dataType : 'json',
@@ -22,14 +38,31 @@ $(document).ready(function() {
 		previewMaxHeight : 100,
 		previewCrop : true,
 		done: function(e, data) {
-			data.context = $('<div/>').addClass("span1").appendTo('#files');
-			var node = $('<p/>');
-			node.append($("<img/>").attr("src", data.result.url).css("max-width", "100%"));
-			node.append($("<input name='image' type='hidden'/>").val(data.result.url));
-			node.appendTo(data.context);
+			var img_url = data.result.url;
+			var template = _.template($("#preview_temp").html());
+			$("#files").append($(template({url:img_url})));
+			remove_img();
 		}
 	});
+
+	remove_img();
 });
+</script>
+{% end %}
+
+{% block template %}
+<script type="text/template" id="preview_temp">
+<div class="span2">
+	<div class="item">
+		<div class="zoom">
+			<img src="<%=url%>" alt="Photo" style="max-width:100%">
+			<input name="image" type="hidden" value="<%=url%>">
+		</div>
+		<div class="details">
+			<a href="javascript:void(0)" class="icon"><i class="icon-remove"></i></a>
+		</div>
+	</div>
+</div>
 </script>
 {% end %}
 
@@ -83,7 +116,21 @@ $(document).ready(function() {
 						<div id="progress" class="progress">
 					        <div class="progress-bar progress-bar-success"></div>
 					    </div>
-					    <div id="files" class="span12"></div>
+					    <div id="files" class="row-fluid">
+					    	{% for image in item.images %}
+							<div class="span2">
+								<div class="item">
+									<div class="zoom">
+										<img src="{{image.url}}" alt="Photo" style="max-width:100%">
+										<input name="image" type="hidden" value="{{image.url}}">
+									</div>
+									<div class="details">
+										<a href="javascript:void(0)" class="icon"><i class="icon-remove"></i></a>
+									</div>
+								</div>
+							</div>
+					    	{% end %}
+					    </div>
 					    <span class="help-block">{{ handler.get_error('images') }}</span>
 					</div>
 				</div>

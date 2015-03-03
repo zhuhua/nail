@@ -8,9 +8,10 @@ import requests
 import random
 from simpletor import tornredis
 from xml.dom import minidom
+from settings import sms_sname, sms_spwd, sms_sprdid
 
 def sendsms(mobile, content):
-    data = dict(sname='dlsdcs00', spwd='zW46mgXE', scorpid='', sprdid='1012818', sdst=mobile, smsg=content)
+    data = dict(sname=sms_sname, spwd=sms_spwd, scorpid='', sprdid=sms_sprdid, sdst=mobile, smsg=content)
     r = requests.post('http://cf.lmobile.cn/submitdata/Service.asmx/g_Submit', data)
     doc = minidom.parseString(r.content)
     state = int(doc.getElementsByTagName('State')[0].firstChild.data)
@@ -32,12 +33,13 @@ class Checkcode:
         return 'CHECKCODE_%s' % mobile
     
     def send(self, mobile):
-        sms_template = u'您的验证码是：%s。请不要把验证码泄露给其他人。【百分信息】'
+        sms_template = u'您的验证码是：%s。请不要把验证码泄露给其他人。【咪咖美妆】'
         code = self.generate()
         content = sms_template % code
         result = sendsms(mobile, content)
         if result:
             tornredis.connect.set(self.key(mobile), code)
+            tornredis.connect.expire(self.key(mobile), 300)
             
     def validate(self, mobile, code):
         s_code = tornredis.connect.get(self.key(mobile))
