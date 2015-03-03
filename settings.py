@@ -29,3 +29,4 @@ sms_sprdid = ''
 port = 8888
 
 appointmentRange = (10,21) #预约时间范围
+order_expire_time = 30 # minute
