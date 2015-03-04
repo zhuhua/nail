@@ -44,6 +44,11 @@ class OrderDAO:
     订单数据访问接口
     '''
     @torndb.get
+    def count_expire(self, expire_time):
+        sql = '''SELECT COUNT(id) AS total FROM orders o WHERE o.create_time < %s'''
+        return sql
+    
+    @torndb.get
     def find(self, order_id):
         sql = '''
         SELECT * FROM orders o WHERE o.id = %s;

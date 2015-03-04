@@ -18,7 +18,7 @@ import models
 from models import appointmentDAO, orderDAO, orderLogDAO
 import settings
 
-order_status_description = ('待支付','已支付', '已出发', '已到达', '已完成', '已取消', '已关闭')
+order_status_description = ('待支付','已支付', '已出发', '已到达', '已完成', '已取消', '已关闭', '已过期')
 order_action_description = ('create', 'pay', 'send', 'arrived', 'finish', 'cancel', 'close')
 order_trader_type = dict(user = 'USER', artisan = 'ARTISAN', system = 'SYSTEM')
 
