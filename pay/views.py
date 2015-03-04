@@ -6,6 +6,7 @@ Created on Mar 4, 2015
 '''
 from simpletor import application
 from alipay import sign_type, alipay
+from trade import services as order_serv
 
 @application.RequestMapping('/pay_notify/alipay')
 class AliNotify(application.RequestHandler):
@@ -17,21 +18,20 @@ class AliNotify(application.RequestHandler):
         
         if self.verify():
             if trade_status == 'TRADE_FINISHED':
-                pass
                 #判断该笔订单是否在商户网站中已经做过处理
+               
                 #如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
                 #如果有做过处理，不执行商户的业务程序
-                
+                self.trade_order(out_trade_no)
                 #注意：
                 #该种交易状态只在两种情况下出现
                 #1、开通了普通即时到账，买家付款成功后。
                 #2、开通了高级即时到账，从该笔交易成功时间算起，过了签约时的可退款时限（如：三个月以内可退款、一年以内可退款等）后。
             elif trade_status == 'TRADE_SUCCESS':
-                pass
                 #判断该笔订单是否在商户网站中已经做过处理
                 #如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
                 #如果有做过处理，不执行商户的业务程序
-                
+                self.trade_order(out_trade_no)
                 #注意：
                 #该种交易状态只在一种情况下出现——开通了高级即时到账，买家付款成功后。
             
@@ -68,3 +68,11 @@ class AliNotify(application.RequestHandler):
             is_sign = alipay.verify(pre_sign_str, sign)
             
         return is_sign
+    
+    def trade_order(self, out_trade_no, trade_no):
+        order = order_serv.get_order_orderno(out_trade_no)
+        if order.trader_no == trade_no and order.status == order_serv.order_status_description.index('待支付'):
+            try:
+                order = order_serv.trade(order.user_id, out_trade_no, 'pay')
+            except Exception, e:
+                print e

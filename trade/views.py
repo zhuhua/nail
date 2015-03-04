@@ -130,7 +130,7 @@ class Orders(application.RequestHandler):
         order, hits = trade_serv.buyer_orders(user_id, status, page, page_size)
         self.render_json(order)
         
-@application.RequestMapping(r"/remote/trade")
+# @application.RequestMapping(r"/remote/trade")
 class RemoteTrade(application.RequestHandler):
     '''
     支付回调地址（remote）：（怎么保证安全性）
