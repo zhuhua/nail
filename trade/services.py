@@ -53,10 +53,11 @@ def close_appointment(artisan_id, appt_date, appt_hour):
 
 @transactional
 def create_order(user_id, sample_id, address, appt_date, appt_hour, order_from = None, remark = None):
-    is_notcorrect_date = appt_date < date.today()
-    is_notcorrect_hour = datetime.now().time().hour > appt_hour
-    is_notcorrect_hour = is_notcorrect_hour or appt_hour < settings.appointmentRange[0]
+    is_notcorrect_hour = appt_hour < settings.appointmentRange[0]
     is_notcorrect_hour = is_notcorrect_hour or appt_hour > settings.appointmentRange[1]
+    is_notcorrect_date = appt_date < date.today()
+    if appt_date == date.today:
+        is_notcorrect_hour = is_notcorrect_hour or datetime.now().time().hour > appt_hour
     if is_notcorrect_date or is_notcorrect_hour:
         raise AppError(u"超出可预约时间范围")
     

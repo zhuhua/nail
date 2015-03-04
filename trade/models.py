@@ -48,6 +48,16 @@ class OrderDAO:
         sql = '''SELECT COUNT(id) AS total FROM orders o WHERE o.create_time < %s'''
         return sql
     
+    @torndb.select
+    def find_expire(self, expire_time):
+        sql = '''SELECT id FROM orders o WHERE o.create_time < %s'''
+        return sql
+    
+    @torndb.update
+    def execute_expire(self, status, orders_ids):
+        sql = '''UPDATE orders SET status = %s WHERE id IN (%s)'''
+        return sql
+    
     @torndb.get
     def find(self, order_id):
         sql = '''
