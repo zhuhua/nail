@@ -124,8 +124,11 @@ def get_image_file(img_name, thumb=False):
     if thumb:
         img_name = img_name.replace(ext, "_s.%s" % ext[1:])
         
-    f = open("%s/%s" % (settings.img_dir, img_name), "rb")
-    return ext, f.read()
+    try:
+        f = open("%s/%s" % (settings.img_dir, img_name), "rb")
+        return ext, f.read()
+    except:
+        return ext, ''
     
 def generate_order_no():
     return '%d' % (int(time.time() * 1000 * 1000))
