@@ -6,7 +6,7 @@ Created on 2013-3-26
 '''
 import os
 
-installed_apps = ['api', 'artisan', 'upload', 'backend', 'sample', 'trade', 'evaluate']
+installed_apps = ['api', 'artisan', 'upload', 'backend', 'sample', 'trade', 'evaluate', 'pay']
 
 template_dir = os.path.join(os.path.dirname(__file__), "templates")
 static_dir = os.path.join(os.path.dirname(__file__), "static")
