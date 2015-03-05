@@ -211,10 +211,14 @@ Nail make up mobile app
     {
      服务地址
     "address": "\u706b\u536b31",
+    手艺人头像
+    "artisan_avatar": "/img/35b141fa2ccff01430674be337f04dd8.png",
     手艺人ID
     "artisan_id": 28000006,  
     手艺人名称
     "artisan_name": "\u7f8e\u7532\u5e0833333",
+    买家头像
+    "buyer_avatar": "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg",
     买家昵称
     "buyer_name": "186", 
     订单封面
@@ -225,6 +229,8 @@ Nail make up mobile app
     "display_buyer": 1,
     是否显示给卖家（即卖家未删除）， 1 显示， 0 不显示
     "display_seller": 1,
+    剩余过期时间（等待支付时间） 单位分钟
+    "expire_remian": 30,
     订单ID
     "id": 12,
     是否评价 0 未评价 1 已评价
@@ -243,7 +249,7 @@ Nail make up mobile app
     "sample_price": 222.0,
     样品店面价(商品)
     "sample_tag_price": 222.0,
-    订单状态  0'待支付',1'已支付', 2'已出发', 3'已到达', 4'已完成', 5'已取消', 6'已关闭'
+    订单状态  0'待支付',1'已支付', 2'已出发', 3'已到达', 4'已完成', 5'已取消', 6'已关闭', 7 '已过期'
     "status": 0,
     样品店面价(商品)
     "tag_price": 222.0,
@@ -285,7 +291,8 @@ Nail make up mobile app
 ###用户订单列表 接口
     /api/orders GET Header [Authorization: <token>]
     参数
-        @param status: 订单状态（不选为全部）
+        @param status: 
+        订单状态（不选为全部）订单状态  0'待支付',1'已支付', 2'已出发', 3'已到达', 4'已完成', 5'已取消', 6'已关闭', 7 '已过期'
         @param page: 
         @param page_size: 
     返回

@@ -19,7 +19,7 @@ from models import appointmentDAO, orderDAO, orderLogDAO
 import settings
 
 order_status_description = ('待支付','已支付', '已出发', '已到达', '已完成', '已取消', '已关闭', '已过期')
-order_action_description = ('create', 'pay', 'send', 'arrived', 'finish', 'cancel', 'close')
+order_action_description = ('create', 'pay', 'send', 'arrived', 'finish', 'cancel', 'close','expire')
 order_trader_type = dict(user = 'USER', artisan = 'ARTISAN', system = 'SYSTEM')
 
 def appointment_status(artisan_id, appt_date):
@@ -32,7 +32,7 @@ def appointment_status(artisan_id, appt_date):
         appt_hours.append(a.appt_hour)
     for x in range(settings.appointmentRange[0], settings.appointmentRange[1] + 1):
         status = True
-        if x in appt_hours:
+        if x in appt_hours or (appt_date == date.today() and x < datetime.now().time().hour):
             status = False
         appt_status[x] = status
 
@@ -49,6 +49,7 @@ def close_appointment(artisan_id, appt_date, appt_hour):
     try:
         appointmentDAO.save(**appt)
     except Exception, e:
+        print e
         raise AppError(u"时间范围不可预约")
 
 @transactional
@@ -77,7 +78,9 @@ def create_order(user_id, sample_id, address, appt_date, appt_hour, order_from =
     order.address = address
     order.artisan_id = sample.artisan_id
     order.artisan_name = artisan.name
+    order.artisan_avatar = artisan.avatar
     order.buyer_name = user.nick
+    order.buyer_avatar = user.avatar
     order.cover = sample.images[0]
 #     order.create_time = datetime.now()
 #     order.display_buyer = True
@@ -123,7 +126,7 @@ def trade(trader_id, order_no, action, price = None):
     orderLog.trader_id = trader_id
     real_trade_id = None
     if order_action_description.index(action) == order_action_description.index('pay'):#用户进行支付操作
-        if status != order_status_description.index('待支付'): #订单为未支付状态
+        if status != order_status_description.index('待支付') or status != order_status_description.index('已过期'): #订单为未支付状态
             raise AppError(u"订单不支持支付操作")
         order.status = order_status_description.index('已支付')
         order.update_time = datetime.now()
@@ -175,6 +178,26 @@ def trade(trader_id, order_no, action, price = None):
     return order
 
 @transactional
+def batch_expire(expire_time):
+    orders_ids = orderDAO.find_expire(expire_time)
+    orders = list();
+    orderLogs = list()
+    for x in orders_ids:
+        order_id = x['id']
+        orders.append(order_id)
+        
+        orderLog = models.OrderLog()
+#     orderLog.create_time 
+        orderLog.order_id = order_id
+        orderLog.trader_action = order_action_description.index('expire')
+        orderLog.trader_id = -1
+        orderLog.trader_type = order_trader_type['system']
+        orderLogs.append(orderLog)
+        
+    orderDAO.execute_expire(order_status_description.index('已过期'), orders)
+    orderLogDAO.batch_save(orderLogs)
+    
+@transactional
 def review(order_no, user_id):
     order = get_order_orderno(order_no)
     user_id = int(user_id)
@@ -194,8 +217,11 @@ def get_order(order_id, with_log = False):
     order = models.orderDAO.find(order_id)
     if order == None:
         raise AppError(u"订单不存在(id:%s)" % (order_id))
+    
     if with_log:
         order.order_log = models.orderLogDAO.find(order.id)
+        
+    add_order_remain(order)
     return order
 
 def get_order_orderno(order_no, with_log = False):
@@ -203,9 +229,11 @@ def get_order_orderno(order_no, with_log = False):
     if order == None:
         message = u"订单不存在(order_no:%s)" % (order_no)
         raise AppError(message)
+    
     if with_log:
         order.order_log = models.orderLogDAO.find(order.id)
-        
+    
+    add_order_remain(order)
     return order
 
 def delete_order(order_id, user_id):
@@ -244,6 +272,9 @@ def seller_orders(artisan_id, status, page = 1, page_size = 10):
         total = models.orderDAO.count_orders_by_seller_status(artisan_id, status)
         orders = models.orderDAO.find_orders_by_seller_status(artisan_id, status, page_size, first_result)
     
+    for order in orders:
+        add_order_remain(order)
+        
     return orders, total['total']
 
 def buyer_orders(user_id, status, page = 1, page_size = 10):
@@ -258,6 +289,9 @@ def buyer_orders(user_id, status, page = 1, page_size = 10):
         total = models.orderDAO.count_orders_by_buyer_status(user_id, status)
         orders = models.orderDAO.find_orders_by_buyer_status(user_id, status, page_size, first_result)
     
+    for order in orders:
+        add_order_remain(order)
+        
     return orders, total['total']
 
 def admin_orders(buyer = None, seller = None, status = None, start_date = None, end_date = None, page = 1, page_size = 10):
@@ -265,6 +299,14 @@ def admin_orders(buyer = None, seller = None, status = None, start_date = None, 
     total = models.orderDAO.count_orders_by_admin(buyer, seller, status, start_date, end_date)
     orders = models.orderDAO.find_orders_by_admin(buyer, seller, status, start_date, end_date, page_size, first_result)
     
+    for order in orders:
+        add_order_remain(order)
+        
     return orders, total[0]['total']
     
-    
+def add_order_remain(order):
+    remain = settings.order_expire_time - ((datetime.now() - order.create_time).seconds / 60)
+    if remain < 0:
+        remain = 0
+    order.expire_remian = remain
+    return order

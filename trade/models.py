@@ -16,6 +16,7 @@ class Order(torndb.Row):
     def __init__(self):
         self.id = None
         self.user_id = None
+        self.buyer_avatar = None
         self.buyer_name = None
         self.address = None
         self.telephone = None
@@ -30,6 +31,7 @@ class Order(torndb.Row):
         self.is_reviewed = False
         self.artisan_id = None
         self.artisan_name = None
+        self.artisan_avatar = None
         self.sample_id = None
         self.sample_name = None
         self.sample_tag_price = None
@@ -45,17 +47,17 @@ class OrderDAO:
     '''
     @torndb.get
     def count_expire(self, expire_time):
-        sql = '''SELECT COUNT(id) AS total FROM orders o WHERE o.create_time < %s'''
+        sql = '''SELECT COUNT(id) AS total FROM orders o WHERE o.status = 0 AND o.create_time < %s'''
         return sql
     
     @torndb.select
     def find_expire(self, expire_time):
-        sql = '''SELECT id FROM orders o WHERE o.create_time < %s'''
+        sql = '''SELECT id FROM orders o WHERE o.status = 0 AND o.create_time < %s'''
         return sql
     
     @torndb.update
     def execute_expire(self, status, orders_ids):
-        sql = '''UPDATE orders SET status = %s WHERE id IN (%s)'''
+        sql = '''UPDATE orders SET status = %s WHERE id IN %s'''
         return sql
     
     @torndb.get
@@ -208,16 +210,16 @@ class OrderDAO:
     @torndb.insert
     def save(self, **order):
         sql = '''
-        INSERT INTO orders (user_id, buyer_name, address, 
+        INSERT INTO orders (user_id, buyer_avatar, buyer_name, address, 
         telephone, title, order_no, trade_no, status, create_time, 
         update_time, display_buyer, display_seller, is_reviewed, 
-        artisan_id, artisan_name, sample_id, sample_name,sample_tag_price, 
+        artisan_id, artisan_name, artisan_avatar, sample_id, sample_name,sample_tag_price, 
         sample_price, cover, tag_price, price, remark) 
-        VALUES (%(user_id)s, %(buyer_name)s, %(address)s, 
+        VALUES (%(user_id)s, %(buyer_avatar)s, %(buyer_name)s, %(address)s, 
         %(telephone)s, %(title)s, %(order_no)s, 
         %(trade_no)s, %(status)s, %(create_time)s, 
         %(update_time)s, %(display_buyer)s, %(display_seller)s, 
-        %(is_reviewed)s, %(artisan_id)s, %(artisan_name)s, 
+        %(is_reviewed)s, %(artisan_id)s, %(artisan_name)s, %(artisan_avatar)s,
         %(sample_id)s, %(sample_name)s, %(sample_tag_price)s, %(sample_price)s, 
         %(cover)s, %(tag_price)s, %(price)s, %(remark)s);
         '''
@@ -261,6 +263,20 @@ class OrderLogDAO:
         %(order_id)s, %(create_time)s);
         '''
         return sql
+    
+    def batch_save(self, orderLogs):
+        params = list()
+        for orderLog in orderLogs:
+            params.append((orderLog['trader_id'],orderLog['trader_type'],
+                           orderLog['trader_action'],orderLog['order_id'],orderLog['create_time']))
+        sql = '''
+        INSERT INTO order_log (trader_id, trader_type, trader_action, 
+        order_id, create_time) 
+        VALUES (%s, %s, %s, %s, %s);
+        '''
+        x = torndb.torcon.executemany(sql, params)
+        
+        return x
     
     @torndb.select
     def find(self, order_id):
