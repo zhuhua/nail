@@ -30,12 +30,32 @@ def appointment_status(artisan_id, appt_date):
 #     appt_status['appt_date'] = appt_date
     for a in appts:
         appt_hours.append(a.appt_hour)
+        
     for x in range(settings.appointmentRange[0], settings.appointmentRange[1] + 1):
         status = True
-        if x in appt_hours or (appt_date == date.today() and x < datetime.now().time().hour):
+        if x in appt_hours:
+            status = False
+        if (appt_date <= date.today() and x < datetime.now().time().hour):
             status = False
         appt_status[x] = status
 
+    return appt_status
+
+def artisan_appt_status(artisan_id, appt_date):
+    appts = appointmentDAO.find(artisan_id, appt_date);
+    appt_status = dict()
+    for a in appts:
+        a['status'] = 1
+        appt_status[a.appt_hour] = a
+        
+    for x in range(settings.appointmentRange[0], settings.appointmentRange[1] + 1):
+        if appt_status.has_key(x):
+            pass
+        elif (appt_date <= date.today() and x < datetime.now().time().hour):
+            appt_status[x] = dict(status = -1)
+        else:
+            appt_status[x] = dict(status = 0)
+            
     return appt_status
 
 @transactional

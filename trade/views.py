@@ -197,8 +197,13 @@ class BackendArtisanOrders(application.RequestHandler):
 class BackenArtisanOrder(application.RequestHandler):
     def get(self):
         order_id = self.get_argument('order_id', default = None, strip=True)
-        order = trade_serv.get_order(order_id, with_log = True)
-        
+        order_no = self.get_argument('order_no', default = None, strip=True)
+        order = None
+        if order_id != None:
+            order = trade_serv.get_order(order_id, with_log = True)
+        if order_no != None:
+            order = trade_serv.get_order_orderno(order_no, with_log = True)
+            
         self.render('trade/artisan_order.html', order = order,
                     status_description = trade_serv.order_status_description)
         
@@ -212,7 +217,7 @@ class ArtisanApptStatus(application.RequestHandler):
         artisan_id = self.get_current_user()['id']
         appt_date = self.get_argument('appt_date', default = datetime.strftime(datetime.now(),"%Y-%m-%d"), strip=True)
         appt_date = str2date(appt_date)
-        apptss = trade_serv.appointment_status(artisan_id, appt_date);
+        apptss = trade_serv.artisan_appt_status(artisan_id, appt_date);
         self.render('artisan/apptss.html', apptss = apptss)
         
 @application.RequestMapping(r"/orders")
@@ -244,6 +249,11 @@ class BackenAdminOrders(application.RequestHandler):
 class BackenAdminOrder(application.RequestHandler):
     def get(self):
         order_id = self.get_argument('order_id', default = None, strip=True)
-        order = trade_serv.get_order(order_id, with_log = True)
+        order_no = self.get_argument('order_no', default = None, strip=True)
+        order = None
+        if order_id != None:
+            order = trade_serv.get_order(order_id, with_log = True)
+        if order_no != None:
+            order = trade_serv.get_order_orderno(order_no, with_log = True)
         
         self.render('trade/admin_order.html', order = order)
