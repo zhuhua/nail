@@ -9,22 +9,27 @@ import requests
 from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_v1_5
 from Crypto.Hash import SHA
+import logging
 
 sign_type = 'RSA'
 
 partner = ''
 # 商户的私钥
-private_key = '/home/zhuhua/rsa_private_key.pem'
+private_key = '/data/certs/rsa_private_key.pem'
 # 支付宝的公钥，无需修改该值
-public_key = '/home/zhuhua/rsa_public_key.pem'
+public_key = '/data/certs/rsa_public_key.pem'
  
 class Alipay:
     
     HTTPS_VERIFY_URL = "https://mapi.alipay.com/gateway.do?service=notify_verify&partner=%s&notify_id=%s"
     
     def __init__(self):
-        self.public_key = RSA.importKey(open(public_key,'r').read()) 
-        self.private_key = RSA.importKey(open(private_key,'r').read())
+        try:
+            self.public_key = RSA.importKey(open(public_key,'r').read()) 
+            self.private_key = RSA.importKey(open(private_key,'r').read())
+        except Exception, e:
+            logging.log('info', 'load pem file failed!')
+            pass
     
     def sign(self, content):
         try:
