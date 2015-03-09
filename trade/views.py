@@ -9,6 +9,7 @@ from simpletor.utils import str2date
 from datetime import datetime
 from api import Api
 from trade import services as trade_serv
+import logging
 
 @application.RequestMapping(r"/api/appointment/status")
 class ApptStatus(application.RequestHandler):
@@ -128,6 +129,7 @@ class Orders(application.RequestHandler):
         page_size = self.get_argument('page_size', default = 10, strip=True)
         page_size = int(page_size)
         order, hits = trade_serv.buyer_orders(user_id, status, page, page_size)
+        logging.log(logging.DEBUG, hits)
         self.render_json(order)
         
 # @application.RequestMapping(r"/remote/trade")

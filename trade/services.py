@@ -23,7 +23,7 @@ order_action_description = ('create', 'pay', 'send', 'arrived', 'finish', 'cance
 order_trader_type = dict(user = 'USER', artisan = 'ARTISAN', system = 'SYSTEM')
 
 def appointment_status(artisan_id, appt_date):
-    appts = appointmentDAO.find(artisan_id, appt_date);
+    appts = appointmentDAO.find_day(artisan_id, appt_date);
     appt_hours = list()
     appt_status = dict()
 #     appt_status['artisan_id'] = artisan_id
@@ -42,7 +42,7 @@ def appointment_status(artisan_id, appt_date):
     return appt_status
 
 def artisan_appt_status(artisan_id, appt_date):
-    appts = appointmentDAO.find(artisan_id, appt_date);
+    appts = appointmentDAO.find_day(artisan_id, appt_date);
     appt_status = dict()
     for a in appts:
         a['status'] = 1
@@ -66,6 +66,10 @@ def close_appointment(artisan_id, appt_date, appt_hour):
     appt.artisan_id = artisan_id
     appt.appt_date = appt_date
     appt.appt_hour = appt_hour
+    
+    apptx = appointmentDAO.find(artisan_id, appt_date, appt_hour)
+    if apptx != None:
+        raise AppError(u"时间已经预约")
     try:
         appointmentDAO.save(**appt)
     except Exception, e:

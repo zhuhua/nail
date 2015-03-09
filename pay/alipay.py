@@ -27,8 +27,9 @@ class Alipay:
         try:
             self.public_key = RSA.importKey(open(public_key,'r').read()) 
             self.private_key = RSA.importKey(open(private_key,'r').read())
-        except Exception, e:
-            logging.log('info', 'load pem file failed!')
+        except:
+            logging.log(logging.INFO, 'load pem file failed!')
+            
             pass
     
     def sign(self, content):

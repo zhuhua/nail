@@ -305,8 +305,15 @@ class AppointmentDAO:
     '''
     订单流转数据访问接口
     '''
+    @torndb.get
+    def find(self, artisan_id, appt_date, appt_hour):
+        sql = '''
+        SELECT * FROM appointment WHERE artisan_id = %s AND appt_date = %s AND appt_hour = %s;
+        '''
+        return sql
+    
     @torndb.select
-    def find(self, artisan_id, appt_date):
+    def find_day(self, artisan_id, appt_date):
         sql = '''
         SELECT * FROM appointment WHERE artisan_id = %s and appt_date = %s;
         '''
