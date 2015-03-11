@@ -292,7 +292,7 @@ Nail make up mobile app
     /api/orders GET Header [Authorization: <token>]
     参数
         @param status: 
-        订单状态（不选为全部）订单状态  0'待支付',1'已支付', 2'已出发', 3'已到达', 4'已完成', 5'已取消', 6'已关闭', 7 '已过期'
+        订单状态（不选为全部）订单状态  'wait_pay''待支付',unfinished（待完成), finished'已完成', other('已取消', '已关闭', '已过期')
         @param page: 
         @param page_size: 
     返回

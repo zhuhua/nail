@@ -123,7 +123,7 @@ class OrderDAO:
     def count_orders_by_buyer_status(self, artisan_id, status):
         sql = '''
         SELECT COUNT(id) AS total FROM orders o 
-        WHERE o.user_id = %s AND o.status = %s AND o.display_buyer = true;
+        WHERE o.user_id = %s AND o.status in %s AND o.display_buyer = true;
         '''
         return sql
     
@@ -141,7 +141,7 @@ class OrderDAO:
     def find_orders_by_buyer_status(self, user_id, status, max_results = 0, first_result = 10):
         sql = '''
         SELECT * FROM orders o 
-        WHERE o.user_id = %s AND o.status = %s AND o.display_buyer = true
+        WHERE o.user_id = %s AND o.status in %s AND o.display_buyer = true
         ORDER BY o.update_time DESC
         LIMIT %s OFFSET %s;
         '''

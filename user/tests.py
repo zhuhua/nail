@@ -10,13 +10,13 @@ import services
 class Test(unittest.TestCase):
 
 #     def testRegister(self):
-#         mobile = '18683591672'
+#         mobile = '18583373989'
 #         password = '123456'
 #         user = services.register(mobile, password)
 #         self.assertEqual(mobile, user.mobile)
          
     def testLogin(self):
-        mobile = '18683591672'
+        mobile = '18583373989'
         password = '123456'
         token = services.login(mobile, password)
         self.assertEqual(len(token.token), 32)

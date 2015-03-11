@@ -21,6 +21,7 @@ import settings
 order_status_description = ('待支付','已支付', '已出发', '已到达', '已完成', '已取消', '已关闭', '已过期')
 order_action_description = ('create', 'pay', 'send', 'arrived', 'finish', 'cancel', 'close','expire')
 order_trader_type = dict(user = 'USER', artisan = 'ARTISAN', system = 'SYSTEM')
+order_status_group = dict(wait_pay=[0,0], unfinished=[1,2,3], finished=[4, 4], other=[5,6,7])
 
 def appointment_status(artisan_id, appt_date):
     appts = appointmentDAO.find_day(artisan_id, appt_date);
@@ -311,6 +312,10 @@ def buyer_orders(user_id, status, page = 1, page_size = 10):
         total = models.orderDAO.count_orders_by_buyer(user_id)
         orders = models.orderDAO.find_orders_by_buyer(user_id, page_size, first_result)
     else:
+        status = order_status_group[status]
+        if status == None:
+            raise AppError(u'订单状态错误')
+        print status
         total = models.orderDAO.count_orders_by_buyer_status(user_id, status)
         orders = models.orderDAO.find_orders_by_buyer_status(user_id, status, page_size, first_result)
     
