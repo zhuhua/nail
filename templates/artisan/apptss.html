@@ -1,34 +1,40 @@
 {% extends "../base.html" %}
 
-{% block title %}我的主页{% end %}
-
-{% block breadcrumb %}
-<li><a href="#">Horzontal & Sidebar Menu</a></li>
-<li><a href="#">预约状态</a></li>
-{% end %} 
+{% block title %}我的预约{% end %}
 
 {% block content %}
 <div class="row-fluid">
-	<div class="span9">
-		<div class="row-fluid">
-			<div class="span8 profile-info">
-				{% for k, v in apptss.iteritems() %}
-				    <div>
-					{{k}}点：
-					{% if v['status'] == 0 %}
-					<span class="label label-info">可预约</span>
-					{% elif v['status'] == -1 %}
-					<span class="label label-danger">已关闭</span>
-					{% else %}
-					<a href="#" class="btn black">被预约 <i class="m-icon-swapright m-icon-white"></i></a>
-					{% end %}
-					</div>
-				{% end %}
+	<div>
+		<!-- BEGIN SAMPLE TABLE PORTLET-->
+		<div class="portlet box">
+			<div class="portlet-body" style="display: block;">
+				<table class="table table-hover">
+					<tbody>
+						{% for k, v in apptss.iteritems() %}
+							{% if k % 4 == 2 %}
+							<tr>
+							{% end %}
+							
+							<td>
+								<span class="btn">{{k}}点：</span>
+								{% if v['status'] == 0 %}
+								<span class="btn green">可预约</span>
+								{% elif v['status'] == -1 %}
+								<span class="btn black">已关闭</span>
+								{% else %}
+								<span class="btn red">被预约</span>
+								{% end %}
+							</td>
+							{% if k % 4 == 1 %}
+							</tr>
+							{% end %}
+						
+						{% end %}
+					</tbody>
+				</table>
 			</div>
-			<!--end span8-->
 		</div>
-		<!--end row-fluid-->
+		<!-- END SAMPLE TABLE PORTLET-->
 	</div>
-	<!--end span9-->
 </div>
 {% end %}

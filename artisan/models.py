@@ -32,7 +32,7 @@ class ArtisanDAO:
     Artist DAO
     '''
     @torndb.insert
-    def save(self, artisan):
+    def save(self, **artisan):
         sql = '''
         INSERT INTO artisan (name, password, gender, mobile, serv_area, avatar, level, avg_price, cert_pop, cert_pro, brief, create_time, last_login) 
         VALUES (%(name)s, %(password)s, %(gender)s, %(mobile)s, %(serv_area)s, %(avatar)s, %(level)s, %(avg_price)s, %(cert_pop)s, %(cert_pro)s, %(brief)s, %(create_time)s, %(last_login)s);

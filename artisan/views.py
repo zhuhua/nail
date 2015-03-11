@@ -6,6 +6,7 @@ Created on 2014-12-24
 '''
 from simpletor import application
 
+from artisan import models as artisan_models
 from artisan import services as artisan_service
 from common import services as common_service
 
@@ -16,22 +17,31 @@ class Add(application.RequestHandler):
     
     @application.Security('ROLE_ADMIN', 'ROLE_MANAGER')
     def get(self):
-        self.render('artisan/add.html')
+        artisan = artisan_models.Artisan()
+        self.render('artisan/add.html', item=artisan)
         
     @application.Security('ROLE_ADMIN')
     def post(self):
-        name = self.get_argument('name', strip=True)
-        mobile = self.get_argument('mobile', strip=True)
-        password = settings.default_pass
-        gender = self.get_argument('gender', default=0, strip=True)
-        brief = self.get_argument('brief', default='', strip=True)
+        artisan = artisan_models.Artisan()
+        artisan.name = self.get_argument('name', strip=True)
+        artisan.mobile = self.get_argument('mobile', strip=True)
+        artisan.password = settings.default_pass
+        artisan.gender = self.get_argument('gender', default=0, strip=True)
+        artisan.brief = self.get_argument('brief', default='', strip=True)
         
-        artisan_service.register(name, mobile, password, gender=gender, brief=brief)
+        try:
+            artisan_service.register(artisan)
+        except application.AppError, e:
+            self.add_error(e)
+            self.render('artisan/add.html', item=artisan)
+            return
+            
         self.redirect('/artisans')
                 
 @application.RequestMapping("/artisans")
 class List(application.RequestHandler):
     
+    @application.Security('ROLE_ADMIN', 'ROLE_MANAGER')
     def get(self):
         page = self.get_argument('page', '1', strip=True)
         page_size = 10

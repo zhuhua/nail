@@ -25,7 +25,7 @@ class Login(application.RequestHandler):
         
         if re.match('[0-9]*', login_id).group() == '':
             user, role, avatar = self.manager_login(login_id, password)
-            home = '/manager'
+            home = '/artisans'
         else:
             user, role, avatar = self.artisan_login(login_id, password)
             home = '/artisan/%s' % user.id

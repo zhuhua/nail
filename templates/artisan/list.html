@@ -1,11 +1,13 @@
-{% extends "../base.html" %} {% block title %}添加美甲师{% end %} {%
-block breadcrumb %}
-<li><a href="#">Horzontal & Sidebar Menu</a></li>
-{% end %} {% block content %}
+{% extends "../base.html" %} 
+{% block title %}美甲师管理{% end %}
+{% block content %}
 <div class="row-fluid">
 	<div>
 		<!-- BEGIN SAMPLE TABLE PORTLET-->
 		<div class="portlet box">
+			<div class="portlet-title">
+				<div class="tools"><a href="/artisan">添加美甲师</a></div>
+			</div>
 			<div class="portlet-body" style="display: block;">
 				<table class="table table-hover">
 					<thead>
@@ -14,7 +16,6 @@ block breadcrumb %}
 							<th>姓名</th>
 							<th>手机号</th>
 							<th>注册时间</th>
-							<th>操作</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -24,11 +25,19 @@ block breadcrumb %}
 							<td>{{item.name}}</td>
 							<td>{{item.mobile}}</td>
 							<td class="hidden-480">{{item.create_time}}</td>
-							<td><a href="artisan/{{item.id}}" class="label label-success">编辑</a></td>
 						</tr>
 						{% end %}
 					</tbody>
 				</table>
+				<div class="row-fluid">
+					<div class="span8"></div>
+					<div class="span4">
+						<div class="dataTables_paginate paging_bootstrap pagination">
+							{% autoescape None %}
+							{{ handler.paging(page, page_size, total) }}
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<!-- END SAMPLE TABLE PORTLET-->

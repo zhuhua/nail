@@ -35,20 +35,16 @@ def validate_artisan(artisan):
     
 @index(core='artisan')
 @transactional
-def register(name, mobile, password, **profile):
-    artisan = models.Artisan()
-    artisan.name = name
-    artisan.password = sha1(password)
-    artisan.mobile = mobile
-    artisan.gender = profile.pop('gender', 1)
+def register(artisan):
+            
+    if validate_utils.is_empty_str(artisan.name):
+        raise AppError('请填写姓名', field='name')
     
-    avatar = profile.pop('avatar', None)
-    brief = profile.pop('brief', None)
+    if validate_utils.is_empty_str(artisan.mobile):
+        raise AppError('请填写手机号', field='mobile')
     
-    if avatar:
-        artisan.avatar = avatar
-    if brief:
-        artisan.brief = brief
+    if not validate_utils.is_mobile(artisan.mobile):
+        raise AppError('请填写正确的手机号', field='mobile')
         
     artisan_id = models.artisanDAO.save(**artisan)
     
