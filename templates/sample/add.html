@@ -37,7 +37,12 @@ $(document).ready(function() {
 		previewMaxWidth : 100,
 		previewMaxHeight : 100,
 		previewCrop : true,
+		progressall: function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $("#progress .bar").css("width", progress + "%");
+        },
 		done: function(e, data) {
+			$("#progress .bar").css("width", 0);
 			var img_url = data.result.url;
 			var template = _.template($("#preview_temp").html());
 			$("#files").append($(template({url:img_url})));
@@ -106,16 +111,18 @@ $(document).ready(function() {
 				<div class="control-group">
 					<label class="control-label">作品图片</label>
 					<div class="controls fileupload-buttonbar">
-						<div class="span12">
+						<div class="row-fluid">
 							<span class="btn green fileinput-button">
 								<i class="icon-plus icon-white"></i>
 								<span>选择图片上传</span>
 								<input id="fileupload" type="file" name="file" />
 							</span>
 						</div>
-						<div id="progress" class="progress">
-					        <div class="progress-bar progress-bar-success"></div>
-					    </div>
+						<div class="row-fluid">
+							<div id="progress" class="progress span8">
+						        <div class="bar bar-success"></div>
+						    </div>
+						</div>
 					    <div id="files" class="row-fluid">
 					    	{% for image in item.images %}
 							<div class="span2">

@@ -21,11 +21,7 @@ $(document).ready(function() {
 		previewCrop : true,
 		progressall: function (e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
-            console.log(progress);
-            $('#progress .progress-bar').css(
-                'width',
-                progress + '%'
-            );
+            $("#progress .bar").css("width", progress + "%");
         },
 		done: function(e, data) {
 			var url = $("<input type='hidden' name='url'/>");
@@ -42,22 +38,24 @@ $(document).ready(function() {
 {% block content %}
 	<div class="row-fluid">
 		<form id="gallery_form" method="post">
-			<div class="span12">
-				<span class="btn green fileinput-button">
-					<i class="icon-plus icon-white"></i> 
-					<span>选择图片上传</span>
-					<input id="fileupload" type="file" name="file" />
-				</span>
+			<div class="control-group">
+				<div class="controls fileupload-buttonbar">
+					<div class="row-fluid">
+						<span class="btn green fileinput-button">
+							<i class="icon-plus icon-white"></i> 
+							<span>选择图片上传</span>
+							<input id="fileupload" type="file" name="file" />
+						</span>
+					</div>
+					<div class="row-fluid">
+						<div id="progress" class="progress">
+							<div class="bar bar-success"></div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</form>
 	</div>
-	<div class="row-fluid">
-		<p></p>
-		<div id="progress" class="progress">
-			<div class="progress-bar progress-bar-success"></div>
-		</div>
-	</div>
-
 	{% for row in items %}
 	<div class="row-fluid">
 		{% for item in row %}
