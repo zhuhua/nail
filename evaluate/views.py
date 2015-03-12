@@ -5,6 +5,7 @@ Created on 2015-02-09
 @author: lisong
 '''
 from simpletor import application
+from simpletor.utils import save_image
 from api import Api
 from evaluate import models as evaluate_models
 from evaluate import services as evaluate_serv
@@ -17,14 +18,21 @@ class Add(application.RequestHandler):
         evaluate.author_id = self.user_id
         evaluate.communication_rank = self.get_argument('communication_rank', strip=True)
         evaluate.content = self.get_argument('content', strip=True)
-        evaluate.images = self.get_arguments('image', strip=True)
+#         evaluate.images = self.get_arguments('image', strip=True)
         evaluate.object_id = self.get_argument('object_id', strip=True)
         evaluate.object_type = self.get_argument('object_type', default = 'sample', strip=True)
         evaluate.professional_rank = self.get_argument('professional_rank', strip=True)
         evaluate.punctual_rank = self.get_argument('punctual_rank', strip=True)
         evaluate.rating = self.get_argument('rating', strip=True)
         evaluate.order_no = self.get_argument('order_no', strip=True)
-        
+        file_dict_list = self.request.files['file']
+        filenames = list()
+        for file_dict in file_dict_list:
+            filename = file_dict["filename"]
+            filename = save_image(filename, file_dict["body"])
+            filenames.append('/img/%s' % filename)
+            
+        evaluate.images = filenames
         evaluate = evaluate_serv.add_evaluate(evaluate)
 
         self.render_json(evaluate)
