@@ -225,7 +225,7 @@ Nail make up mobile app
     买家昵称
     "buyer_name": "186", 
     订单封面
-    "cover": "{'url': u'/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg', 'create_time': datetime.datetime(2015, 2, 9, 13, 33, 55), 'id': 86L, 'obj_id': u'e5d604c0ffbb39165fa3f59821907bc6'}",
+    "cover": '/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg',
     创建时间
     "create_time": "2015-02-09 14:49:04",
     是否显示给买家（即买家未删除）， 1 显示， 0 不显示
