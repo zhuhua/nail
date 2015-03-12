@@ -71,11 +71,20 @@ def login(artisan_id, password):
     
 @cacheable('#artisan_id', prefix='ARTISAN')
 def get_artisan(artisan_id):
+    def count_rank(counts):
+        rank_keys = ('communication_rank', 'professional_rank', 'punctual_rank')
+        for rk in rank_keys:
+            if counts.has_key(rk):
+                pass
+            else:
+                counts[rk] =0
+                
     artisan = models.artisanDAO.find(artisan_id)
     if artisan is None:
         raise AppError(u'该美甲师不存在')
     
     counts = common_services.get_counts(artisan_id, 'artisan')
+    count_rank(counts)
     artisan.counts = counts
     
     if len(artisan.counts) == 0:

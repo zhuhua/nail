@@ -29,17 +29,17 @@ def validate_evaluate(evaluate):
         raise AppError('请为手艺沟通能力评分', field='communication_rank')
     if not is_correct_rank(evaluate.communication_rank):
         raise AppError('评分超出范围', field='communication_rank')
-    if not is_correct_rank(evaluate.communication_rank):
+    if validate_utils.is_empty_str(evaluate.professional_rank):
+        raise AppError('请为专业能力评分', field='professional_rank')
+    if not is_correct_rank(evaluate.professional_rank):
         raise AppError('评分超出范围', field='professional_rank')
-    if not is_correct_rank(evaluate.communication_rank):
+    if validate_utils.is_empty_str(evaluate.professional_rank):
+        raise AppError('请为守时情况评分', field='professional_rank')
+    if not is_correct_rank(evaluate.punctual_rank):
         raise AppError('评分超出范围', field='punctual_rank')
-    if not is_correct_rank(evaluate.communication_rank):
+    if validate_utils.is_empty_str(evaluate.order_no):
         raise AppError('请填写发起评价的订单号', field='order_no')
     
-    if validate_utils.is_empty_str(evaluate.content):
-        raise AppError('请为手艺专业水平评分', field='professional_rank')
-    if validate_utils.is_empty_str(evaluate.content):
-        raise AppError('请为手艺守时情况评分', field='punctual_rank')
     if validate_utils.is_empty_str(evaluate.rating):
         raise AppError('请选择评价级别', field='rating')
     if not (int(evaluate.rating) in (0, 1, 2)):
@@ -51,6 +51,13 @@ def validate_evaluate(evaluate):
 @transactional
 def add_evaluate(evaluate):
     '''添加评价'''
+    def count_rank(counts):
+        rank_keys = ('communication_rank', 'professional_rank', 'punctual_rank')
+        for rk in rank_keys:
+            xr = int(evaluate[rk]) * 10
+            if counts.has_key(rk):
+                xr = (int(counts[rk]) + xr) / 2
+            counts[rk] = xr
     validate_evaluate(evaluate)
     images = evaluate.images
     order_no = evaluate.order_no
@@ -71,6 +78,9 @@ def add_evaluate(evaluate):
     score += count_score[rating]
     artisan.counts['score'] = score
     artisan.level = get_level(score)
+#     
+    count_rank(artisan.counts)
+    
     artisan_services.update_profile(artisan)
     evaluate = models.evaluateDAO.find(evaluate_id)
     

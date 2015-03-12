@@ -18,7 +18,7 @@ def process_expired_orders():
     #查询已经过期的订单数量
     order_amount = get_amount()
     print 'found %s expired order(s)!' % order_amount['total']
-    #查出过期订单ID，并将订单置为己过期状态，添加谜团日志
+    #查出过期订单ID，并将订单置为己过期状态，添加日志
     trade_serv.batch_expire(expire_time)
     
     print 'expire worker finished!'

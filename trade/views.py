@@ -5,6 +5,7 @@ Created on Jan 28, 2015
 @author: lisong
 '''
 from simpletor import application
+from simpletor.application import AppError
 from simpletor.utils import str2date
 from datetime import datetime
 from api import Api
@@ -67,6 +68,8 @@ class UserTrade(application.RequestHandler):
         user_id = self.user_id
         order_no = self.get_argument('order_no', strip=True)
         action = self.get_argument('action', strip=True)
+        if not (action in ('arrived', 'finish', 'cancel')):
+            raise AppError(u'action错误')
         price = self.get_argument('price', default = None, strip=True)
         order = trade_serv.trade(user_id, order_no, action, price)
         

@@ -120,6 +120,9 @@ Nail make up mobile app
 	    "counts": {
 	            "sample": 0, 作品数量
 	            "sale": 0 销量
+		    "communication_rank" 沟通评分 [0,50] 显示时请除10再显示
+                    "professional_rank" 专业评分 [0,50] 显示时请除10再显示
+                    "punctual_rank" 守时评分 [0,50] 显示时请除10再显示
 	    },
 	    "cert_pop": 明星美甲师,
 	    "avg_price": 均价,
@@ -286,7 +289,78 @@ Nail make up mobile app
     /api/order GET Header [Authorization: <token>]
     参数
         @param order_no: 订单号
-    同 创建订单 接口
+	@param with_log：是否显示流转日志 不传不显示  True显示
+    {
+    "address": "\u706b\u536b31",
+    "artisan_avatar": "/img/35b141fa2ccff01430674be337f04dd8.png",
+    "artisan_id": 28000006,
+    "artisan_name": "\u7f8e\u7532\u5e0833333",
+    "buyer_avatar": "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg",
+    "buyer_name": "18683591672",
+    "cover": null,
+    "create_time": "2015-03-11 23:29:02",
+    "display_buyer": 1,
+    "display_seller": 1,
+    "expire_remian": 0,
+    "id": 2,
+    "is_reviewed": 1,
+    "order_log": [
+        {
+            "create_time": "2015-03-11 23:29:02", 时间
+            "id": 2,
+            "order_id": 2,
+            "trader_action": 0, (0 创建订单, 1， 用户支付, 2 手艺人出发, 3，手艺人到达, 4，交易完成 , 5，用户取消交易, 6，关闭交易,7，交易过期)
+            "trader_id": 3, 交易发起者ID
+            "trader_type": "USER" 交易发起者类型
+        },
+        {
+            "create_time": "2015-03-12 18:00:02",
+            "id": 12,
+            "order_id": 2,
+            "trader_action": 1,
+            "trader_id": 3,
+            "trader_type": "USER"
+        },
+        {
+            "create_time": "2015-03-12 18:04:37",
+            "id": 17,
+            "order_id": 2,
+            "trader_action": 2,
+            "trader_id": 28000006,
+            "trader_type": "ARTISAN"
+        },
+        {
+            "create_time": "2015-03-12 18:05:00",
+            "id": 24,
+            "order_id": 2,
+            "trader_action": 3,
+            "trader_id": 3,
+            "trader_type": "USER"
+        },
+        {
+            "create_time": "2015-03-12 18:05:14",
+            "id": 30,
+            "order_id": 2,
+            "trader_action": 4,
+            "trader_id": 3,
+            "trader_type": "USER"
+        }
+    ],
+    "order_no": "1426087742571880",
+    "price": 222.0,
+    "remark": "1426087742.48",
+    "sample_id": 28,
+    "sample_name": "333333333333",
+    "sample_price": 222.0,
+    "sample_tag_price": 222.0,
+    "status": 4,
+    "tag_price": 222.0,
+    "telephone": "18683591672",
+    "title": "333333333333",
+    "trade_no": "1426087742571978",
+    "update_time": "2015-03-12 18:05:14",
+    "user_id": 3
+}
     
 ###用户订单列表 接口
     /api/orders GET Header [Authorization: <token>]

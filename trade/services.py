@@ -18,7 +18,8 @@ import models
 from models import appointmentDAO, orderDAO, orderLogDAO
 import settings
 
-order_status_description = ('待支付','已支付', '已出发', '已到达', '已完成', '已取消', '已关闭', '已过期')
+order_status_description = (u'待支付',u'已支付', u'已出发', u'已到达', u'已完成',
+                             u'已取消', u'已关闭', u'已过期')
 order_action_description = ('create', 'pay', 'send', 'arrived', 'finish', 'cancel', 'close','expire')
 order_trader_type = dict(user = 'USER', artisan = 'ARTISAN', system = 'SYSTEM')
 order_status_group = dict(wait_pay=[0,0], unfinished=[1,2,3], finished=[4, 4], other=[5,6,7])
@@ -144,7 +145,7 @@ def create_order(user_id, sample_id, address, appt_date, appt_hour, order_from =
 @transactional
 def trade(trader_id, order_no, action, price = None):
     order = get_order_orderno(order_no)
-    status = order.status
+    status = int(order.status)
     orderLog = models.OrderLog()
 #     orderLog.create_time 
     orderLog.order_id = order.id
@@ -152,44 +153,47 @@ def trade(trader_id, order_no, action, price = None):
     orderLog.trader_id = trader_id
     real_trade_id = None
     if order_action_description.index(action) == order_action_description.index('pay'):#用户进行支付操作
-        if status != order_status_description.index('待支付') or status != order_status_description.index('已过期'): #订单为未支付状态
+        wait_pay_status = order_status_description.index(u'待支付')
+        expired_status = order_status_description.index(u'已过期')
+        if status != wait_pay_status and status != expired_status: #订单为未支付状态
+            
             raise AppError(u"订单不支持支付操作")
-        order.status = order_status_description.index('已支付')
+        order.status = order_status_description.index(u'已支付')
         order.update_time = datetime.now()
         orderLog.trader_type = order_trader_type['user']
         real_trade_id = order.user_id
     elif order_action_description.index(action) == order_action_description.index('send'):#手艺人出发
-        if status != order_status_description.index('已支付'): #订单为未支付状态
+        if status != order_status_description.index(u'已支付'): #订单为未支付状态
             raise AppError(u"订单不支持出发操作")
-        order.status = order_status_description.index('已出发')
+        order.status = order_status_description.index(u'已出发')
         order.update_time = datetime.now()
         orderLog.trader_type = order_trader_type['artisan']
         real_trade_id = order.artisan_id
     elif order_action_description.index(action) == order_action_description.index('arrived'):#用户确认手艺人到达
-        if status != order_status_description.index('已出发'): #订单为未支付状态
+        if status != order_status_description.index(u'已出发'): #订单为未支付状态
             raise AppError(u"订单不支持到达操作")
-        order.status = order_status_description.index('已到达')
+        order.status = order_status_description.index(u'已到达')
         order.update_time = datetime.now()
         orderLog.trader_type = order_trader_type['user']
         real_trade_id = order.user_id
     elif order_action_description.index(action) == order_action_description.index('finish'):#用户确认交易结束
-        if status != order_status_description.index('已到达'): #订单为未支付状态
+        if status != order_status_description.index(u'已到达'): #订单为未支付状态
             raise AppError(u"订单不支持完成操作")
-        order.status = order_status_description.index('已完成')
+        order.status = order_status_description.index(u'已完成')
         order.update_time = datetime.now()
         orderLog.trader_type = order_trader_type['user']
         real_trade_id = order.user_id
     elif order_action_description.index(action) == order_action_description.index('cancel'):#用户取消订单
-        if status != order_status_description.index('待支付'): #订单为未支付状态
+        if status != order_status_description.index(u'待支付'): #订单为未支付状态
             raise AppError(u"订单不支持取消操作")
-        order.status = order_status_description.index('已取消')
+        order.status = order_status_description.index(u'已取消')
         order.update_time = datetime.now()
         orderLog.trader_type = order_trader_type['user']
         real_trade_id = order.user_id
     elif order_action_description.index(action) == order_action_description.index('close'):#系统关闭
-        if status != order_status_description.index('待支付'): #订单为未支付状态
+        if status != order_status_description.index(u'待支付'): #订单为未支付状态
             raise AppError(u"订单不支持关闭操作")
-        order.status = order_status_description.index('已关闭')
+        order.status = order_status_description.index(u'已关闭')
         order.update_time = datetime.now()
         orderLog.trader_type = order_trader_type['system']
         real_trade_id = None
@@ -220,7 +224,7 @@ def batch_expire(expire_time):
         orderLog.trader_type = order_trader_type['system']
         orderLogs.append(orderLog)
         
-    orderDAO.execute_expire(order_status_description.index('已过期'), orders)
+    orderDAO.execute_expire(order_status_description.index(u'已过期'), orders)
     orderLogDAO.batch_save(orderLogs)
     
 @transactional
@@ -231,7 +235,7 @@ def review(order_no, user_id):
         raise AppError(u"订单已评价")
     if order.user_id != user_id:
         raise AppError(u"评价订单操作用户错误")
-    if order.status != order_status_description.index('已完成'):
+    if order.status != order_status_description.index(u'已完成'):
         raise AppError('订单未成功不能评价', field='order_no')
     order.is_reviewed = 1
     

@@ -71,7 +71,7 @@ class AliNotify(application.RequestHandler):
     
     def trade_order(self, out_trade_no, trade_no):
         order = order_serv.get_order_orderno(out_trade_no)
-        if order.trader_no == trade_no and order.status == order_serv.order_status_description.index('待支付'):
+        if order.trader_no == trade_no and order.status == order_serv.order_status_description.index(u'待支付'):
             try:
                 order = order_serv.trade(order.user_id, out_trade_no, 'pay')
             except Exception, e:
