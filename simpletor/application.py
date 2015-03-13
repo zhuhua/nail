@@ -80,7 +80,7 @@ class Security:
                 return
             
             if user['role'] not in self.roles:
-                request.send_error(403)
+                request.redirect('/logout')
                 return
             return method(request, *args, **kwds)
         return __method
