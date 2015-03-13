@@ -76,7 +76,7 @@ class Security:
             
             user = request.get_current_user()
             if user is None:
-                request.send_error(403)
+                request.redirect('/login')
                 return
             
             if user['role'] not in self.roles:
