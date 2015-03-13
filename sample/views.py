@@ -11,6 +11,7 @@ from sample import services as sample_services
 @application.RequestMapping("/sample")
 class Add(application.RequestHandler):
     
+    @application.Security('ROLE_ARTISAN')
     def get(self):
         categories = sample_services.get_categories()
         tags = sample_services.get_tags()
@@ -18,6 +19,7 @@ class Add(application.RequestHandler):
         sample.images = []
         self.render('sample/add.html', item=sample, categories=categories, tags=tags)
         
+    @application.Security('ROLE_ARTISAN')
     def post(self):
         sample = sample_models.Sample()
         sample.name = self.get_argument('name', strip=True)
@@ -43,12 +45,14 @@ class Add(application.RequestHandler):
 @application.RequestMapping("/sample/([0-9]+)")
 class Edit(application.RequestHandler):
     
+    @application.Security('ROLE_ARTISAN')
     def get(self, sample_id):
         categories = sample_services.get_categories()
         tags = sample_services.get_tags()
         sample = sample_services.get_sample(sample_id)
         self.render('sample/edit.html', item=sample, categories=categories, tags=tags)
         
+    @application.Security('ROLE_ARTISAN')
     def post(self, sample_id):
         sample = sample_services.get_sample(sample_id)
         sample.name = self.get_argument('name', strip=True)
@@ -64,6 +68,8 @@ class Edit(application.RequestHandler):
         
 @application.RequestMapping("/samples")
 class List(application.RequestHandler):
+    
+    @application.Security('ROLE_ARTISAN')
     def get(self):
         page = self.get_argument('page', '1', strip=True)
         page_size = 10
