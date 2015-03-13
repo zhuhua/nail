@@ -8,6 +8,14 @@ from simpletor import application
 from alipay import sign_type, alipay
 from trade import services as order_serv
 
+def trade_order(self, out_trade_no, trade_no):
+    order = order_serv.get_order_orderno(out_trade_no)
+    if order.trader_no == trade_no and order.status == order_serv.order_status_description.index(u'待支付'):
+        try:
+            order = order_serv.trade(order.user_id, out_trade_no, 'pay')
+        except Exception, e:
+            print e
+            
 @application.RequestMapping('/pay_notify/alipay')
 class AliNotify(application.RequestHandler):
     
@@ -68,11 +76,26 @@ class AliNotify(application.RequestHandler):
             is_sign = alipay.verify(pre_sign_str, sign)
             
         return is_sign
-    
-    def trade_order(self, out_trade_no, trade_no):
-        order = order_serv.get_order_orderno(out_trade_no)
-        if order.trader_no == trade_no and order.status == order_serv.order_status_description.index(u'待支付'):
-            try:
-                order = order_serv.trade(order.user_id, out_trade_no, 'pay')
-            except Exception, e:
-                print e
+
+@application.RequestMapping('/pay_notify/wxpay')
+class WxNotify(application.RequestHandler):
+    '''
+    微信支付回调地址
+    '''
+    def get(self):
+        pass
+
+@application.RequestMapping('/wxpay/signture')
+class WxSignture(application.RequestHandler):
+    '''
+    微信支付回调地址
+    '''
+    def get(self):
+        device_info = self.get_argument('device_info', default = None, strip=True) #微信支付分配的终端设备号，商户自定义
+        fee_type = self.get_argument('fee_type', default = 'CNY', strip=True) #符合ISO 4217标准的三位字母代码，默认人民币：CNY 
+        trade_type = self.get_argument('trade_type', default = 'APP', strip=True) #取值如下：JSAPI，NATIVE，APP
+        product_id = self.get_argument('trade_type', default = None, strip=True) #trade_type=NATIVE，此参数必传。此id为二维码中包含的商品ID，商户自行定义。
+        openid = self.get_argument('trade_type', default = None, strip=True) #trade_type=JSAPI，此参数必传，用户在商户appid下的唯一标识
+        spbill_create_ip = self.get_argument('spbill_create_ip', strip=True) #APP和网页支付提交用户端ip，Native支付填调用微信支付API的机器IP
+        order_no = self.get_argument('order_no', strip=True) #APP和网页支付提交用户端ip，Native支付填调用微信支付API的机器IP
+        
