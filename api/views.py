@@ -134,7 +134,13 @@ class Addresses(application.RequestHandler):
 
 @application.RequestMapping("/api/user/address/default")
 class DefaultAddress(application.RequestHandler):
+    ''' 获取默认地址'''
+    @Api(auth=True)
+    def get(self):
+        user_id = self.user_id
+        self.render_json(user_service.get_default(user_id))
     '''设置常用地址为默认'''
+        
     @Api(auth=True)
     def post(self):
         user_id = self.user_id

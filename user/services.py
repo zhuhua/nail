@@ -84,9 +84,10 @@ def add_address(address):
     if validate_utils.is_empty_str(address.detail):
         raise AppError(u'请填写详细地址', field='detail')
     if int(address.is_default) == 1:
-        default_addr = models.addressDAO.find_default()
+        user_id = address.user_id
+        default_addr = models.addressDAO.find_default(user_id)
         if default_addr != None:
-            models.addressDAO.change_default(0, default_addr.id);
+            models.addressDAO.change_default(0, default_addr.id, user_id);
     models.addressDAO.save(**address)
     
 def get_addresses(user_id):
@@ -96,12 +97,28 @@ def get_addresses(user_id):
 @transactional
 def set_default(user_id, address_id):
     '''设置常用地址为默认'''
-    default_addr = models.addressDAO.find_default()
-    if default_addr != address_id:
-        if default_addr != None:
-            models.addressDAO.change_default(0, default_addr.id);
-        models.addressDAO.change_default(1, address_id);
-        
+    default_addr = models.addressDAO.find_default(user_id)
+    if default_addr != None:
+        if default_addr.user_id != user_id:
+            raise AppError(u'地址不属于此用户')
+        if default_addr.id != address_id:
+            models.addressDAO.change_default(0, default_addr.id, user_id);
+    addr = models.addressDAO.find(address_id)
+    if addr.user_id != user_id:
+            raise AppError(u'地址不属于此用户')
+    models.addressDAO.change_default(1, address_id, user_id);
+
+def get_default(user_id):
+    default_addr = models.addressDAO.find_default(user_id)
+    if default_addr == None:
+        addrs = models.addressDAO.find_by_user(user_id)
+        if len(addrs) > 0:
+            sda = addrs[0]
+            models.addressDAO.change_default(1, sda.id, sda.user_id);
+        default_addr = models.addressDAO.find_default(user_id)
+    
+    return default_addr
+
 @transactional
 def del_address(user_id, address_id):
     '''删除常用地址'''

@@ -71,6 +71,17 @@ Nail make up mobile app
 	/api/user/addresses GET Header [Authorization: <token>]
 	
 ###设定默认地址
+    /api/user/address/default GET Header [Authorization: <token>]
+    返回 地址对象
+    {
+    "create_time": "2015-03-18 16:50:27",
+    "detail": "\u5317\u5927\u8857222222222",
+    "id": 7,
+    "is_default": 1,
+    "location": "\u6210\u90fd\u5e02",
+    "user_id": 3
+    }
+    
     /api/user/address/default POST Header [Authorization: <token>]
     参数 
         address_id 设定为默认地址的ID

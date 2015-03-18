@@ -139,16 +139,16 @@ class AddressDAO:
         return sql
     
     @torndb.get
-    def find_default(self):
+    def find_default(self, user_id):
         sql = '''
-        SELECT * FROM address a WHERE a.is_default = 1;
+        SELECT * FROM address a WHERE a.is_default = 1 AND a.user_id = %s;
         '''
         return sql
     
     @torndb.update
-    def change_default(self, is_default, address_id):
+    def change_default(self, is_default, address_id, user_id):
         sql = '''
-        UPDATE address a SET a.is_default = %s WHERE a.id = %s;
+        UPDATE address a SET a.is_default = %s WHERE a.id = %s AND a.user_id = %s;
         '''
         return sql
     
