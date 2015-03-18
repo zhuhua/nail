@@ -86,11 +86,27 @@ def add_evaluate(evaluate):
     
     return evaluate
 
-def get_evaluates(sample_id, page, page_size, object_type = 'sample'):
+def get_evaluates(sample_id, rating, page, page_size, object_type = 'sample'):
     page = int(page)
     page_size = int(page_size)
     first_result = (page - 1) * page_size
     hits = models.evaluateDAO.count_obj_id(sample_id, object_type)
     evaluates = models.evaluateDAO.find_obj_id(sample_id, object_type, page_size, first_result)
+    if rating != None:
+        hits = models.evaluateDAO.count_obj_id_rating(sample_id, rating, object_type)
+        evaluates = models.evaluateDAO.find_obj_id_rating(sample_id, rating, object_type, page_size, first_result)
     
     return evaluates, hits['total']
+
+def count_evaluates(sample_id, object_type = 'sample'):
+    count_all = models.evaluateDAO.count_obj_id(sample_id, object_type)
+    count_good = models.evaluateDAO.count_obj_id_rating(sample_id, 0, object_type)
+    count_normal = models.evaluateDAO.count_obj_id_rating(sample_id, 1, object_type)
+    count_bad = models.evaluateDAO.count_obj_id_rating(sample_id, 2, object_type)
+    res = dict(total=count_all['total'], 
+               good=count_good['total'], 
+               normal=count_normal['total'],
+               bad=count_bad['total'])
+    
+    return res
+    

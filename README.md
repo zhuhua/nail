@@ -504,9 +504,12 @@ Nail make up mobile app
     /api/evaluates GET
     参数
     sample_id 样品ID
-    page
+    rating 0 好评 1， 中评 2 差评  不传全部
+    page  
     page_size
-    {
+    
+    返回评价列表   
+     {
     "evaluates": [
        
         {
@@ -539,4 +542,7 @@ Nail make up mobile app
         }
     ],
     "total": 11
+    "good": 7,
+    "normal": 0,
+    "bad": 4
     }

@@ -50,6 +50,20 @@ class EvaluateDAO():
         '''
         return sql
     
+    @torndb.get
+    def count_obj_id_rating(self, object_id, rating, object_type):
+        sql = '''
+        SELECT COUNT(id) AS total FROM evaluate o WHERE o.object_id = %s AND o.rating = %s AND o.object_type = %s;
+        '''
+        return sql
+    
+    @torndb.select
+    def find_obj_id_rating(self, object_id, rating, object_type, max_results, first_result):
+        sql = '''
+        SELECT * FROM evaluate o WHERE o.object_id = %s AND o.rating = %s AND o.object_type = %s LIMIT %s OFFSET %s;
+        '''
+        return sql
+    
     @torndb.insert
     def save(self, **evaluate):
         sql = '''
