@@ -70,7 +70,7 @@ Nail make up mobile app
 ###常用地址列表
 	/api/user/addresses GET Header [Authorization: <token>]
 	
-###设定默认地址
+###获取默认地址
     /api/user/address/default GET Header [Authorization: <token>]
     返回 地址对象
     {
@@ -82,6 +82,7 @@ Nail make up mobile app
     "user_id": 3
     }
     
+###设定默认地址
     /api/user/address/default POST Header [Authorization: <token>]
     参数 
         address_id 设定为默认地址的ID
