@@ -111,6 +111,7 @@ class Address(torndb.Row):
         self.user_id = None
         self.location = ''
         self.detail = ''
+        self.is_default = True
         self.create_time = datetime.now()
         
 class AddressDAO:
@@ -118,8 +119,8 @@ class AddressDAO:
     @torndb.insert
     def save(self, **address):
         sql = '''
-        INSERT INTO address(user_id, location, detail, create_time) 
-        VALUES (%(user_id)s, %(location)s, %(detail)s, %(create_time)s);
+        INSERT INTO address(user_id, location, detail, is_default, create_time) 
+        VALUES (%(user_id)s, %(location)s, %(detail)s, %(is_default)s, %(create_time)s);
         '''
         return sql
     
@@ -134,6 +135,20 @@ class AddressDAO:
     def find_by_user(self, user_id):
         sql = '''
         SELECT * FROM address a WHERE a.user_id = %s ORDER BY a.create_time DESC;
+        '''
+        return sql
+    
+    @torndb.get
+    def find_default(self):
+        sql = '''
+        SELECT * FROM address a WHERE a.is_default = 1;
+        '''
+        return sql
+    
+    @torndb.update
+    def change_default(self, is_default, address_id):
+        sql = '''
+        UPDATE address a SET a.is_default = %s WHERE a.id = %s;
         '''
         return sql
     

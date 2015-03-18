@@ -56,18 +56,25 @@ Nail make up mobile app
 	参数 
 		location 位置
 		detail 详细地址
+		is_default 是否为默认地址 1 是 0 否
 	返回 地址对象列表
 	{
 	    "id": ID,
 	    "user_id": 用户ID,
 	    "location": 位置,
 	    "detail": 详细地址,
-	    "create_time":
+	    "create_time":,
+	    "is_default": 0 是否为默认地址 1 是 0 否
 	}
 		
 ###常用地址列表
 	/api/user/addresses GET Header [Authorization: <token>]
-		
+	
+###设定默认地址
+    /api/user/address/default POST Header [Authorization: <token>]
+    参数 
+        address_id 设定为默认地址的ID
+        
 ###删除常用地址
 	/api/user/address/<地址ID> POST Header [Authorization: <token>]
 		

@@ -120,6 +120,7 @@ class AddAddress(application.RequestHandler):
         address.user_id = user_id
         address.location = self.get_argument('location', strip=True)
         address.detail = self.get_argument('detail', strip=True)
+        address.is_default = self.get_argument('is_default', strip=True)
         user_service.add_address(address)
         self.render_json(user_service.get_addresses(user_id))
         
@@ -129,6 +130,16 @@ class Addresses(application.RequestHandler):
     @Api(auth=True)
     def get(self):
         user_id = self.user_id
+        self.render_json(user_service.get_addresses(user_id))
+
+@application.RequestMapping("/api/user/address/default")
+class DefaultAddress(application.RequestHandler):
+    '''设置常用地址为默认'''
+    @Api(auth=True)
+    def post(self):
+        user_id = self.user_id
+        address_id = self.get_argument('address_id', strip=True)
+        user_service.set_default(user_id, address_id)
         self.render_json(user_service.get_addresses(user_id))
         
 @application.RequestMapping("/api/user/address/([0-9]+)")
