@@ -259,6 +259,8 @@ Nail make up mobile app
     "sample_price": 222.0,
     样品店面价(商品)
     "sample_tag_price": 222.0,
+    样品描述
+    "sample_brief": "\u963f\u65af\u987f\u53d1\u751f\u7684",
     订单状态  0'待支付',1'已支付', 2'已出发', 3'已到达', 4'已完成', 5'已取消', 6'已关闭', 7 '已过期'
     "status": 0,
     样品店面价(商品)

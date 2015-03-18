@@ -120,7 +120,9 @@ def create_order(user_id, sample_id, address, appt_date, appt_hour, order_from =
     order.sample_id = sample_id
     order.sample_name = sample.name
     order.sample_tag_price = sample.tag_price
-    order.sample_price = sample.price# from simpletor.utils import validate_utils, generate_order_no
+    order.sample_price = sample.price
+    order.sample_brief = sample.brief
+    # from simpletor.utils import validate_utils, generate_order_no
 # from common import services as common_serv
 #     order.status = 0;
     order.tag_price = sample.tag_price

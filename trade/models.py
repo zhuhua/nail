@@ -36,6 +36,7 @@ class Order(torndb.Row):
         self.sample_name = None
         self.sample_tag_price = None
         self.sample_price = None
+        self.sample_brief = None
         self.cover = None
         self.tag_price = None
         self.price = None
@@ -214,14 +215,14 @@ class OrderDAO:
         telephone, title, order_no, trade_no, status, create_time, 
         update_time, display_buyer, display_seller, is_reviewed, 
         artisan_id, artisan_name, artisan_avatar, sample_id, sample_name,sample_tag_price, 
-        sample_price, cover, tag_price, price, remark) 
+        sample_price, sample_brief, cover, tag_price, price, remark) 
         VALUES (%(user_id)s, %(buyer_avatar)s, %(buyer_name)s, %(address)s, 
         %(telephone)s, %(title)s, %(order_no)s, 
         %(trade_no)s, %(status)s, %(create_time)s, 
         %(update_time)s, %(display_buyer)s, %(display_seller)s, 
         %(is_reviewed)s, %(artisan_id)s, %(artisan_name)s, %(artisan_avatar)s,
         %(sample_id)s, %(sample_name)s, %(sample_tag_price)s, %(sample_price)s, 
-        %(cover)s, %(tag_price)s, %(price)s, %(remark)s);
+        %(sample_brief)s, %(cover)s, %(tag_price)s, %(price)s, %(remark)s);
         '''
         
         return sql
