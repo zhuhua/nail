@@ -120,7 +120,7 @@ class AddAddress(application.RequestHandler):
         address.user_id = user_id
         address.location = self.get_argument('location', strip=True)
         address.detail = self.get_argument('detail', strip=True)
-        address.is_default = self.get_argument('is_default', strip=True)
+        address.is_default = self.get_argument('is_default', default=0, strip=True)
         user_service.add_address(address)
         self.render_json(user_service.get_addresses(user_id))
         
