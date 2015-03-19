@@ -10,7 +10,7 @@ import uuid
 import md5
 
 from trade import services as trade_serv
-
+import xml.etree.ElementTree as ET
 
 class Wxpay:
     
@@ -18,13 +18,18 @@ class Wxpay:
     
     notify_url = ''
     file_path = ''
+    def __init__(self):
+#         loadProperties
+        self.appid = None
+        self.mch_id = None
+        self.key = None
+        
     def sign(self, client_params):
-        appid, mch_id, key = self.loadProperties(self.file_path)
         order_no = client_params.get('order_no')
         order = trade_serv.get_order_orderno(order_no)
         params = dict(
-                      appid = appid,
-                      mch_id = mch_id,
+                      appid = self.appid,
+                      mch_id = self.mch_id,
                       nonce_str = self.generate_nonce_str(),#随机字符串
                       body = order.title, #商品或支付单简要描述 String(32)
                       detail = '', ###商品名称明细列表 String(8192)  
@@ -42,20 +47,37 @@ class Wxpay:
                       )
         
         params.update(client_params)
-        params
-        stringA = ''
-        stringSignTemp="%s&key=%s" % (stringA, key)
+#         params
+        self.para_filter(params)
+        stringA = self.create_link_string(params)
+        stringSignTemp="%s&key=%s" % (stringA, self.key)
         m = md5.new()
         m.update(stringSignTemp)
         sign=m.digest().upper()
+
+    
         params['sign'] =  sign
         
         self.doRequest(self.prepay_url, params, 'get', self.xx)
-        
+
+    def verify(self, content, sign):
+        res = False
+        try:
+            stringSignTemp="%s&key=%s" % (content, self.key)
+            m = md5.new()
+            m.update(stringSignTemp)
+            signn=m.hexdigest().upper()
+            
+            res = signn == sign.upper()
+        except Exception, e:
+            print e
+            
+        return res
+    
     def xx (self, data) :
         print 'Data :' 
         print json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
-        
+    
     def doRequest(self, url, params, method, dataHandler, token=''):
         '''
         Parameters:
@@ -82,5 +104,67 @@ class Wxpay:
             print "HTTP STATUS CODE: %s" % rep.status_code
             print rep.content
             
+    def para_filter(self, params):
+        '''
+        过虑值为空的参数及sign, sigh_type
+        '''
+        result = dict()
+        if params is None or len(params) <= 0:
+            return result
+        
+        for k, v in params.iteritems():
+            if k.lower() == 'sign' or k.lower() == 'sign_type':
+                continue
+                
+            result[k] = v
+            
+        return result
+    
+    def create_link_string(self, params):
+        '''
+        对参数按照key=value的格式，并按照参数名ASCII字典序排序
+        '''
+        keys = params.keys()
+        keys.sort()
+        
+        param_str = ''
+        for key in keys:
+            param_str += '%s=%s&' % (key, params[key])
+
+        length = len(param_str)
+        if length > 1:
+            return param_str[:len(param_str) - 1]
+        
+        return param_str
+    
+    def dump_xml(self, params):
+        '''
+        将字典转为xml
+        '''
+        root = ET.Element('xml')
+        for k, v in params:
+            ET.SubElement(root, k).text = v
+             
+        return ET.dump(root)
+    
+    def parse_xml(self, content):
+        '''
+        解析xml返回字典
+        '''
+        root = ET.fromstring(content)
+        params = dict()
+        for c in root:
+            if isinstance(c.text, unicode):
+                params[c.tag] = c.text.encode("utf-8")
+            else:
+                params[c.tag] = c.text
+        
+        return params
+    
     def generate_nonce_str(self):
+        '''
+        随机字符串
+        '''
         return uuid.uuid4().hex
+    
+wxpay = Wxpay()

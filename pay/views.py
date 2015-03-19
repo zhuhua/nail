@@ -7,10 +7,11 @@ Created on Mar 4, 2015
 from simpletor import application
 from alipay import sign_type, alipay
 from trade import services as order_serv
+from pay.wxpay import wxpay
 
-def trade_order(self, out_trade_no, trade_no):
+def trade_order(self, out_trade_no):
     order = order_serv.get_order_orderno(out_trade_no)
-    if order.trader_no == trade_no and order.status == order_serv.order_status_description.index(u'待支付'):
+    if order.order_no == out_trade_no and order.status == order_serv.order_status_description.index(u'待支付'):
         try:
             order = order_serv.trade(order.user_id, out_trade_no, 'pay')
         except Exception, e:
@@ -30,7 +31,7 @@ class AliNotify(application.RequestHandler):
                
                 #如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
                 #如果有做过处理，不执行商户的业务程序
-                self.trade_order(out_trade_no, trade_no)
+                trade_order(out_trade_no)
                 #注意：
                 #该种交易状态只在两种情况下出现
                 #1、开通了普通即时到账，买家付款成功后。
@@ -39,7 +40,7 @@ class AliNotify(application.RequestHandler):
                 #判断该笔订单是否在商户网站中已经做过处理
                 #如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
                 #如果有做过处理，不执行商户的业务程序
-                self.trade_order(out_trade_no, trade_no)
+                trade_order(out_trade_no)
                 #注意：
                 #该种交易状态只在一种情况下出现——开通了高级即时到账，买家付款成功后。
             
@@ -82,13 +83,47 @@ class WxNotify(application.RequestHandler):
     '''
     微信支付回调地址
     '''
-    def get(self):
-        pass
+    def post(self):
+        is_sign, params = self.verify()
+        result_code = params.get('result_code')
+        if is_sign and (result_code is not None) and result_code.lower() == 'success':
+            out_trade_no = params.get('out_trade_no')
+            trade_order(out_trade_no)
+            res = wxpay.dump_xml(dict(return_code='success', return_msg='ok'))
+            self.write(res)
+        self.finish()
+        
+    def verify(self):
+        content = self.request.body
+        
+        params = wxpay.parse_xml(content)
+        return_code = params.pop('return_code')
+        if return_code.lower() != 'success':
+            return False
+        if params.has_key('return_msg'):
+            params.pop('return_msg')
+        sign = ''
+        if params.get('sign') is not None:
+            sign = params.get('sign')
+            
+        is_sign = self.get_sign_veryfy(params, sign)
 
-@application.RequestMapping('/wxpay/signture')
+        return is_sign, params
+        
+    def get_sign_veryfy(self, params, sign):
+        #过滤空值、sign与sign_type参数
+        params = wxpay.para_filter(params)
+        #获取待签名字符串
+        pre_sign_str = wxpay.create_link_string(params)
+        #获得签名验证结果
+        is_sign = wxpay.verify(pre_sign_str, sign)
+            
+        return is_sign
+    
+@application.RequestMapping('/api/wxpay/signture')
 class WxSignture(application.RequestHandler):
     '''
-    微信支付回调地址
+    微信支付统一下单
     '''
     def get(self):
         device_info = self.get_argument('device_info', default = None, strip=True) #微信支付分配的终端设备号，商户自定义
@@ -98,4 +133,5 @@ class WxSignture(application.RequestHandler):
         openid = self.get_argument('trade_type', default = None, strip=True) #trade_type=JSAPI，此参数必传，用户在商户appid下的唯一标识
         spbill_create_ip = self.get_argument('spbill_create_ip', strip=True) #APP和网页支付提交用户端ip，Native支付填调用微信支付API的机器IP
         order_no = self.get_argument('order_no', strip=True) #APP和网页支付提交用户端ip，Native支付填调用微信支付API的机器IP
-        
+    
+    
