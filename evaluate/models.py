@@ -14,7 +14,10 @@ class Evaluate(torndb.Row):
     def __init__(self):
         self.id = None
         self.author_id = None
+        self.author_avatar = None
+        self.author_mobile = None
         self.object_id = None
+        self.object_name = None
         self.object_type = None
         self.content = None
         self.rating = 0
@@ -39,38 +42,42 @@ class EvaluateDAO():
     @torndb.get
     def count_obj_id(self, object_id, object_type):
         sql = '''
-        SELECT COUNT(id) AS total FROM evaluate o WHERE o.object_id = %s AND o.object_type = %s;
+        SELECT COUNT(id) AS total FROM evaluate o 
+        WHERE o.object_id = %s AND o.object_type = %s;
         '''
         return sql
     
     @torndb.select
     def find_obj_id(self, object_id, object_type, max_results, first_result):
         sql = '''
-        SELECT * FROM evaluate o WHERE o.object_id = %s AND o.object_type = %s LIMIT %s OFFSET %s;
+        SELECT o.id FROM evaluate o WHERE o.object_id = %s AND o.object_type = %s 
+        ORDER BY o.create_time DESC LIMIT %s OFFSET %s;
         '''
         return sql
     
     @torndb.get
     def count_obj_id_rating(self, object_id, rating, object_type):
         sql = '''
-        SELECT COUNT(id) AS total FROM evaluate o WHERE o.object_id = %s AND o.rating = %s AND o.object_type = %s;
+        SELECT COUNT(id) AS total FROM evaluate o 
+        WHERE o.object_id = %s AND o.rating = %s AND o.object_type = %s;
         '''
         return sql
     
     @torndb.select
     def find_obj_id_rating(self, object_id, rating, object_type, max_results, first_result):
         sql = '''
-        SELECT * FROM evaluate o WHERE o.object_id = %s AND o.rating = %s AND o.object_type = %s LIMIT %s OFFSET %s;
+        SELECT o.id FROM evaluate o WHERE o.object_id = %s AND o.rating = %s AND o.object_type = %s 
+        ORDER BY o.create_time DESC LIMIT %s OFFSET %s;
         '''
         return sql
     
     @torndb.insert
     def save(self, **evaluate):
         sql = '''
-        INSERT INTO evaluate (author_id, object_id, object_type, 
+        INSERT INTO evaluate (author_id, author_avatar, author_mobile, object_id, object_name, object_type, 
         content, rating, communication_rank, professional_rank,
         punctual_rank, create_time, is_block, is_valid) 
-        VALUES (%(author_id)s, %(object_id)s, %(object_type)s, 
+        VALUES (%(author_id)s, %(author_avatar)s, %(author_mobile)s, %(object_id)s, %(object_name)s, %(object_type)s, 
         %(content)s,%(rating)s, %(communication_rank)s, %(professional_rank)s, 
         %(punctual_rank)s, %(create_time)s, %(is_block)s, %(is_valid)s); 
         '''

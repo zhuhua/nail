@@ -474,6 +474,8 @@ Nail make up mobile app
     ]
     
 ##评价部分
+
+###添加评价
     /api/evaluate/add POST Header [Authorization: <token>]
     参数
     communication_rank 沟通评分 [1,5]
@@ -486,14 +488,22 @@ Nail make up mobile app
     order_no 评价来源订单号
     返回
     {
+        "author_avatar": "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg", 评价者头像
         "author_id": 4, 评价者
+        "author_mobile": "18683591672", 评价者手机号
         "communication_rank": 2, 沟通评分 [1,5]
         "content": "drgdfg", 评价内容
         "create_time": "2015-02-10 11:47:59", 评价时间
         "id": 1,
+         "images": [
+        "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg",
+        "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg",
+        "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg"
+        ],评价者 上传图片
         "is_block": 0, 是否屏蔽 0 不屏蔽 1 屏蔽（管理员禁止显示）
         "is_valid": 1, 是否有效 1,有效 2, 无效（用户自己删除）
         "object_id": "28", 评价样品ID
+        "object_name": "333333333333",评价样品名称
         "object_type": "sample", 评价类型
         "professional_rank": 2,专业评分 [1,5]
         "punctual_rank": 5,守时评分 [1,5]
@@ -513,33 +523,50 @@ Nail make up mobile app
     "evaluates": [
        
         {
+            "author_avatar": "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg",
             "author_id": 4,
-            "communication_rank": 4,
-            "content": "drgdfg",
-            "create_time": "2015-02-10 17:12:16",
-            "id": 10,
+            "author_mobile": "18683591672",
+            "communication_rank": 5,
+            "content": "1423536316378362",
+            "create_time": "2015-03-19 11:19:26",
+            "id": 44,
+            "images": [
+                "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg",
+                "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg",
+                "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg"
+            ],
             "is_block": 0,
             "is_valid": 1,
             "object_id": "28",
+            "object_name": "333333333333",
             "object_type": "sample",
-            "professional_rank": 0,
-            "punctual_rank": 1,
-            "rating": 1
-        },
-        {
-            "author_id": 4,
-            "communication_rank": 4,
-            "content": "drgdfg",
-            "create_time": "2015-02-10 17:15:00",
-            "id": 11,
-            "is_block": 0,
-            "is_valid": 1,
-            "object_id": "28",
-            "object_type": "sample",
-            "professional_rank": 2,
+            "professional_rank": 5,
             "punctual_rank": 5,
             "rating": 0
-        }
+        },
+        {
+            "author_avatar": "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg",
+            "author_id": 4,
+            "author_mobile": "18683591672",
+            "communication_rank": 5,
+            "content": "1423536316378362",
+            "create_time": "2015-03-19 11:18:26",
+            "id": 43,
+            "images": [
+                "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg",
+                "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg",
+                "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg"
+            ],
+            "is_block": 0,
+            "is_valid": 1,
+            "object_id": "28",
+            "object_name": "333333333333",
+            "object_type": "sample",
+            "professional_rank": 5,
+            "punctual_rank": 5,
+            "rating": 0
+        },
+        ...
     ],
     "total": 11
     "good": 7,

@@ -7,6 +7,7 @@ Created on Feb 9, 2015
 from simpletor.torndb import transactional
 from simpletor.application import AppError
 from simpletor.utils import validate_utils, get_level
+from simpletor.tornredis import cacheable, cacheevict
 
 from evaluate import models
 from common import services as common_services
@@ -14,7 +15,7 @@ from trade import services as trade_services
 from artisan import services as artisan_services
 
 evaluate_rating = ('好评', '中评', '差评')
-evaluate_rank_range = (0, 1,2,3,4,5)
+evaluate_rank_range = (0, 1, 2, 3, 4, 5)
 count_score = (1, 0, -1)
 
 def is_correct_rank(rank):
@@ -58,15 +59,24 @@ def add_evaluate(evaluate):
             if counts.has_key(rk):
                 xr = (int(counts[rk]) + xr) / 2
             counts[rk] = xr
+            
     validate_evaluate(evaluate)
-    images = evaluate.images
+    
     order_no = evaluate.order_no
+    order = trade_services.get_order_orderno(order_no)
+    evaluate.author_mobile = order.telephone
+    evaluate.author_avatar = order.buyer_avatar
+    evaluate.object_name = order.sample_name
     
     evaluate_id = models.evaluateDAO.save(**evaluate)
+    
+    #保存评价图片
+    images = evaluate.images
     for image in images:
         common_services.add_to_gallery(evaluate.object_id, 'evaluate', image)
     #修改订单评价状态
     order = trade_services.review(order_no, evaluate.author_id)
+    
     #修改手艺人积分
     artisan_id = order.artisan_id
     artisan = artisan_services.get_artisan(artisan_id)
@@ -74,6 +84,7 @@ def add_evaluate(evaluate):
     counts = artisan.counts
     if counts.has_key('score'):
         score = artisan.counts['score']
+        
     rating = int(evaluate.rating)
     score += count_score[rating]
     artisan.counts['score'] = score
@@ -82,27 +93,51 @@ def add_evaluate(evaluate):
     count_rank(artisan.counts)
     
     artisan_services.update_profile(artisan)
+    evaluate = get_evaluate(evaluate_id)
+    
+    return evaluate
+
+@cacheable('#evaluate_id', prefix='EVALUATE')
+def get_evaluate(evaluate_id):
     evaluate = models.evaluateDAO.find(evaluate_id)
+    if evaluate == None:
+        raise AppError(u'评价不存在')
+    images = common_services.get_gallery(evaluate.object_id, evaluate.object_type)
+    
+    imgs = list()
+    for image in images:
+        imgs.append(image.url)
+    evaluate['images'] = imgs
     
     return evaluate
 
 def get_evaluates(sample_id, rating, page, page_size, object_type = 'sample'):
+    
     page = int(page)
     page_size = int(page_size)
     first_result = (page - 1) * page_size
-    hits = models.evaluateDAO.count_obj_id(sample_id, object_type)
-    evaluates = models.evaluateDAO.find_obj_id(sample_id, object_type, page_size, first_result)
-    if rating != None:
-        hits = models.evaluateDAO.count_obj_id_rating(sample_id, rating, object_type)
-        evaluates = models.evaluateDAO.find_obj_id_rating(sample_id, rating, object_type, page_size, first_result)
     
-    return evaluates, hits['total']
+#     hits = models.evaluateDAO.count_obj_id(sample_id, object_type)
+    evaluates_id = models.evaluateDAO.find_obj_id(sample_id, object_type, page_size, first_result)
+    if rating != None:
+#         hits = models.evaluateDAO.count_obj_id_rating(sample_id, rating, object_type)
+        evaluates_id = models.evaluateDAO.find_obj_id_rating(sample_id, rating, object_type, page_size, first_result)
+    evaluates = list()
+    for eid in evaluates_id:
+        try:
+            evaluates.append(get_evaluate(eid.get('id')))
+        except:
+            print 'evaluate not exits (id:%s)' % eid
+        
+    return evaluates
 
 def count_evaluates(sample_id, object_type = 'sample'):
+    
     count_all = models.evaluateDAO.count_obj_id(sample_id, object_type)
     count_good = models.evaluateDAO.count_obj_id_rating(sample_id, 0, object_type)
     count_normal = models.evaluateDAO.count_obj_id_rating(sample_id, 1, object_type)
     count_bad = models.evaluateDAO.count_obj_id_rating(sample_id, 2, object_type)
+    
     res = dict(total=count_all['total'], 
                good=count_good['total'], 
                normal=count_normal['total'],

@@ -45,8 +45,7 @@ class GetEvaluates(application.RequestHandler):
         rating = self.get_argument('rating', default = None, strip=True)
         page = self.get_argument('page', default = 1, strip=True)
         page_size = self.get_argument('page_size', default = 10, strip=True)
-        evaluates, hits = evaluate_serv.get_evaluates(sample_id, rating, page, page_size)
-        print hits
+        evaluates = evaluate_serv.get_evaluates(sample_id, rating, page, page_size)
         counts = evaluate_serv.count_evaluates(sample_id)
         counts.update(dict(evaluates=evaluates))
         self.render_json(counts)
