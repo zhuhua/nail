@@ -8,6 +8,7 @@ import requests
 import json
 import uuid
 import md5
+import ConfigParser
 
 from trade import services as trade_serv
 import xml.etree.ElementTree as ET
@@ -17,12 +18,15 @@ class Wxpay:
     prepay_url = 'https://api.mch.weixin.qq.com/pay/unifiedorder'
     
     notify_url = ''
-    file_path = ''
+    
     def __init__(self):
-#         loadProperties
-        self.appid = None
-        self.mch_id = None
-        self.key = None
+        file_path = '/data/certs/wxpay.properties'
+        
+        config = ConfigParser.RawConfigParser()
+        config.read(file_path)
+        self.appid = config.get('Section1', 'appid')
+        self.mch_id = config.get('Section1', 'mch_id')
+        self.key = config.get('Section1', 'key')
         
     def sign(self, client_params):
         order_no = client_params.get('order_no')
