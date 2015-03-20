@@ -242,7 +242,11 @@ class Samples(application.RequestHandler):
     '''获取美甲师作品列表'''
     @Api()
     def get(self):
-        user_id = self.user_id
+        user_id = None
+        try:
+            user_id = self.user_id
+        except:
+            pass
         category_id = self.get_argument('category_id', default='1', strip=True)
         order_by = self.get_argument('order_by', default='create_time', strip=True)
         sort = self.get_argument('sort', default='desc', strip=True)
@@ -277,7 +281,11 @@ class Sample(application.RequestHandler):
     '''获取美甲师作品详情'''
     @Api()
     def get(self, sample_id):
-        user_id = self.user_id
+        user_id = None
+        try:
+            user_id = self.user_id
+        except:
+            pass
         sample = sample_service.get_sample(sample_id)
         
         #添加收藏标记
