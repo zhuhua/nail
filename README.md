@@ -179,7 +179,7 @@ Nail make up mobile app
 	返回 美甲作品对象列表
 
 ###获取作品详情
-	/api/sample<作品ID>
+	/api/sample/<作品ID>
 	{
 	    "status": 状态 0 正常 1删除 ,
 	    "name": 名称,
@@ -194,6 +194,7 @@ Nail make up mobile app
 	    "images": 图片,
 	    "category_id": 类别id,
 	    "id": 12,
+	    "is_fav": 是否收藏 0 未收藏 1，已经收藏,
 	    "tag_price": 店面价
 	}
 
