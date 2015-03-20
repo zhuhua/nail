@@ -103,12 +103,79 @@ Nail make up mobile app
 		page 页码 可选 默认 1
 		page_size 页大小 可选 默认 10
 	返回美甲师或者美甲对象列表
+	[
+            {
+                "artisan_id": 28000006,
+                "brief": "asdf",
+                "category_id": 1,
+                "counts": {
+                    "sale": 0
+                },
+                "create_time": "2015-01-23 16:19:32",
+                "id": 19,
+                "images": [],
+                "name": "adfads",
+                "price": 1111.0,
+                "sale": 0,
+                "status": 0,
+                "tag_price": 11.0,
+                "tags": [
+                   
+                ],
+                "version": "2015-01-27 09:20:54"
+            },
+            {
+                "artisan_id": 28000006,
+                "brief": "阿斯顿发生的",
+                "category_id": 1,
+                "counts": {
+                    "sale": 0
+                },
+                "create_time": "2015-02-06 17:03:20",
+                "id": 28,
+                "images": [],
+                "name": "333333333333",
+                "price": 222.0,
+                "sale": 0,
+                "status": 0,
+                "tag_price": 222.0,
+                "tags": [
+                    "圣诞节",
+                    "特价款"
+                ],
+                "version": "2015-02-06 09:03:20"
+            }
+        ]
 		
 ###删除收藏
 	/api/user/favorite/delete POST Header [Authorization: <token>]
 	参数 
 		type 类型 1 美甲师 2 美甲作品
 		object_id 美甲师或美甲作品id
+	返回美甲师或者美甲对象列表
+        [
+                {
+                "artisan_id": 28000006,
+                "brief": "阿斯顿发生的",
+                "category_id": 1,
+                "counts": {
+                    "sale": 0
+                },
+                "create_time": "2015-02-06 17:03:20",
+                "id": 28,
+                "images": [],
+                "name": "333333333333",
+                "price": 222.0,
+                "sale": 0,
+                "status": 0,
+                "tag_price": 222.0,
+                "tags": [
+                    "圣诞节",
+                    "特价款"
+                ],
+                "version": "2015-02-06 09:03:20"
+                }
+        ]
 
 ##美甲师部分
 
