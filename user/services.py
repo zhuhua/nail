@@ -95,7 +95,7 @@ def get_addresses(user_id):
     return models.addressDAO.find_by_user(user_id)
 
 @transactional
-def set_default(user_id, address_id):
+def set_default_address(user_id, address_id):
     '''设置常用地址为默认'''
     default_addr = models.addressDAO.find_default(user_id)
     if default_addr != None:
@@ -108,7 +108,7 @@ def set_default(user_id, address_id):
             raise AppError(u'地址不属于此用户')
     models.addressDAO.change_default(1, address_id, user_id);
 
-def get_default(user_id):
+def get_default_address(user_id):
     default_addr = models.addressDAO.find_default(user_id)
     if default_addr == None:
         addrs = models.addressDAO.find_by_user(user_id)
@@ -174,7 +174,27 @@ def get_favorites(user_id, fav_type, page=1, page_size=10):
         elif fav_type == '2':
             objects.append(sample_serv.get_sample(object_id))
     return objects
+
+def get_favorite(user_id, fav_type, object_id):
+    '''收藏对象'''
+    if not fav_type in fav_types.keys():
+        raise AppError(u'类型错误')
+    favorite = models.Favorite()
+    favorite.user_id = user_id
+    favorite.type = fav_type
+    favorite.object_id = object_id
+    fav = models.favoriteDAO.find_by_object(**favorite)
     
+    return fav
+
+def get_favorites_sub(user_id, fav_type, object_ids):
+    '''指定对象的收藏对象'''
+    if not fav_type in fav_types.keys():
+        raise AppError(u'类型错误')
+    favs = models.favoriteDAO.find_by_user_objects(user_id, fav_type, object_ids)
+    
+    return favs
+
 @transactional
 def del_favorite(user_id, favorite):
     '''删除常用地址'''

@@ -138,14 +138,14 @@ class DefaultAddress(application.RequestHandler):
     @Api(auth=True)
     def get(self):
         user_id = self.user_id
-        self.render_json(user_service.get_default(user_id))
+        self.render_json(user_service.get_default_address(user_id))
     '''设置常用地址为默认'''
         
     @Api(auth=True)
     def post(self):
         user_id = self.user_id
         address_id = self.get_argument('address_id', strip=True)
-        user_service.set_default(user_id, address_id)
+        user_service.set_default_address(user_id, address_id)
         self.render_json(user_service.get_addresses(user_id))
         
 @application.RequestMapping("/api/user/address/([0-9]+)")
@@ -242,6 +242,7 @@ class Samples(application.RequestHandler):
     '''获取美甲师作品列表'''
     @Api()
     def get(self):
+        user_id = self.user_id
         category_id = self.get_argument('category_id', default='1', strip=True)
         order_by = self.get_argument('order_by', default='create_time', strip=True)
         sort = self.get_argument('sort', default='desc', strip=True)
@@ -252,12 +253,39 @@ class Samples(application.RequestHandler):
         
         result = sample_service.search_sample(category_id=category_id, page=page, page_size=page_size, \
                                               artisan_id=artisan_id, tag=tag, order_by=order_by, sort=sort)
-        self.render_json(result[0])
+        sids = list()
+        sd = dict()
+        res = result[0]
+        for s in res:
+            sd[s.id] = s
+            sids.append(s.id)
+            s.is_fav = 0
+        
+        fav_type = '2'
+        favs = user_service.get_favorites_sub(user_id, fav_type, sids)
+        fids = list()
+        for fav in favs:
+            fids.append(user_service.fav_types[fav_type](fav.object_id))
+        for s in res:
+            if s.id in fids:
+                s.is_fav = 1
+                
+        self.render_json(res)
      
 @application.RequestMapping("/api/sample/([0-9]+)")
 class Sample(application.RequestHandler):
     '''获取美甲师作品详情'''
     @Api()
     def get(self, sample_id):
+        user_id = self.user_id
         sample = sample_service.get_sample(sample_id)
+        
+        #添加收藏标记
+        sample.is_fav = 0
+        if user_id is not None:
+            #查询用户有没有收藏这个样品
+            fav = user_service.get_favorite(user_id, '2', sample.id)
+            if fav is not None:
+                sample.is_fav = 1
+                
         self.render_json(sample)

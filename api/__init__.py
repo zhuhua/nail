@@ -18,6 +18,10 @@ class Api():
                     handler.send_error(403)
                     return
                 handler.user_id = token.user_id
+            else:
+                token = user_service.get_token(headers.get('Authorization'))
+                if token is not None:
+                    handler.user_id = token.user_id
             try:
                 method(handler, *args, **kwds)
             except application.AppError, e:

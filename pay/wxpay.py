@@ -11,12 +11,13 @@ import ConfigParser
 
 from trade import services as trade_serv
 import xml.etree.ElementTree as ET
-
+from simpletor.application import AppError
+from simpletor.utils import validate_utils
 class Wxpay:
     
     prepay_url = 'https://api.mch.weixin.qq.com/pay/unifiedorder'
     
-    notify_url = ''
+    notify_url = 'http://115.28.134.4/pay_notify/wxpay'
     
     def __init__(self):
         file_path = '/data/certs/wxpay.properties'
@@ -30,6 +31,8 @@ class Wxpay:
     def sign(self, client_params):
         order_no = client_params.get('order_no')
         order = trade_serv.get_order_orderno(order_no)
+        if int(order.status) == trade_serv.order_status_description.index(u'已支付'):
+            raise AppError(u'订单已经支付')
         params = dict(
                       appid = self.appid,
                       mch_id = self.mch_id,
@@ -51,7 +54,7 @@ class Wxpay:
         
         params.update(client_params)
 #         params
-        self.para_filter(params)
+        param = self.para_filter(params)
         stringA = self.create_link_string(params)
         
         sign = self.generate_sign(stringA)
@@ -91,7 +94,7 @@ class Wxpay:
             return result
         
         for k, v in params.iteritems():
-            if k.lower() == 'sign' or k.lower() == 'sign_type':
+            if k.lower() == 'sign' or k.lower() == 'sign_type' or v is None or validate_utils.is_empty_str(v):
                 continue
                 
             result[k] = v

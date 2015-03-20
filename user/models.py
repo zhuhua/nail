@@ -195,6 +195,13 @@ class FavoriteDAO:
         return sql
     
     @torndb.select
+    def find_by_user_objects(self, user_id, fav_type, object_ids):
+        sql = '''
+        SELECT * FROM favorite f WHERE f.user_id = %s AND f.type = %s AND f.object_id in %s;
+        '''
+        return sql
+    
+    @torndb.select
     def find_by_user(self, user_id, fav_type, limit=10, offset=0):
         sql = '''
         SELECT * FROM favorite f WHERE f.user_id = %s AND f.type = %s ORDER BY f.create_time DESC LIMIT %s OFFSET %s;
