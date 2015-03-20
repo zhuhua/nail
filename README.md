@@ -510,6 +510,41 @@ Nail make up mobile app
         "rating": 1 评价品级 0 好评 1， 中评 2 差评
     }
     
+###修改评价
+    /api/evaluate/edit POST Header [Authorization: <token>]
+    参数
+    communication_rank 沟通评分 [1,5]
+    content 评价内容
+    file 图片列表(multipart 直接上传多个文件)
+    evaluate_id 评价ID
+    professional_rank 专业评分 [1,5]
+    punctual_rank 守时评分 [1,5]
+    rating 评价品级 0 好评 1， 中评 2 差评
+    
+    返回
+    {
+        "author_avatar": "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg", 评价者头像
+        "author_id": 4, 评价者
+        "author_mobile": "18683591672", 评价者手机号
+        "communication_rank": 2, 沟通评分 [1,5]
+        "content": "drgdfg", 评价内容
+        "create_time": "2015-02-10 11:47:59", 评价时间
+        "id": 1,
+         "images": [
+        "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg",
+        "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg",
+        "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg"
+        ],评价者 上传图片
+        "is_block": 0, 是否屏蔽 0 不屏蔽 1 屏蔽（管理员禁止显示）
+        "is_valid": 1, 是否有效 1,有效 2, 无效（用户自己删除）
+        "object_id": "28", 评价样品ID
+        "object_name": "333333333333",评价样品名称
+        "object_type": "sample", 评价类型
+        "professional_rank": 2,专业评分 [1,5]
+        "punctual_rank": 5,守时评分 [1,5]
+        "rating": 1 评价品级 0 好评 1， 中评 2 差评
+    }
+    
 ###样品评价列表
     /api/evaluates GET
     参数
