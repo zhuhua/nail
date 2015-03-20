@@ -22,7 +22,7 @@ class AliNotify(application.RequestHandler):
     
     def get(self):
         out_trade_no = self.get_argument('out_trade_no', strip=True) #商户订单号
-        trade_no = self.get_argument('trade_no', strip=True) #支付宝交易号
+#         trade_no = self.get_argument('trade_no', strip=True) #支付宝交易号
         trade_status = self.get_argument('trade_status', strip=True) #交易状态
         
         if self.verify():
@@ -126,12 +126,29 @@ class WxSignture(application.RequestHandler):
     微信支付统一下单
     '''
     def get(self):
-        device_info = self.get_argument('device_info', default = None, strip=True) #微信支付分配的终端设备号，商户自定义
-        fee_type = self.get_argument('fee_type', default = 'CNY', strip=True) #符合ISO 4217标准的三位字母代码，默认人民币：CNY 
-        trade_type = self.get_argument('trade_type', default = 'APP', strip=True) #取值如下：JSAPI，NATIVE，APP
-        product_id = self.get_argument('trade_type', default = None, strip=True) #trade_type=NATIVE，此参数必传。此id为二维码中包含的商品ID，商户自行定义。
-        openid = self.get_argument('trade_type', default = None, strip=True) #trade_type=JSAPI，此参数必传，用户在商户appid下的唯一标识
-        spbill_create_ip = self.get_argument('spbill_create_ip', strip=True) #APP和网页支付提交用户端ip，Native支付填调用微信支付API的机器IP
-        order_no = self.get_argument('order_no', strip=True) #APP和网页支付提交用户端ip，Native支付填调用微信支付API的机器IP
-    
-    
+        #微信支付分配的终端设备号，商户自定义(非必要)
+        device_info = self.get_argument('device_info', default = None, strip=True)
+        #符合ISO 4217标准的三位字母代码，默认人民币：CNY (非必要)
+        fee_type = self.get_argument('fee_type', default = 'CNY', strip=True)
+        #取值如下：JSAPI，NATIVE，APP(非必要 当前为APP)
+        trade_type = self.get_argument('trade_type', default = 'APP', strip=True)
+        #trade_type=NATIVE，此参数必传。此id为二维码中包含的商品ID，商户自行定义。(有条件必要)
+        product_id = self.get_argument('product_id', default = None, strip=True)
+        #trade_type=JSAPI，此参数必传，用户在商户appid下的唯一标识(有条件必要)
+        openid = self.get_argument('openid', default = None, strip=True) 
+        #APP和网页支付提交用户端ip，Native支付填调用微信支付API的机器IP
+        spbill_create_ip = self.get_argument('spbill_create_ip', strip=True)
+        #
+        order_no = self.get_argument('order_no', strip=True)
+        params = dict(
+                      device_info = device_info,
+                      fee_type = fee_type,
+                      trade_type = trade_type,
+                      product_id = product_id,
+                      openid = openid,
+                      spbill_create_ip = spbill_create_ip,
+                      order_no = order_no,
+                      )
+        rep = wxpay.sign(params)
+        
+        self.render_json(rep)

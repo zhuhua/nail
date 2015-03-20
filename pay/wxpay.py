@@ -5,7 +5,6 @@ Created on 2015-03-13
 @author: lisong
 '''
 import requests
-import json
 import uuid
 import md5
 import ConfigParser
@@ -54,23 +53,28 @@ class Wxpay:
 #         params
         self.para_filter(params)
         stringA = self.create_link_string(params)
+        
+        sign = self.generate_sign(stringA)
+        params['sign'] =  sign
+        
+        data = self.dump_xml(params)
+        
+        rep = requests.post(self.prepay_url, data=data, headers={'content-type':'text/plain'},)
+
+        return self.parse_xml(rep.content)
+    
+    def generate_sign(self, stringA):
         stringSignTemp="%s&key=%s" % (stringA, self.key)
         m = md5.new()
         m.update(stringSignTemp)
-        sign=m.digest().upper()
-
-    
-        params['sign'] =  sign
+        sign = m.hexdigest().upper()
         
-        self.doRequest(self.prepay_url, params, 'get', self.xx)
-
+        return sign
+    
     def verify(self, content, sign):
         res = False
         try:
-            stringSignTemp="%s&key=%s" % (content, self.key)
-            m = md5.new()
-            m.update(stringSignTemp)
-            signn=m.hexdigest().upper()
+            signn = self.generate_sign(content)
             
             res = signn == sign.upper()
         except Exception, e:
@@ -78,36 +82,6 @@ class Wxpay:
             
         return res
     
-    def xx (self, data) :
-        print 'Data :' 
-        print json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
-    
-    def doRequest(self, url, params, method, dataHandler, token=''):
-        '''
-        Parameters:
-            url  - 请求url
-            params - 请求参数
-            method - 请求方式 GET/POST
-            dataHandler - 处理返回结果的方法
-            token - 如果接口需要token则传入，如果不需要则不传
-        '''
-        headers = dict()
-        if len(token) > 0:
-            headers['Authorization']='%s' % token
-        rep = None
-        print headers
-        if (method.lower() == 'get') :
-            rep = requests.get(url, params=params,headers=headers)
-        elif method.lower() == 'post' :
-            rep = requests.post(url, data=params,headers=headers)
-        print rep.url
-        
-        if rep.status_code == 200:
-            dataHandler(rep.json())
-        else :
-            print "HTTP STATUS CODE: %s" % rep.status_code
-            print rep.content
-            
     def para_filter(self, params):
         '''
         过虑值为空的参数及sign, sigh_type
@@ -146,10 +120,16 @@ class Wxpay:
         将字典转为xml
         '''
         root = ET.Element('xml')
-        for k, v in params:
-            ET.SubElement(root, k).text = v
+        for k, v in params.iteritems():
+            if v is not None:
+#                 print type(v), v, k
+                if isinstance(v, unicode):
+                    v = str(v.encode('utf-8'))
+                if not isinstance(v, str):
+                    v = str(v)
+                ET.SubElement(root, k).text = v
              
-        return ET.dump(root)
+        return ET.tostring(root)
     
     def parse_xml(self, content):
         '''
