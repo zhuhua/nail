@@ -8,7 +8,8 @@ from datetime import datetime
 from simpletor.torndb import transactional
 from simpletor.application import AppError
 from simpletor.utils import validate_utils, get_level
-from simpletor.tornredis import cacheable, cacheevict
+from simpletor.tornredis import cacheable
+from simpletor.tornredis import connect
 
 from evaluate import models
 from common import services as common_services
@@ -84,10 +85,9 @@ def add_evaluate(evaluate):
     return evaluate
 
 @transactional
-@cacheevict('#evaluate.id', prefix='EVALUATE')
 def edit_evaluate(evaluate):
     validate_evaluate(evaluate)
-    o_evaluate = models.evaluateDAO.find(evaluate.id)
+    o_evaluate = models.evaluateDAO.find_order_no(evaluate.order_no)
     if o_evaluate is None:
         raise AppError(u'评价不存在')
     
@@ -112,6 +112,8 @@ def edit_evaluate(evaluate):
     artisan_id = order.artisan_id
     change_score(artisan_id, evaluate, evaluate_id)
     
+    #手动删除缓存
+    connect.delete('EVALUATE_%s' % evaluate_id)
     evaluate = get_evaluate(evaluate_id)
     return evaluate
 

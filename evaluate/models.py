@@ -42,6 +42,13 @@ class EvaluateDAO():
         return sql
     
     @torndb.get
+    def find_order_no(self, order_no):
+        sql = '''
+        SELECT * FROM evaluate o WHERE o.order_no = %s;
+        '''
+        return sql
+    
+    @torndb.get
     def count_obj_id(self, object_id, object_type):
         sql = '''
         SELECT COUNT(id) AS total FROM evaluate o 

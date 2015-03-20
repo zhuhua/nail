@@ -49,7 +49,7 @@ class Edit(application.RequestHandler):
         evaluate.professional_rank = self.get_argument('professional_rank', strip=True)
         evaluate.punctual_rank = self.get_argument('punctual_rank', strip=True)
         evaluate.rating = self.get_argument('rating', strip=True)
-        evaluate.id = self.get_argument('evaluate_id', strip=True)
+        evaluate.order_no = self.get_argument('order_no', strip=True)
         file_dict_list = self.request.files.get('file')
         filenames = list()
         for file_dict in file_dict_list:

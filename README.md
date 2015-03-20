@@ -516,7 +516,7 @@ Nail make up mobile app
     communication_rank 沟通评分 [1,5]
     content 评价内容
     file 图片列表(multipart 直接上传多个文件)
-    evaluate_id 评价ID
+    order_no 评价订单号
     professional_rank 专业评分 [1,5]
     punctual_rank 守时评分 [1,5]
     rating 评价品级 0 好评 1， 中评 2 差评
