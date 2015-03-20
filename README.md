@@ -255,7 +255,7 @@ Nail make up mobile app
     "expire_remian": 30,
     订单ID
     "id": 12,
-    是否评价 0 未评价 1 已评价
+    是否评价 0 未评价 1 已评价 2 评价不可修改
     "is_reviewed": 0,
     订单号
     "order_no": "1423464544849774",

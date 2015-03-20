@@ -91,7 +91,7 @@ def edit_evaluate(evaluate):
     if o_evaluate is None:
         raise AppError(u'评价不存在')
     
-    if (datetime.now() - o_evaluate).day > evaluate_expire_day:
+    if (datetime.now() - o_evaluate.create_time).days > evaluate_expire_day:
         raise AppError(u'评价不可修改')
     
     o_evaluate.rating = evaluate.rating
