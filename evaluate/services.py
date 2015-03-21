@@ -52,7 +52,11 @@ def validate_evaluate(evaluate):
     
     if len(evaluate.images) == 0:
         raise AppError('至少上传一张图片', field='image')
-    evaluate.content = evaluate.content.encode('utf-8')
+
+    print evaluate.content.decode('utf-8')
+    print evaluate.content.encode('utf-8')
+    evaluate.content = evaluate.content.decode('utf-8')
+
 
 @transactional
 def add_evaluate(evaluate):
