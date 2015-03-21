@@ -81,11 +81,13 @@ def get_sample(sample_id):
     sample.tags = sample.tags.split(' ')
     
     counts = common_services.get_counts(sample_id, 'sample')
-    sample.counts = counts
+    
     
     if len(sample.counts) == 0:
         sample.counts = sample_count
-    
+    else:
+        sample.counts = sample_count.update(counts)
+        
     return sample
         
 @index(core='sample')

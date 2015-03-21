@@ -16,7 +16,12 @@ import models
 
 artisan_count = {
     'sample': 0,
-    'sale': 0
+    'sale': 0,
+    'evaluate_count': 0,
+    'communication_rank': 50,
+    'professional_rank': 50 ,
+    'punctual_rank': 50,
+    
 }
 
 def validate_artisan(artisan):
@@ -88,11 +93,12 @@ def get_artisan(artisan_id):
     if not counts.has_key('evaluate_count'):
         counts['evaluate_count'] = 0
         
-    artisan.counts = counts
+    
     
     if len(artisan.counts) == 0:
         artisan.counts = artisan_count
-    
+    else:
+        artisan.counts = artisan_count.update(counts)
     return artisan
     
 @index(core='artisan')
