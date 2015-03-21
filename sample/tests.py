@@ -14,6 +14,13 @@ def add_sample_image():
     obj_type = 'sample'
     url = '/img/44af80ee7c225cef047e8b43191c31f3.jpg'
     common_serv.add_to_gallery(obj_id, obj_type, url)
+    
+def test_upate():
+    sample_id = 31
+    s = services.get_sample(sample_id)
+    services.update_sample(s)
+
+test_upate()
 if __name__ == '__main__':
 #     items = models.sampleDAO.all()
     
@@ -24,5 +31,5 @@ if __name__ == '__main__':
 #             services.update_sample(sample)
 #         except Exception, e:
 #             print e
-    add_sample_image()
+#     add_sample_image()
     print 'finish'

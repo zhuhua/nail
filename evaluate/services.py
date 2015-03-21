@@ -15,6 +15,7 @@ from evaluate import models
 from common import services as common_services
 from trade import services as trade_services
 from artisan import services as artisan_services
+from sample import services as sample_services
 
 evaluate_rating = ('好评', '中评', '差评')
 evaluate_rank_range = (0, 1, 2, 3, 4, 5)
@@ -80,6 +81,9 @@ def add_evaluate(evaluate):
     # 新增评价或修改评价且评价级别发生变化 修改手艺人积分
     artisan_id = order.artisan_id
     change_score(artisan_id, evaluate, evaluate_id)
+    
+#     添加样品评价数
+    change_sample_evaluate_count(object_id)
     
     evaluate = get_evaluate(evaluate_id)
     return evaluate
@@ -194,6 +198,9 @@ def change_score(artisan_id, evaluate, evaluate_id, o_evaluate = None):
         score += count_score[rating]
         if counts.has_key('evaluate_count'):
             artisan.counts['evaluate_count'] += 1
+        else:
+            artisan.counts['evaluate_count'] = 1
+            
     artisan.counts['score'] = score
     artisan.level = get_level(score)
 #     
@@ -201,5 +208,13 @@ def change_score(artisan_id, evaluate, evaluate_id, o_evaluate = None):
     
     artisan_services.update_profile(artisan)
     
+def change_sample_evaluate_count(sample_id):
     
+    sample = sample_services.get_sample(sample_id)
+    if sample.counts.has_key('evaluate_count'):
+        sample.counts['evaluate_count'] += 1
+    else:
+        sample.counts['evaluate_count'] = 1
+        
+    sample_services.update_sample(sample)
     

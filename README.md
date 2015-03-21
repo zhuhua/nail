@@ -206,7 +206,7 @@ Nail make up mobile app
 	    "counts": {
 	            "sample": 0, 作品数量
 	            "sale": 0, 销量
-		    "communication_rank": 40, 沟通评分 [0,50] 显示时请除10再显示
+                    "communication_rank": 40, 沟通评分 [0,50] 显示时请除10再显示
                     "professional_rank": 24 , 专业评分 [0,50] 显示时请除10再显示
                     "punctual_rank": 8, 守时评分 [0,50] 显示时请除10再显示
                     "score": 9， 积分
@@ -256,7 +256,8 @@ Nail make up mobile app
 	    "price": 价格,
 	    "brief": 作品简介,
 	    "counts": {
-	        "sale": 0 销量
+	        "sale": 0, 销量
+	        "evaluate_count": 1, 评价数量 
 	    },
 	    "artisan_id": 美甲师Id,
 	    "create_time": 创建时间,

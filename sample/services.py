@@ -12,7 +12,8 @@ from simpletor.utils import validate_utils
 from common import services as common_services
 
 sample_count = {
-    'sale': 0
+    'sale': 0,
+    'evaluate_count': 0,
 }
 
 import models
@@ -93,6 +94,8 @@ def get_sample(sample_id):
 def update_sample(sample):
     '''编辑作品'''
     sample_id = sample.id
+    if isinstance(sample.tags, list):
+        sample.tags = ' '.join(sample.tags)
     models.sampleDAO.update(**sample)
     
     images = sample.images

@@ -7,9 +7,7 @@ Created on Jan 28, 2015
 from datetime import date, datetime
 from simpletor.torndb import transactional
 from simpletor.application import AppError
-# from simpletor.tornsolr import index, connect
 from simpletor.utils import generate_order_no #validate_utils,
-# from common import services as common_serv
 from artisan import services as artisan_serv
 from sample import services as sample_serv
 from user import services as user_serv
@@ -20,7 +18,8 @@ import settings
 
 order_status_description = (u'待支付',u'已支付', u'已出发', u'已到达', u'已完成',
                              u'已取消', u'已关闭', u'已过期')
-order_action_description = ('create', 'pay', 'send', 'arrived', 'finish', 'cancel', 'close','expire')
+order_action_description = ('create', 'pay', 'send', 'arrived', 'finish', 
+                            'cancel', 'close','expire')
 order_trader_type = dict(user = 'USER', artisan = 'ARTISAN', system = 'SYSTEM')
 order_status_group = dict(wait_pay=[0,0], unfinished=[1,2,3], finished=[4, 4], other=[5,6,7])
 
@@ -165,26 +164,27 @@ def trade(trader_id, order_no, action, price = None):
         orderLog.trader_type = order_trader_type['user']
         real_trade_id = order.user_id
     elif order_action_description.index(action) == order_action_description.index('send'):#手艺人出发
-        if status != order_status_description.index(u'已支付'): #订单为未支付状态
+        if status != order_status_description.index(u'已支付'): 
             raise AppError(u"订单不支持出发操作")
         order.status = order_status_description.index(u'已出发')
         order.update_time = datetime.now()
         orderLog.trader_type = order_trader_type['artisan']
         real_trade_id = order.artisan_id
     elif order_action_description.index(action) == order_action_description.index('arrived'):#用户确认手艺人到达
-        if status != order_status_description.index(u'已出发'): #订单为未支付状态
+        if status != order_status_description.index(u'已出发'): 
             raise AppError(u"订单不支持到达操作")
         order.status = order_status_description.index(u'已到达')
         order.update_time = datetime.now()
         orderLog.trader_type = order_trader_type['user']
         real_trade_id = order.user_id
     elif order_action_description.index(action) == order_action_description.index('finish'):#用户确认交易结束
-        if status != order_status_description.index(u'已到达'): #订单为未支付状态
+        if status != order_status_description.index(u'已到达'): 
             raise AppError(u"订单不支持完成操作")
         order.status = order_status_description.index(u'已完成')
         order.update_time = datetime.now()
         orderLog.trader_type = order_trader_type['user']
         real_trade_id = order.user_id
+
     elif order_action_description.index(action) == order_action_description.index('cancel'):#用户取消订单
         if status != order_status_description.index(u'待支付'): #订单为未支付状态
             raise AppError(u"订单不支持取消操作")
@@ -193,7 +193,7 @@ def trade(trader_id, order_no, action, price = None):
         orderLog.trader_type = order_trader_type['user']
         real_trade_id = order.user_id
     elif order_action_description.index(action) == order_action_description.index('close'):#系统关闭
-        if status != order_status_description.index(u'待支付'): #订单为未支付状态
+        if status != order_status_description.index(u'待支付'): 
             raise AppError(u"订单不支持关闭操作")
         order.status = order_status_description.index(u'已关闭')
         order.update_time = datetime.now()
@@ -204,8 +204,12 @@ def trade(trader_id, order_no, action, price = None):
     
     if real_trade_id != None and real_trade_id != long(trader_id):
         raise AppError(u"订单操作用户错误")
+    
     models.orderDAO.update(**order)
     models.orderLogDAO.save(**orderLog)
+    #添加作品销量
+    if order_action_description.index(action) == order_action_description.index('finish'):
+        add_sale(order.sample_id)
     order = get_order(order.id)
     return order
 
@@ -346,3 +350,11 @@ def add_order_remain(order):
         remain = 0
     order.expire_remian = remain
     return order
+
+def add_sale(sample_id):
+    sample = sample_serv.get_sample(sample_id)
+    if sample.counts.has_key('sale'):
+        sample.counts['sale'] += 1
+    else:
+        sample.counts['sale'] = 1
+    sample_serv.update_sample(sample)
