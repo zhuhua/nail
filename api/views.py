@@ -266,13 +266,18 @@ class Samples(application.RequestHandler):
             s.is_fav = 0
         
         fav_type = '2'
-        favs = user_service.get_favorites_sub(user_id, fav_type, sids)
-        fids = list()
-        for fav in favs:
-            fids.append(user_service.fav_types[fav_type](fav.object_id))
-        for s in res:
-            if s.id in fids:
-                s.is_fav = 1
+        if len(sids) > 1:
+            favs = user_service.get_favorites_sub(user_id, fav_type, sids)
+            fids = list()
+            for fav in favs:
+                fids.append(user_service.fav_types[fav_type](fav.object_id))
+            for s in res:
+                if s.id in fids:
+                    s.is_fav = 1
+        elif len(sids) == 1:
+            fav = user_service.get_favorite(user_id, fav_type, sids[0])
+            if fav is not None:
+                res[0].is_fav = 1
                 
         self.render_json(res)
      
