@@ -82,10 +82,13 @@ def get_sample(sample_id):
     
     counts = common_services.get_counts(sample_id, 'sample')
     
+    print 'counts', counts
     if len(counts) == 0:
         sample.counts = sample_count
+        print '0', sample.counts
     else:
         sample.counts = sample_count.update(counts)
+        print '1', sample.counts
         
     return sample
         
