@@ -76,29 +76,16 @@ def login(artisan_id, password):
     
 @cacheable('#artisan_id', prefix='ARTISAN')
 def get_artisan(artisan_id):
-    def count_rank(counts):
-        rank_keys = ('communication_rank', 'professional_rank', 'punctual_rank')
-        for rk in rank_keys:
-            if counts.has_key(rk):
-                pass
-            else:
-                counts[rk] = 50
                 
     artisan = models.artisanDAO.find(artisan_id)
     if artisan is None:
         raise AppError(u'该美甲师不存在')
     
     counts = common_services.get_counts(artisan_id, 'artisan')
-    count_rank(counts)
-    if not counts.has_key('evaluate_count'):
-        counts['evaluate_count'] = 0
-        
     
+    artisan_count.update(counts)
+    artisan.counts = artisan_count
     
-    if len(counts) == 0:
-        artisan.counts = artisan_count
-    else:
-        artisan.counts = artisan_count.update(counts)
     return artisan
     
 @index(core='artisan')
