@@ -205,10 +205,12 @@ Nail make up mobile app
 	    "avatar": 头像,
 	    "counts": {
 	            "sample": 0, 作品数量
-	            "sale": 0 销量
-		    "communication_rank" 沟通评分 [0,50] 显示时请除10再显示
-                    "professional_rank" 专业评分 [0,50] 显示时请除10再显示
-                    "punctual_rank" 守时评分 [0,50] 显示时请除10再显示
+	            "sale": 0, 销量
+		    "communication_rank": 40, 沟通评分 [0,50] 显示时请除10再显示
+                    "professional_rank": 24 , 专业评分 [0,50] 显示时请除10再显示
+                    "punctual_rank": 8, 守时评分 [0,50] 显示时请除10再显示
+                    "score": 9， 积分
+                    "evaluate_count": 0, 评价数
 	    },
 	    "cert_pop": 明星美甲师,
 	    "avg_price": 均价,

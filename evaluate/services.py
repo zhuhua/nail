@@ -192,6 +192,8 @@ def change_score(artisan_id, evaluate, evaluate_id, o_evaluate = None):
         score += o_evaluate.rating - rating
     else:
         score += count_score[rating]
+        if counts.has_key('evaluate_count'):
+            artisan.counts['evaluate_count'] += 1
     artisan.counts['score'] = score
     artisan.level = get_level(score)
 #     

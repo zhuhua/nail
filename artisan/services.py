@@ -77,7 +77,7 @@ def get_artisan(artisan_id):
             if counts.has_key(rk):
                 pass
             else:
-                counts[rk] =0
+                counts[rk] = 50
                 
     artisan = models.artisanDAO.find(artisan_id)
     if artisan is None:
@@ -85,6 +85,9 @@ def get_artisan(artisan_id):
     
     counts = common_services.get_counts(artisan_id, 'artisan')
     count_rank(counts)
+    if not counts.has_key('evaluate_count'):
+        counts['evaluate_count'] = 0
+        
     artisan.counts = counts
     
     if len(artisan.counts) == 0:
