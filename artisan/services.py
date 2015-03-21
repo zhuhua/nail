@@ -95,7 +95,7 @@ def get_artisan(artisan_id):
         
     
     
-    if len(artisan.counts) == 0:
+    if len(counts) == 0:
         artisan.counts = artisan_count
     else:
         artisan.counts = artisan_count.update(counts)
