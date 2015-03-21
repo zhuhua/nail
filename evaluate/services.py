@@ -52,7 +52,7 @@ def validate_evaluate(evaluate):
     
     if len(evaluate.images) == 0:
         raise AppError('至少上传一张图片', field='image')
-
+    evaluate.content = evaluate.content.enable('utf-8')
 
 @transactional
 def add_evaluate(evaluate):
@@ -99,6 +99,7 @@ def edit_evaluate(evaluate):
         raise AppError(u'评价不可修改')
     
     o_evaluate.rating = evaluate.rating
+    o_evaluate.content = evaluate.content
     o_evaluate.communication_rank = evaluate.communication_rank
     o_evaluate.professional_rank = evaluate.professional_rank
     o_evaluate.punctual_rank =evaluate.punctual_rank
