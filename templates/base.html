@@ -29,7 +29,7 @@
 			<div class="navbar-inner">
 				<div class="container-fluid">
 					<!-- BEGIN LOGO -->
-					<a class="brand" href="index.html"> <img src="/static/image/logo.png" alt="logo" /> </a>
+					<a class="brand" href="/"> <img src="/static/image/logo.png" alt="logo" /> </a>
 					<!-- END LOGO -->
 					<!-- BEGIN TOP NAVIGATION MENU -->
 					<ul class="nav pull-right">
@@ -82,9 +82,11 @@
 							<span class="title">退出</span>
 						</a>
 					</li>
+					
 					{% end %}
 					
 					{% if current_user['role'] == 'ROLE_ARTISAN' %}
+					
 					<li class="start">
 						<a href="/artisan/{{current_user['id']}}">
 							<i class="icon-home"></i>
@@ -148,7 +150,12 @@
 							<ul class="breadcrumb">
 								<li>
 									<i class="icon-home"></i>
-									<a href="index.html">主页</a>
+									{% if current_user['role'] == 'ROLE_ADMIN' %}
+									<a href="/">主页</a>
+									{% end %}
+									{% if current_user['role'] == 'ROLE_ARTISAN' %}
+									<a href="/artisan/{{current_user['id']}}">主页</a>
+									{% end %}
 									<i class="icon-angle-right"></i>
 								</li>
 								<li><a href="javascript:void(0)">{% block title %}{% end %}</a></li>

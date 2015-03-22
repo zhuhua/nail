@@ -1,0 +1,19 @@
+{% extends "./base.html" %} 
+{% block title %}主页{% end %}
+
+{% block css %}
+<link href="/static/css/jquery.fileupload-ui.css" rel="stylesheet">
+{% end %}
+
+{% block js %}
+
+<script type="text/javascript">
+
+</script>
+{% end %}
+
+{% block content %}
+    <div>
+	 欢迎回来<span class="username">{{current_user['name']}}</span>
+	</div>
+{% end %}

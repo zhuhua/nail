@@ -20,7 +20,8 @@ db_password = '123456'
 
 default_pass = '123456'
 
-solr = 'http://127.0.0.1:8983/solr'
+# solr = 'http://127.0.0.1:8983/solr'
+solr = 'http://115.28.134.4:8983/solr'
 
 redis = '127.0.0.1'
 

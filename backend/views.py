@@ -51,3 +51,10 @@ class Logout(application.RequestHandler):
     def get(self):
         self.clear_all_cookies()
         self.redirect('/login')
+        
+
+@application.RequestMapping("/")
+class Index(application.RequestHandler):
+    
+    def get(self):
+        self.render('index.html')
