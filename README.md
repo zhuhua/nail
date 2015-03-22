@@ -58,18 +58,28 @@ Nail make up mobile app
 		detail 详细地址
 		is_default 是否为默认地址 1 是 0 否
 	返回 地址对象列表
-	{
+	[{
 	    "id": ID,
 	    "user_id": 用户ID,
 	    "location": 位置,
 	    "detail": 详细地址,
 	    "create_time":,
 	    "is_default": 0 是否为默认地址 1 是 0 否
-	}
+	}]
 		
 ###常用地址列表
 	/api/user/addresses GET Header [Authorization: <token>]
-	
+	返回 地址对象列表
+	[
+	    {
+            "create_time": "2015-03-18 16:50:27",
+            "detail": "\u5317\u5927\u8857222222222",
+            "id": 7,
+            "is_default": 1,
+            "location": "\u6210\u90fd\u5e02",
+            "user_id": 3
+            }
+	]
 ###获取默认地址
     /api/user/address/default GET Header [Authorization: <token>]
     返回 地址对象
@@ -86,10 +96,30 @@ Nail make up mobile app
     /api/user/address/default POST Header [Authorization: <token>]
     参数 
         address_id 设定为默认地址的ID
-        
+     返回 地址对象列表
+	[
+	    {
+            "create_time": "2015-03-18 16:50:27",
+            "detail": "\u5317\u5927\u8857222222222",
+            "id": 7,
+            "is_default": 1,
+            "location": "\u6210\u90fd\u5e02",
+            "user_id": 3
+            }
+	]   
 ###删除常用地址
 	/api/user/address/<地址ID> POST Header [Authorization: <token>]
-		
+	返回 地址对象列表
+	[
+	    {
+            "create_time": "2015-03-18 16:50:27",
+            "detail": "\u5317\u5927\u8857222222222",
+            "id": 7,
+            "is_default": 1,
+            "location": "\u6210\u90fd\u5e02",
+            "user_id": 3
+            }
+	]	
 ###添加收藏
 	/api/user/favorite POST Header [Authorization: <token>]
 	参数 
