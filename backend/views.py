@@ -56,5 +56,6 @@ class Logout(application.RequestHandler):
 @application.RequestMapping("/")
 class Index(application.RequestHandler):
     
+    @application.Security('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_ARTISAN')
     def get(self):
         self.render('index.html')
