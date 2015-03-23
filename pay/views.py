@@ -8,7 +8,6 @@ from simpletor import application
 from alipay import sign_type, alipay
 from trade import services as order_serv
 from pay.wxpay import wxpay
-import logging
 
 def trade_order(self, out_trade_no):
     order = order_serv.get_order_orderno(out_trade_no)
@@ -51,7 +50,7 @@ class AliNotify(application.RequestHandler):
         
     def verify(self):
         params = self.request.arguments
-        logging.debug(params)
+        print params
         response_txt = 'true'
         if params.get('notify_id') is not None:
             notify_id = params.get('notify_id')[0]
@@ -64,10 +63,10 @@ class AliNotify(application.RequestHandler):
         is_sign = self.get_sign_veryfy(params, sign)
 
         if is_sign and response_txt == 'true':
-            logging.debug('Alipay verify success')
+            print 'Alipay verify success'
             return True
         else:
-            logging.debug('Alipay verify failed')
+            print 'Alipay verify failed'
             return False
         
     def get_sign_veryfy(self, params, sign):
