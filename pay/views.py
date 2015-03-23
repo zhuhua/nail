@@ -50,6 +50,7 @@ class AliNotify(application.RequestHandler):
         
     def verify(self):
         params = self.request.arguments
+        print params
         response_txt = 'true'
         if params.get('notify_id') is not None:
             notify_id = params.get('notify_id')[0]
