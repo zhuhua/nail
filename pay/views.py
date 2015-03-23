@@ -61,7 +61,8 @@ class AliNotify(application.RequestHandler):
             sign = params.get('sign')[0]
             
         is_sign = self.get_sign_veryfy(params, sign)
-
+        
+        print response_txt
         if is_sign and response_txt == 'true':
             print 'Alipay verify success'
             return True
