@@ -7,6 +7,7 @@ Created on 2014年12月18日
 from simpletor import application
 from simpletor.utils import sha1, save_image, validate_utils
 
+from backend import services as backend_service
 from user import services as user_service
 from artisan import services as artisan_service
 from sample import services as sample_service
@@ -302,3 +303,32 @@ class Sample(application.RequestHandler):
                 sample.is_fav = 1
                 
         self.render_json(sample)
+        
+@application.RequestMapping("/api/banners")
+class Banner(application.RequestHandler):
+    '''获取美甲师作品详情'''
+    @Api()
+    def get(self):
+        banners = backend_service.get_banners()
+        self.render_json(banners)
+        
+@application.RequestMapping("/api/user_agreement")
+class UserAgreement(application.RequestHandler):
+    '''获取美甲师作品详情'''
+    @Api()
+    def get(self):
+        self.render('user_agreement.html')
+        
+@application.RequestMapping("/api/about_us")
+class AboutUs(application.RequestHandler):
+    '''获取美甲师作品详情'''
+    @Api()
+    def get(self):
+        self.render('about_us.html')
+        
+@application.RequestMapping("/api/service_areas")
+class ServiceAreas(application.RequestHandler):
+    '''获取美甲师作品详情'''
+    @Api()
+    def get(self):
+        self.render('service_areas.html')

@@ -709,3 +709,14 @@ Nail make up mobile app
     "normal": 0,
     "bad": 4
     }
+
+##html内容
+    
+###关于我们
+    /api/about_us GET
+###服务范围
+    /api/service_areas GET
+###用户协议
+    /api/user_agreement GET
+###banner(返回内容暂不确定)
+    /api/banners GET
