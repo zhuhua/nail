@@ -20,7 +20,7 @@ def trade_order(self, out_trade_no):
 @application.RequestMapping('/pay_notify/alipay')
 class AliNotify(application.RequestHandler):
     
-    def get(self):
+    def post(self):
         out_trade_no = self.get_argument('out_trade_no', strip=True) #商户订单号
 #         trade_no = self.get_argument('trade_no', strip=True) #支付宝交易号
         trade_status = self.get_argument('trade_status', strip=True) #交易状态
