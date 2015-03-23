@@ -21,12 +21,14 @@ class Wxpay:
     
     def __init__(self):
         file_path = '/data/certs/wxpay.properties'
-        
-        config = ConfigParser.RawConfigParser()
-        config.read(file_path)
-        self.appid = config.get('Section1', 'appid')
-        self.mch_id = config.get('Section1', 'mch_id')
-        self.key = config.get('Section1', 'key')
+        try:
+            config = ConfigParser.RawConfigParser()
+            config.read(file_path)
+            self.appid = config.get('Section1', 'appid')
+            self.mch_id = config.get('Section1', 'mch_id')
+            self.key = config.get('Section1', 'key')
+        except:
+            print 'load wxpay.properties failed'
         
     def sign(self, client_params):
         order_no = client_params.get('order_no')
