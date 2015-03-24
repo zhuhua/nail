@@ -14,17 +14,35 @@ class Banner(torndb.Row):
     def __init__(self):
         self.id = None
         self.name = None
-        self.image = None
+        self.cover = None
+        self.detail = None
+        self.serial_number = None
         self.url = None
+        
 
 class BannerDAO:
     '''
     Banner DAO
     '''
+    @torndb.get
+    def find(self, banner_id):
+        sql = '''
+        SELECT * FROM banner WHERE id = %s
+        '''
+        return sql
+        
     @torndb.select
     def find_all(self):
         sql = '''
-        SELECT * FROM banner m
+        SELECT * FROM banner LIMIT 5 OFFSET 0
+        '''
+        return sql
+    
+    @torndb.insert
+    def save(self, **banner):
+        sql = '''
+        INSERT INTO banner (name, cover, detail, serial_number, url) 
+        VALUES (%(name)s, %(cover)s, %(detail)s, %(serial_number)s, %(url)s)
         '''
         return sql
     

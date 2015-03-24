@@ -305,30 +305,38 @@ class Sample(application.RequestHandler):
         self.render_json(sample)
         
 @application.RequestMapping("/api/banners")
-class Banner(application.RequestHandler):
-    '''获取美甲师作品详情'''
+class Banners(application.RequestHandler):
+    '''banner列表'''
     @Api()
     def get(self):
         banners = backend_service.get_banners()
-        self.render_json(banners)
+        self.render('backend/api_banners.html', items=banners)
+        
+@application.RequestMapping("/api/banner/([0-9]+)")
+class Banner(application.RequestHandler):
+    '''banner 详情'''
+    @Api()
+    def get(self, banner_id):
+        banner = backend_service.get_banner(banner_id)
+        self.render('backend/api_banner.html', item=banner)
         
 @application.RequestMapping("/api/user_agreement")
 class UserAgreement(application.RequestHandler):
-    '''获取美甲师作品详情'''
+    '''用户协议'''
     @Api()
     def get(self):
         self.render('user_agreement.html')
         
 @application.RequestMapping("/api/about_us")
 class AboutUs(application.RequestHandler):
-    '''获取美甲师作品详情'''
+    '''关于我们'''
     @Api()
     def get(self):
         self.render('about_us.html')
         
 @application.RequestMapping("/api/service_areas")
 class ServiceAreas(application.RequestHandler):
-    '''获取美甲师作品详情'''
+    '''服务地区'''
     @Api()
     def get(self):
         self.render('service_areas.html')

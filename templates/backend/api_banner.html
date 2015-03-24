@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="width=device-width; initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0; user-scalable=1;" name="viewport" />
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+<meta content="telephone=no" name="format-detection" />
+<link href="/static/css/global.css" rel="stylesheet" type="text/css" />
+<link href="/static/css/grid.css" rel="stylesheet" type="text/css" />
+<title>活动详情页</title>
+</head>
+<body>
+<div id="wrap" class="con_bg02">
+          <div class="mkw">
+            <div class="co_k c04">
+                {% for detail in item.detail %}
+                <!--图片内容块 -->
+                <p><img src="{{detail['image']}}" class="img100" /></p>
+                <!--图片内容块 END-->
+                <!--文本内容块 -->
+                <p class="h5 mgt05 mgb10 p04">{{detail['description']}}</p>    
+                <!--文本内容块 END -->         
+                {% end %}
+                <p class="txac pdl10 pdr10 pdb24"><a href="{{item.url}}" class="black1 btn_actdtl">查看活动详情</a></p>
+           </div>
+    </div>
+</div>
+</body>
+</html>
+

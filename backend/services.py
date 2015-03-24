@@ -5,6 +5,7 @@ Created on Jan 15, 2015
 @author: zhuhua
 '''
 import models
+import json
 
 from datetime import datetime
 from simpletor.application import AppError
@@ -27,6 +28,37 @@ def login(username, password):
     models.managerDAO.update(**manager)
     return manager
 
+def build_detail(detail):
+    detail = json.loads(detail)
+    detail = sorted(detail, key = lambda item:item['serial_number'])
+    return detail
+
 def get_banners():
-    banner = models.bannerDAO.find_all()
+    '''
+    banner 活动列表
+    '''
+    banners = models.bannerDAO.find_all()
+    for banner in banners:
+       
+        banner.detail = build_detail(banner.detail)
+    banners = sorted(banners, key = lambda banner: banner['serial_number'] )
+    return banners
+
+def get_banner(banner_id):
+    '''
+    banner 活动详情
+    '''
+    banner = models.bannerDAO.find(banner_id)
+    banner.detail = build_detail(banner.detail)
     return banner
+    
+@transactional
+def add_banner(banner):
+    '''
+    添加活动banner
+    '''
+    banner.detail = json.dumps(banner.detail)
+    models.bannerDAO.save(**banner)
+    banners = get_banners()
+    
+    return banners
