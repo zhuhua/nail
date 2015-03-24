@@ -26,3 +26,7 @@ def login(username, password):
     manager.last_login = datetime.now()
     models.managerDAO.update(**manager)
     return manager
+
+def get_banners():
+    banner = models.bannerDAO.find_all()
+    return banner

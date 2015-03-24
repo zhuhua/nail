@@ -6,6 +6,30 @@ Created on Jan 15, 2015
 '''
 from simpletor import torndb
 
+
+class Banner(torndb.Row):
+    '''
+    Banner
+    '''
+    def __init__(self):
+        self.id = None
+        self.name = None
+        self.image = None
+        self.url = None
+
+class BannerDAO:
+    '''
+    Banner DAO
+    '''
+    @torndb.select
+    def find_all(self):
+        sql = '''
+        SELECT * FROM banner m
+        '''
+        return sql
+    
+bannerDAO = BannerDAO()
+
 class Manager(torndb.Row):
     '''
     Manager
