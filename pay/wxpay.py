@@ -13,6 +13,8 @@ from trade import services as trade_serv
 import xml.etree.ElementTree as ET
 from simpletor.application import AppError
 from simpletor.utils import validate_utils
+import logging
+
 class Wxpay:
     
     prepay_url = 'https://api.mch.weixin.qq.com/pay/unifiedorder'
@@ -56,7 +58,8 @@ class Wxpay:
         
         params.update(client_params)
 #         params
-        param = self.para_filter(params)
+        params = self.para_filter(params)
+        logging.debug(params)
         stringA = self.create_link_string(params)
         
         sign = self.generate_sign(stringA)
