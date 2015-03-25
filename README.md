@@ -709,7 +709,7 @@ Nail make up mobile app
     "normal": 0,
     "bad": 4
     }
-###banner(返回内容暂不确定)
+###banner 列表接口
     /api/banners GET
     参数 无
     返回 banner 对象列表
@@ -759,7 +759,9 @@ Nail make up mobile app
     }
     ]
 ##html内容
-    
+
+###banner 详情接口
+    /api/banner/<banner ID> GET
 ###关于我们
     /api/about_us GET
 ###服务范围
