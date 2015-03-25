@@ -39,8 +39,8 @@ def get_banners():
     '''
     banners = models.bannerDAO.find_all()
     for banner in banners:
-       
         banner.detail = build_detail(banner.detail)
+        
     banners = sorted(banners, key = lambda banner: banner['serial_number'] )
     return banners
 

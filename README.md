@@ -709,7 +709,55 @@ Nail make up mobile app
     "normal": 0,
     "bad": 4
     }
-
+###banner(返回内容暂不确定)
+    /api/banners GET
+    参数 无
+    返回 banner 对象列表
+    [
+    {
+        banner 图片
+        "cover": "/img/667b5b4a2addc4696602b498a73c0d04.jpg", 
+        "detail": [
+            {
+                "description": "00活动内容描述00",
+                "image": "/img/243f6827fe80944b6bb26e80e175c713.jpg",
+                "serial_number": 0
+            },
+            {
+                "description": "11活动内容描述11",
+                "image": "/img/174509341416b35b7cf23cf41b04906c.jpg",
+                "serial_number": 1
+            }
+        ],
+        
+        "id": 1,
+        活动名称
+        "name": "banner-1",
+        排序字段
+        "serial_number": 0,
+        内部或外部跳转地址
+        "url": "http://photo.cankaoxiaoxi.com/roll10/2015/0324/717027.shtml"
+    },
+    {
+        "cover": "/img/667b5b4a2addc4696602b498a73c0d04.jpg",
+        "detail": [
+            {
+                "description": "00活动内容描述00",
+                "image": "/img/243f6827fe80944b6bb26e80e175c713.jpg",
+                "serial_number": 0
+            },
+            {
+                "description": "11活动内容描述11",
+                "image": "/img/174509341416b35b7cf23cf41b04906c.jpg",
+                "serial_number": 1
+            }
+        ],
+        "id": 2,
+        "name": "banner-2",
+        "serial_number": 1,
+        "url": "http://photo.cankaoxiaoxi.com/roll10/2015/0324/717027_2.shtml"
+    }
+    ]
 ##html内容
     
 ###关于我们
@@ -718,5 +766,3 @@ Nail make up mobile app
     /api/service_areas GET
 ###用户协议
     /api/user_agreement GET
-###banner(返回内容暂不确定)
-    /api/banners GET

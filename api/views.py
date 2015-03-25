@@ -310,7 +310,8 @@ class Banners(application.RequestHandler):
     @Api()
     def get(self):
         banners = backend_service.get_banners()
-        self.render('backend/api_banners.html', items=banners)
+        self.render_json(banners)
+#         self.render('backend/api_banners.html', items=banners)
         
 @application.RequestMapping("/api/banner/([0-9]+)")
 class Banner(application.RequestHandler):
