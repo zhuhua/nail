@@ -226,7 +226,11 @@ class MyArtisans(application.RequestHandler):
     '''我的大咖'''
     @Api()
     def get(self):
-        user_id = self.user_id
+        user_id = None
+        try:
+            user_id = self.user_id
+        except:
+            pass
         order_by = self.get_argument('order_by', default='create_time', strip=True)
         sort = self.get_argument('sort', default='desc', strip=True)
         page = self.get_argument('page', default=1, strip=True)
