@@ -133,7 +133,6 @@ def my_artisan(user_id, page = 1, page_size = 10, order_by='create_time', sort='
     artisans = list()
     for artisan_id in ids:
         try:
-            print artisan_id['id']
             artisans.append(get_artisan(artisan_id['id']))
         except:
             pass
