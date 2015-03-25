@@ -220,6 +220,19 @@ class Artisan(application.RequestHandler):
         gallery = common_service.get_gallery(artisan_id, 'artisan')
         artisan.gallery = gallery
         self.render_json(artisan)
+
+@application.RequestMapping("/api/my_mecat")
+class MyArtisans(application.RequestHandler):
+    '''我的大咖'''
+    @Api()
+    def get(self):
+        user_id = self.user_id
+        order_by = self.get_argument('order_by', default='create_time', strip=True)
+        sort = self.get_argument('sort', default='desc', strip=True)
+        page = self.get_argument('page', default=1, strip=True)
+        page_size = self.get_argument('page_size', default=10, strip=True)
+        artisans = artisan_service.my_artisan(user_id, page, page_size, order_by, sort)
+        self.render_json(artisans[0])
         
 #######  SAMPLE ##################################
 @application.RequestMapping("/api/tags")

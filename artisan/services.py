@@ -120,3 +120,22 @@ def search_artisan(page=1, page_size=10, name='', order_by='create_time', sort='
     artisans = [get_artisan(doc['id']) for doc in docs]
     return artisans, results.hits
     
+def my_artisan(user_id, page = 1, page_size = 10, order_by='create_time', sort='desc'):
+    '''
+    与此用户完成过交易的手艺人
+    '''
+    page = int(page)
+    page_size = int(page_size)
+    first_result = (page - 1) * page_size
+    ids = models.artisanDAO.find_by_user(user_id, order_by, sort, page_size, first_result)
+    hits = models.artisanDAO.count_by_user(user_id)['total']
+    
+    artisans = list()
+    for artisan_id in ids:
+        try:
+            print artisan_id['id']
+            artisans.append(get_artisan(artisan_id['id']))
+        except:
+            pass
+    return artisans, hits
+    

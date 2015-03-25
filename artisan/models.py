@@ -61,5 +61,25 @@ class ArtisanDAO:
         SELECT * FROM artisan;
         '''
         return sql
+    
+    @torndb.get
+    def count_by_user(self, user_id):
+        sql = '''
+        SELECT COUNT(DISTINCT a.id) as total FROM artisan a, orders o 
+        WHERE a.id = o.artisan_id AND o.status = 4 AND o.user_id = %s
+        '''
+        return sql
         
+    @torndb.select
+    def find_by_user(self, user_id, order_by, sort, max_results, first_result):
+        sqls = dict(
+                    create_time = '''SELECT DISTINCT a.id FROM artisan a, orders o 
+                    WHERE a.id = o.artisan_id AND o.status = 4 AND o.user_id = %s 
+                    ORDER BY %s %s LIMIT %s OFFSET %s''',
+                    sales = ''' ''',
+                    price = ''' '''
+                    )
+        
+        return sqls['create_time']
+    
 artisanDAO = ArtisanDAO()
