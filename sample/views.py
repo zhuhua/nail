@@ -65,6 +65,16 @@ class Edit(application.RequestHandler):
         
         sample_services.update_sample(sample)
         self.redirect('/samples')
+
+@application.RequestMapping("/sample/delete/([0-9]+)")
+class Delete(application.RequestHandler):
+    
+    @application.Security('ROLE_ARTISAN')
+    def get(self, sample_id):
+        sample = sample_services.get_sample(sample_id)
+        sample.status = 1
+        sample_services.update_sample(sample)
+        self.redirect('/samples')
         
 @application.RequestMapping("/samples")
 class List(application.RequestHandler):

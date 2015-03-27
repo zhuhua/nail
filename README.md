@@ -281,7 +281,12 @@ Nail make up mobile app
         "serv_area": "哈哈哈， 哈哈哈"
     }
     ]
-
+###删除我的大咖
+    /api/my_mecat/delete  POST  Header [Authorization: <token>]
+    参数
+        artisan_id
+    返回
+        美甲师对象列表
 ##美甲作品部分
 
 ###获取标签列表

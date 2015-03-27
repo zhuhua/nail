@@ -89,10 +89,17 @@ class CountsDAO:
         '''
         return sql
     
+    @torndb.get
+    def find_by_id(self, count_id):
+        sql = '''
+        SELECT * FROM counts c WHERE c.id = %s;
+        '''
+        return sql
+    
     @torndb.select
     def findByObjId(self, obj_id):
         sql = '''
-        SELECT * FROM counts c WHERE c.obj_id = %s;
+        SELECT c.id FROM counts c WHERE c.obj_id = %s;
         '''
         return sql
     

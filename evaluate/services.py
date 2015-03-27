@@ -238,11 +238,9 @@ def change_score(artisan_id, evaluate, evaluate_id, o_evaluate = None):
 def change_sample_evaluate_count(sample_id):
     
     sample = sample_services.get_sample(sample_id)
-    sample.images = list()
+    count_value = 1
     if sample.counts.has_key('evaluate_count'):
-        sample.counts['evaluate_count'] += 1
-    else:
-        sample.counts['evaluate_count'] = 1
+        count_value = sample.counts['evaluate_count'] + 1
         
-    sample_services.update_sample(sample)
+    common_services.update_count(sample_id, 'sample', 'evaluate_count', count_value)
     

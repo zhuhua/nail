@@ -5,6 +5,7 @@ Created on Jan 19, 2015
 @author: zhuhua
 '''
 from simpletor.application import AppError
+from simpletor.tornredis import cacheable, cacheevict
 from simpletor.utils import md5
 import models
 
@@ -78,7 +79,11 @@ def update_count(obj_id, obj_type, key, value):
     else:
         counts.count_key = key
         counts.count_value = value
-        models.countsDAO.update(**counts)
+        upate_count_with_cache(counts)
+        
+@cacheevict('#counts.id', prefix='COUNTS')
+def upate_count_with_cache(counts):
+    models.countsDAO.update(**counts)
     
 def get_counts(obj_id, obj_type):
     '''获取对象计数'''
@@ -88,9 +93,17 @@ def get_counts(obj_id, obj_type):
     counts_type = counts_types[obj_type]
     obj_id = md5('%s_%s' % (obj_id, counts_type))
     
-    rows = models.countsDAO.findByObjId(obj_id)
+    couts_ids = models.countsDAO.findByObjId(obj_id)
     counts = dict()
     
-    for row in rows:
-        counts[row.count_key] = row.count_value
+    for count_id in couts_ids:
+        count_id = count_id['id']
+        row = get_count(count_id)
+        if row is not None:
+            counts[row.count_key] = row.count_value
     return counts
+
+@cacheable('#count_id', prefix='COUNTS')
+def get_count(count_id):
+    countx = models.countsDAO.find_by_id(count_id)
+    return countx

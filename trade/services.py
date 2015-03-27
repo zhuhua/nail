@@ -4,13 +4,16 @@ Created on Jan 28, 2015
 
 @author: lisong
 '''
+import logging
 from datetime import date, datetime
 from simpletor.torndb import transactional
 from simpletor.application import AppError
 from simpletor.utils import generate_order_no #validate_utils,
+from common import services as common_services
 from artisan import services as artisan_serv
 from sample import services as sample_serv
 from user import services as user_serv
+from user import models as user_models
 
 import models
 from models import appointmentDAO, orderDAO, orderLogDAO
@@ -22,6 +25,8 @@ order_action_description = ('create', 'pay', 'send', 'arrived', 'finish',
                             'cancel', 'close','expire')
 order_trader_type = dict(user = 'USER', artisan = 'ARTISAN', system = 'SYSTEM')
 order_status_group = dict(wait_pay=[0,0], unfinished=[1,2,3], finished=[4, 4], other=[5,6,7])
+
+log = logging.getLogger(__name__)
 
 def appointment_status(artisan_id, appt_date):
     appts = appointmentDAO.find_day(artisan_id, appt_date);
@@ -210,6 +215,7 @@ def trade(trader_id, order_no, action, price = None):
     #添加作品销量
     if order_action_description.index(action) == order_action_description.index('finish'):
         add_sale(order.sample_id)
+        add_mecat(order.user_id, order.artisan_id)
     order = get_order(order.id)
     return order
 
@@ -233,7 +239,7 @@ def batch_expire(expire_time):
     orderDAO.execute_expire(order_status_description.index(u'已过期'), orders)
     orderLogDAO.batch_save(orderLogs)
     
-@transactional
+
 def review(order_no, user_id):
     order = get_order_orderno(order_no)
     user_id = int(user_id)
@@ -353,8 +359,18 @@ def add_order_remain(order):
 
 def add_sale(sample_id):
     sample = sample_serv.get_sample(sample_id)
+    count_value = 1
     if sample.counts.has_key('sale'):
-        sample.counts['sale'] += 1
-    else:
-        sample.counts['sale'] = 1
-    sample_serv.update_sample(sample)
+        count_value = sample.counts['sale'] + 1
+    
+    common_services.update_count(sample_id, 'sample', 'sale', count_value)
+    
+def add_mecat(user_id, artisan_id):
+    favorite = user_models.Favorite()
+    favorite.user_id = user_id
+    favorite.object_id = artisan_id
+    favorite.type = '1'
+    try:
+        user_serv.add_favorite(favorite);
+    except Exception, e:
+        log.debug('add to mecat error:%s' % e)

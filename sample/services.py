@@ -69,9 +69,20 @@ def add_sample(sample):
     
     return get_sample(sample_id)
         
-@cacheable('#sample_id', prefix='SAMPLE')
+
 def get_sample(sample_id):
     '''获取作品'''
+    
+    sample = get_sample_from_db(sample_id)
+    counts = common_services.get_counts(sample_id, 'sample')
+    
+    sample_count.update(counts)
+    sample.counts = sample_count
+        
+    return sample
+
+@cacheable('#sample_id', prefix='SAMPLE')
+def get_sample_from_db(sample_id):
     sample = models.sampleDAO.find(sample_id)
     if sample is None:
         raise AppError(u'该作品不存在')
@@ -80,13 +91,8 @@ def get_sample(sample_id):
     sample.images = images
     sample.tags = sample.tags.split(' ')
     
-    counts = common_services.get_counts(sample_id, 'sample')
-    
-    sample_count.update(counts)
-    sample.counts = sample_count
-        
     return sample
-        
+
 @index(core='sample')
 @transactional
 @cacheevict('#sample.id', prefix='SAMPLE')
