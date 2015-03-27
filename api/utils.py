@@ -9,8 +9,14 @@ import random
 from simpletor import tornredis
 from xml.dom import minidom
 from settings import sms_sname, sms_spwd, sms_sprdid
+import logging
+
+log = logging.getLogger(__name__)
 
 def sendsms(mobile, content):
+    
+    log.debug('Send sms to %s' % mobile)
+    
     data = dict(sname=sms_sname, spwd=sms_spwd, scorpid='', sprdid=sms_sprdid, sdst=mobile, smsg=content)
     r = requests.post('http://cf.lmobile.cn/submitdata/Service.asmx/g_Submit', data)
     doc = minidom.parseString(r.content)

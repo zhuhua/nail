@@ -15,6 +15,8 @@ from simpletor.application import AppError
 from simpletor.utils import validate_utils
 import logging
 
+log = logging.getLogger(__name__)
+
 class Wxpay:
     
     prepay_url = 'https://api.mch.weixin.qq.com/pay/unifiedorder'
@@ -30,7 +32,7 @@ class Wxpay:
             self.mch_id = config.get('Section1', 'mch_id')
             self.key = config.get('Section1', 'key')
         except:
-            print 'load wxpay.properties failed'
+            log.error('load wxpay.properties failed')
         
     def sign(self, client_params):
         order_no = client_params.get('order_no')
@@ -86,7 +88,7 @@ class Wxpay:
             
             res = signn == sign.upper()
         except Exception, e:
-            print e
+            log.error(e)
             
         return res
     
