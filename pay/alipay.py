@@ -19,7 +19,6 @@ sign_type = 'RSA'
 private_key = '/data/certs/rsa_private_key.pem'
 # 支付宝的公钥，无需修改该值
 public_key = '/data/certs/rsa_public_key.pem'
-ali_public_key  =  '/data/certs/ali_public_key.pem'
 class Alipay:
     
     HTTPS_VERIFY_URL = "https://mapi.alipay.com/gateway.do?service=notify_verify&partner=%s&notify_id=%s"
@@ -30,7 +29,7 @@ class Alipay:
             config = ConfigParser.RawConfigParser()
             config.read(cfg_file)
             self.partner = config.get('Section1', 'partner')
-            self.public_key = RSA.importKey(open(ali_public_key).read()) 
+            self.public_key = RSA.importKey(open(public_key).read()) 
             self.private_key = RSA.importKey(open(private_key,'r').read())
         except:
             logging.log(logging.INFO, 'load pem file failed!')
