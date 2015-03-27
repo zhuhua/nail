@@ -74,3 +74,16 @@ class GetEvaluates(application.RequestHandler):
         counts = evaluate_serv.count_evaluates(sample_id)
         counts.update(dict(evaluates=evaluates))
         self.render_json(counts)
+        
+@application.RequestMapping("/api/evaluates/artisan")
+class GetEvaluatesByArtisan(application.RequestHandler):
+    @Api()
+    def get(self):
+        artisan_id = self.get_argument('artisan_id', strip=True)
+        rating = self.get_argument('rating', default = None, strip=True)
+        page = self.get_argument('page', default = 1, strip=True)
+        page_size = self.get_argument('page_size', default = 10, strip=True)
+        evaluates, hits = evaluate_serv.get_evaluates_by_artisan(artisan_id, rating, page, page_size)
+        
+        res = dict(evaluates=evaluates, total=hits)
+        self.render_json(res)

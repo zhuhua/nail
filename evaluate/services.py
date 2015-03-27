@@ -54,14 +54,10 @@ def validate_evaluate(evaluate):
         raise AppError('至少上传一张图片', field='image')
 
     try:
-        print evaluate.content.decode('utf-8')
-        print 'xxxx' 
-        print evaluate.content.encode('utf-8')
+        evaluate.content = evaluate.content.encode('utf-8')
     except Exception, e:
         print e
-    evaluate.content = evaluate.content.encode('utf-8')
-
-
+        
 @transactional
 def add_evaluate(evaluate):
     '''添加评价'''
@@ -78,6 +74,7 @@ def add_evaluate(evaluate):
     evaluate.author_mobile = order.telephone
     evaluate.author_avatar = order.buyer_avatar
     evaluate.object_name = order.sample_name
+    evaluate.artisan_id = order.artisan_id
     
     evaluate_id = models.evaluateDAO.save(**evaluate)
     #保存评价图片
@@ -165,6 +162,27 @@ def get_evaluates(sample_id, rating, page, page_size, object_type = 'sample'):
         
     return evaluates
 
+def get_evaluates_by_artisan(artisan_id, rating, page, page_size, object_type = 'sample'):
+    page = int(page)
+    page_size = int(page_size)
+    first_result = (page - 1) * page_size
+    hits = 0
+    evaluates_id = []
+    if rating != None:
+        hits = models.evaluateDAO.count_by_artisan_rating(artisan_id, rating, object_type)
+        evaluates_id = models.evaluateDAO.find_by_artisan_rating(artisan_id, rating, object_type, page_size, first_result)
+    else:
+        hits = models.evaluateDAO.count_by_artisan(artisan_id, object_type)
+        evaluates_id = models.evaluateDAO.find_by_artisan(artisan_id, object_type, page_size, first_result)
+    evaluates = list()
+    for eid in evaluates_id:
+        try:
+            evaluates.append(get_evaluate(eid.get('id')))
+        except:
+            print 'evaluate not exits (id:%s)' % eid
+        
+    return evaluates, hits['total']
+
 def count_evaluates(sample_id, object_type = 'sample'):
     
     count_all = models.evaluateDAO.count_obj_id(sample_id, object_type)
@@ -220,6 +238,7 @@ def change_score(artisan_id, evaluate, evaluate_id, o_evaluate = None):
 def change_sample_evaluate_count(sample_id):
     
     sample = sample_services.get_sample(sample_id)
+    sample.images = list()
     if sample.counts.has_key('evaluate_count'):
         sample.counts['evaluate_count'] += 1
     else:

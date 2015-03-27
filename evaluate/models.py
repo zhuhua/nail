@@ -20,6 +20,7 @@ class Evaluate(torndb.Row):
         self.object_name = None
         self.object_type = None
         self.order_no = None
+        self.artisan_id = None
         self.content = None
         self.rating = 0
         self.communication_rank = None
@@ -80,14 +81,46 @@ class EvaluateDAO():
         '''
         return sql
     
+    @torndb.get
+    def count_by_artisan(self, artisan_id, object_type):
+        sql = '''
+        SELECT COUNT(id) AS total FROM evaluate o 
+        WHERE o.artisan_id = %s AND o.object_type = %s;
+        '''
+        return sql
+    
+    @torndb.get
+    def count_by_artisan_rating(self, artisan_id, rating, object_type):
+        sql =  '''
+            SELECT COUNT(id) AS total FROM evaluate o 
+            WHERE o.artisan_id = %s AND o.rating = %s AND o.object_type = %s;
+        '''
+        return sql
+    
+    @torndb.select
+    def find_by_artisan(self, artisan_id, object_type, max_results, first_result):
+        sql = '''
+        SELECT o.id FROM evaluate o WHERE o.artisan_id = %s  AND o.object_type = %s
+        ORDER BY o.create_time DESC LIMIT %s OFFSET %s;
+        '''
+        return sql
+    
+    @torndb.select
+    def find_by_artisan_rating(self, artisan_id, rating, object_type, max_results, first_result):
+        sql = '''
+            SELECT o.id FROM evaluate o WHERE o.artisan_id = %s AND o.rating = %s AND o.object_type = %s 
+            ORDER BY o.create_time DESC LIMIT %s OFFSET %s;
+            '''
+        return sql
+    
     @torndb.insert
     def save(self, **evaluate):
         sql = '''
         INSERT INTO evaluate (author_id, author_avatar, author_mobile, object_id, 
-        object_name, object_type, order_no, content, rating, communication_rank, 
+        object_name, object_type, order_no, artisan_id, content, rating, communication_rank, 
         professional_rank, punctual_rank, create_time, update_time, is_block, is_valid) 
         VALUES (%(author_id)s, %(author_avatar)s, %(author_mobile)s, %(object_id)s, 
-        %(object_name)s, %(object_type)s, %(order_no)s, %(content)s,%(rating)s,
+        %(object_name)s, %(object_type)s, %(order_no)s, %(artisan_id)s, %(content)s, %(rating)s,
          %(communication_rank)s,%(professional_rank)s, %(punctual_rank)s,
          %(create_time)s, %(update_time)s, %(is_block)s, %(is_valid)s); 
         '''
