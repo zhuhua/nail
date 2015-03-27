@@ -154,9 +154,19 @@ def add_favorite(favorite):
     except AppError, e:
         raise e
     
+   
     if models.favoriteDAO.find_by_object(**favorite) is not None:
-        raise AppError(u'该收藏已存在')
-    
+            raise AppError(u'该收藏已存在')
+        
+    if favorite.type == '1':
+        favorite.status = 1
+        if models.favoriteDAO.find_by_object(**favorite) is not None:
+            favorite.update_time = datetime.now()
+            favorite.status = 0
+            models.favoriteDAO.update(**favorite)
+            return
+        else:
+            favorite.status = 0
     models.favoriteDAO.save(**favorite)
     
 def get_favorites(user_id, fav_type, page=1, page_size=10):
@@ -165,7 +175,8 @@ def get_favorites(user_id, fav_type, page=1, page_size=10):
         raise AppError(u'类型错误')
         
     offset = (page - 1) * page_size
-    results = models.favoriteDAO.find_by_user(user_id, fav_type, page_size, offset)
+    status = 0
+    results = models.favoriteDAO.find_by_user(user_id, fav_type, status, page_size, offset)
     objects = []
     for row in results:
         object_id = fav_types[fav_type](row.object_id)
@@ -173,6 +184,7 @@ def get_favorites(user_id, fav_type, page=1, page_size=10):
             objects.append(artisan_serv.get_artisan(object_id))
         elif fav_type == '2':
             objects.append(sample_serv.get_sample(object_id))
+            
     return objects
 
 def get_favorite(user_id, fav_type, object_id):
@@ -197,7 +209,7 @@ def get_favorites_sub(user_id, fav_type, object_ids):
 
 @transactional
 def del_favorite(user_id, favorite):
-    '''删除常用地址'''
+    '''删除收藏'''
     favorite = models.favoriteDAO.find_by_object(**favorite)
     if favorite is None:
         raise AppError(u'收藏不存在')
@@ -205,5 +217,7 @@ def del_favorite(user_id, favorite):
     fav_type = favorite.type
     if not favorite.user_id == user_id:
         raise AppError(u'没有权限删除')
-    models.favoriteDAO.delete(favorite.id)
+    
+    favorite.status = 1
+    models.favoriteDAO.update(**favorite)
     return fav_type

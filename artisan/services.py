@@ -75,12 +75,16 @@ def login(artisan_id, password):
     return artisan
     
 @cacheable('#artisan_id', prefix='ARTISAN')
-def get_artisan(artisan_id):
-                
+def get_artisan_from_db(artisan_id):
     artisan = models.artisanDAO.find(artisan_id)
     if artisan is None:
         raise AppError(u'该美甲师不存在')
     
+    return artisan
+
+def get_artisan(artisan_id):
+                
+    artisan = get_artisan_from_db(artisan_id)
     counts = common_services.get_counts(artisan_id, 'artisan')
     
     artisan_count.update(counts)
@@ -104,6 +108,8 @@ def update_profile(artisan):
     
 def search_artisan(page=1, page_size=10, name='', order_by='create_time', sort='desc'):
     page = int(page)
+    if page < 1:
+        page = 1
     page_size = int(page_size)
     
     solr = connect(core='artisan')
@@ -112,6 +118,7 @@ def search_artisan(page=1, page_size=10, name='', order_by='create_time', sort='
         query = 'name:%s' % name
         
     results = solr.search(query, **{
+        'fq':'status:0',
         'start': (page - 1) * page_size,
         'rows': page_size,
         'sort': '%s %s' % (order_by, sort)
@@ -120,21 +127,8 @@ def search_artisan(page=1, page_size=10, name='', order_by='create_time', sort='
     artisans = [get_artisan(doc['id']) for doc in docs]
     return artisans, results.hits
     
-def my_artisan(user_id, page = 1, page_size = 10, order_by='create_time', sort='desc'):
-    '''
-    与此用户完成过交易的手艺人
-    '''
-    page = int(page)
-    page_size = int(page_size)
-    first_result = (page - 1) * page_size
-    ids = models.artisanDAO.find_by_user(user_id, order_by, sort, page_size, first_result)
-    hits = models.artisanDAO.count_by_user(user_id)['total']
-    
-    artisans = list()
-    for artisan_id in ids:
-        try:
-            artisans.append(get_artisan(artisan_id['id']))
-        except:
-            pass
-    return artisans, hits
+@index(core='artisan')
+@cacheevict('#artisan_id', prefix='ARTISAN')
+def update_index(artisan_id):
+    return get_artisan(artisan_id)
     

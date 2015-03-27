@@ -8,6 +8,7 @@ from uuid import uuid4
 from datetime import datetime
 from simpletor import torndb
 import time
+from sqlite3.dbapi2 import sqlite_version_info
 
 class User(torndb.Row):
     '''
@@ -168,6 +169,8 @@ class Favorite(torndb.Row):
         self.user_id = None
         self.object_id = None
         self.type = None
+        self.status = 0
+        self.update_time = datetime.now()
         self.create_time = datetime.now()
         
 class FavoriteDAO:
@@ -175,37 +178,50 @@ class FavoriteDAO:
     @torndb.insert
     def save(self, **favorite):
         sql = '''
-        INSERT INTO favorite(user_id, object_id, type, create_time) 
-        VALUES (%(user_id)s, %(object_id)s, %(type)s, %(create_time)s);
+        INSERT INTO favorite(user_id, object_id, type, status, update_time, create_time) 
+        VALUES (%(user_id)s, %(object_id)s, %(type)s, %(status)s, %(update_time)s, %(create_time)s);
         '''
         return sql
         
     @torndb.get
-    def find(self, favorite_id):
+    def find(self, favorite_id, status = 0):
         sql = '''
-        SELECT * FROM favorite f WHERE f.id = %s;
+        SELECT * FROM favorite f WHERE f.id = %s AND f.status = %s;
         '''
         return sql
     
     @torndb.get
     def find_by_object(self, **favorite):
         sql = '''
-        SELECT * FROM favorite f WHERE f.user_id = %(user_id)s AND f.type = %(type)s AND f.object_id = %(object_id)s;
+        SELECT * FROM favorite f 
+        WHERE f.user_id = %(user_id)s AND f.type = %(type)s 
+            AND f.object_id = %(object_id)s AND f.status = %(status)s;
         '''
         return sql
     
     @torndb.select
-    def find_by_user_objects(self, user_id, fav_type, object_ids):
+    def find_by_user_objects(self, user_id, fav_type, object_ids, status = 0):
         sql = '''
-        SELECT * FROM favorite f WHERE f.user_id = %s AND f.type = %s AND f.object_id in %s;
+        SELECT * FROM favorite f 
+        WHERE f.user_id = %s AND f.type = %s AND f.object_id in %s AND f.status = %s;
         '''
         return sql
     
     @torndb.select
-    def find_by_user(self, user_id, fav_type, limit=10, offset=0):
+    def find_by_user(self, user_id, fav_type, status = 0, limit=10, offset=0):
         sql = '''
-        SELECT * FROM favorite f WHERE f.user_id = %s AND f.type = %s ORDER BY f.create_time DESC LIMIT %s OFFSET %s;
+        SELECT * FROM favorite f 
+        WHERE f.user_id = %s AND f.type = %s  AND f.status = %s 
+        ORDER BY f.update_time DESC LIMIT %s OFFSET %s;
         '''
+        return sql
+    
+    @torndb.update
+    def update(self, **favorite):
+        sql = '''
+        UPDATE favorite f SET f.status = %(status)s, f.update_time = %(update_time)s WHERE f.id = %(id)s
+        '''
+        
         return sql
     
     @torndb.delete

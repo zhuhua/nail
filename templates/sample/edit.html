@@ -20,6 +20,11 @@ $(document).ready(function() {
 		}
 	};
 	
+	$('#delete').click(function(){
+		if (confirm('您确定要删除此作品')) {
+			window.location.href=$(this).attr("target")
+		}
+	});
 	var remove_img = function() {
 		$(".icon-remove").unbind("click");
 		$(".icon-remove").click(function() {
@@ -160,7 +165,7 @@ $(document).ready(function() {
 				<div class="control-group">
 					<div class="controls">
 						<input type="submit" class="btn green" value="提交" />
-						<input type="reset" class="btn" value="删除" />
+						<input id="delete" target="/sample/delete/{{item.id}}" type="button" class="btn" value="删除" />
 					</div>
 				</div>
 			</form>

@@ -118,3 +118,14 @@ class RemoveFromGallery(application.RequestHandler):
     def get(self, gallery_id):
         common_service.remove_from_gallery(gallery_id)
         self.redirect('/gallery')
+        
+@application.RequestMapping("/artisan/index/update")
+class UpdateIndex(application.RequestHandler):
+    
+    @application.Security('ROLE_ADMIN', 'ROLE_MANAGER')
+    def get(self):
+        artisans = artisan_models.artisanDAO.all()
+        for artisan in artisans:
+            artisan_service.update_index(artisan.id)
+        self.write('update index %s' % len(artisans))
+        self.finish()

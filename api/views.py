@@ -9,6 +9,7 @@ from simpletor.utils import sha1, save_image, validate_utils
 
 from backend import services as backend_service
 from user import services as user_service
+from user import models as user_models
 from artisan import services as artisan_service
 from sample import services as sample_service
 from common import services as common_service
@@ -222,7 +223,7 @@ class Artisan(application.RequestHandler):
         self.render_json(artisan)
 
 @application.RequestMapping("/api/my_mecat")
-class MyArtisans(application.RequestHandler):
+class MyMecat(application.RequestHandler):
     '''我的大咖'''
     @Api()
     def get(self):
@@ -231,12 +232,25 @@ class MyArtisans(application.RequestHandler):
             user_id = self.user_id
         except:
             pass
-        order_by = self.get_argument('order_by', default='create_time', strip=True)
-        sort = self.get_argument('sort', default='desc', strip=True)
         page = self.get_argument('page', default=1, strip=True)
         page_size = self.get_argument('page_size', default=10, strip=True)
-        artisans = artisan_service.my_artisan(user_id, page, page_size, order_by, sort)
-        self.render_json(artisans[0])
+        artisans = user_service.get_favorites(user_id, '1', page, page_size)
+        self.render_json(artisans)
+        
+@application.RequestMapping("/api/my_mecat/delete")
+class RemoveMecat(application.RequestHandler):
+    '''删除我的大咖'''
+    @Api(auth=True)
+    def post(self):
+        user_id = self.user_id
+        artisan_id = self.get_argument('artisan_id', strip=True)
+        favorite = user_models.Favorite()
+        favorite.user_id = user_id
+        favorite.object_id = artisan_id
+        favorite.type = '1'
+        user_service.del_favorite(user_id, favorite)
+        artisans = user_service.get_favorites(user_id, '1', 1, 10)
+        self.render_json(artisans)
         
 #######  SAMPLE ##################################
 @application.RequestMapping("/api/tags")

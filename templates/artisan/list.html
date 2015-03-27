@@ -16,6 +16,7 @@
 							<th>姓名</th>
 							<th>手机号</th>
 							<th>注册时间</th>
+							<th>操作</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -25,6 +26,7 @@
 							<td>{{item.name}}</td>
 							<td>{{item.mobile}}</td>
 							<td class="hidden-480">{{item.create_time}}</td>
+							<td><a href="/artisan/{{item.id}}/profile" class="label label-delete">删除</a></td>
 						</tr>
 						{% end %}
 					</tbody>
