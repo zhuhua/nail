@@ -744,6 +744,66 @@ Nail make up mobile app
     "normal": 0,
     "bad": 4
     }
+    
+###手艺人样品评价列表
+    /api/evaluates/artisan GET
+    参数
+    artisan 手艺人ID
+    rating 0 好评 1， 中评 2 差评  不传全部
+    page  
+    page_size
+    
+    返回评价列表   
+    "evaluates": [
+       
+        {
+            "author_avatar": "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg",
+            "author_id": 4,
+            "author_mobile": "18683591672",
+            "communication_rank": 5,
+            "content": "1423536316378362",
+            "create_time": "2015-03-19 11:19:26",
+            "id": 44,
+            "images": [
+                "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg",
+                "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg",
+                "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg"
+            ],
+            "is_block": 0,
+            "is_valid": 1,
+            "object_id": "28",
+            "object_name": "333333333333",
+            "object_type": "sample",
+            "professional_rank": 5,
+            "punctual_rank": 5,
+            "rating": 0
+        },
+        {
+            "author_avatar": "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg",
+            "author_id": 4,
+            "author_mobile": "18683591672",
+            "communication_rank": 5,
+            "content": "1423536316378362",
+            "create_time": "2015-03-19 11:18:26",
+            "id": 43,
+            "images": [
+                "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg",
+                "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg",
+                "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg"
+            ],
+            "is_block": 0,
+            "is_valid": 1,
+            "object_id": "28",
+            "object_name": "333333333333",
+            "object_type": "sample",
+            "professional_rank": 5,
+            "punctual_rank": 5,
+            "rating": 0
+        },
+        ...
+    ],
+    "total": 11
+    }
 ###banner 列表接口
     /api/banners GET
     参数 无
