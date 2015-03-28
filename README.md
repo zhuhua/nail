@@ -308,7 +308,7 @@ Nail make up mobile app
 ###获取作品列表
 	/api/samples
 	参数
-		category_id 类别ID 可选 [ 1:美甲 2:美睫 3:手足护理 4:空气净化 默认1 ]
+		category_id 类别ID 可选 [ 1:美甲 2:美睫 3:手足护理 4:空气净化 默认 '' 所有分类商品 ]
 		order_by 排序字段 可选 默认 create_time  [ price 价格， counts_sale 销量 ]
 		sort asc|desc 可选 默认 desc 范围 [asc 正序, desc 倒序]
 		page 页码 可选 默认 1

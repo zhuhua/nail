@@ -279,7 +279,7 @@ class Samples(application.RequestHandler):
             user_id = self.user_id
         except:
             pass
-        category_id = self.get_argument('category_id', default='1', strip=True)
+        category_id = self.get_argument('category_id', default='', strip=True)
         order_by = self.get_argument('order_by', default='create_time', strip=True)
         sort = self.get_argument('sort', default='desc', strip=True)
         page = self.get_argument('page', default=1, strip=True)

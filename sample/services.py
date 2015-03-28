@@ -118,7 +118,10 @@ def search_sample(page=1, page_size=10, category_id='*', artisan_id='', tag='', 
     page_size = int(page_size)
     
     solr = connect(core='sample')
-    query = 'category_id:%s AND status:0' % category_id
+    query = 'status:0' % category_id
+    if not category_id == '':
+        query += 'AND category_id:%s' % category_id
+        
     if not artisan_id == '':
         query += ' AND artisan_id:%s' % artisan_id
         
