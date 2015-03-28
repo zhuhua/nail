@@ -174,7 +174,9 @@ def get_favorites(user_id, fav_type, page=1, page_size=10):
     if not fav_type in fav_types.keys():
         raise AppError(u'类型错误')
         
-    offset = (int(page) - 1) * int(page_size)
+    page = int(page)
+    page_size = int(page_size)
+    offset = (page - 1) * page_size
     status = 0
     results = models.favoriteDAO.find_by_user(user_id, fav_type, status, page_size, offset)
     objects = []
