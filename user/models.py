@@ -8,7 +8,6 @@ from uuid import uuid4
 from datetime import datetime
 from simpletor import torndb
 import time
-from sqlite3.dbapi2 import sqlite_version_info
 
 class User(torndb.Row):
     '''
@@ -184,9 +183,9 @@ class FavoriteDAO:
         return sql
         
     @torndb.get
-    def find(self, favorite_id, status = 0):
+    def find(self, favorite_id):
         sql = '''
-        SELECT * FROM favorite f WHERE f.id = %s AND f.status = %s;
+        SELECT * FROM favorite f WHERE f.id = %s;
         '''
         return sql
     

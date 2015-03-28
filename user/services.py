@@ -203,7 +203,8 @@ def get_favorites_sub(user_id, fav_type, object_ids):
     '''指定对象的收藏对象'''
     if not fav_type in fav_types.keys():
         raise AppError(u'类型错误')
-    favs = models.favoriteDAO.find_by_user_objects(user_id, fav_type, object_ids)
+    status = 0
+    favs = models.favoriteDAO.find_by_user_objects(user_id, fav_type, object_ids, status)
     
     return favs
 

@@ -86,3 +86,16 @@ class List(application.RequestHandler):
         artisan_id = self.get_current_user()['id']
         items, hits = sample_services.search_sample(artisan_id=artisan_id, page=page, page_size=page_size)
         self.render('sample/list.html', items=items, page=page, page_size=page_size, total=hits)
+        
+@application.RequestMapping("/sample/index/update")
+class UpdateIndex(application.RequestHandler):
+    
+    @application.Security('ROLE_ADMIN')
+    def get(self):
+        page = self.get_argument('page', '1', strip=True)
+        page_size = 10000
+        items = sample_models.sampleDAO.all()
+        for item in items:
+            sample_services.update_sample_index(item.id)
+            
+        self.finish("update sample index %s" % len(items))

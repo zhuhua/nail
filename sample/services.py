@@ -134,3 +134,8 @@ def search_sample(page=1, page_size=10, category_id='*', artisan_id='', tag='', 
     docs = results.docs
     samples = [get_sample(doc['id']) for doc in docs]
     return samples, results.hits
+
+@index(core='sample')
+@cacheevict('#sample_id', prefix='SAMPLE')
+def update_sample_index(sample_id):
+    return get_sample(sample_id)
