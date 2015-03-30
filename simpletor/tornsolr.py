@@ -34,3 +34,8 @@ class index:
     
 def connect(core=''):
     return pysolr.Solr('%s/%s' % (settings.solr, core), timeout=10)
+
+def delete_index(core, query_string):
+    solr = connect(core)
+    solr.delete(q=query_string)
+        

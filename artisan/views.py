@@ -83,6 +83,14 @@ class Edit(application.RequestHandler):
             
         self.redirect('/artisan/%s' % artisan_id)
 
+@application.RequestMapping("/artisan/([0-9]+)/delete")
+class Delete(application.RequestHandler):
+    
+    @application.Security('ROLE_ADMIN')
+    def post(self, artisan_id):
+        artisan_service.delelte_artisan(artisan_id)
+        self.redirect('/artisans')
+        
 @application.RequestMapping("/gallery")
 class UploadToGallery(application.RequestHandler):
     

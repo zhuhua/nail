@@ -103,6 +103,21 @@ class SampleDAO:
         return sql
     
     @torndb.select
+    def find_id_by_artisan(self, artisan_id):
+        sql = '''
+        SELECT id FROM sample s WHERE s.artisan_id = %s;
+        '''
+        return sql
+    
+    @torndb.update
+    def delete_by_artisan(self, artisan_id):
+        sql = '''
+        UPDATE sample
+        SET status = 1 WHERE artisan_id = %s
+        '''
+        return sql
+        
+    @torndb.select
     def all(self):
         sql = '''
         SELECT * FROM sample s;

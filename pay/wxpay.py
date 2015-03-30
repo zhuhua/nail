@@ -21,7 +21,7 @@ class Wxpay:
     
     prepay_url = 'https://api.mch.weixin.qq.com/pay/unifiedorder'
     
-    notify_url = 'http://115.28.134.4/pay_notify/wxpay'
+    notify_url = 'http://115.28.134.4/f/'
     
     def __init__(self):
         file_path = '/data/certs/wxpay.properties'

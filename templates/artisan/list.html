@@ -1,5 +1,19 @@
 {% extends "../base.html" %} 
 {% block title %}美甲师管理{% end %}
+{% block js %}
+<script type="text/javascript">
+console.debug('---')
+$(document).ready(function() {
+    $(".delete_artisan").click(function(){
+        if(confirm("您确认要删除此条目？(警告：此操作不可恢复，请谨慎！)")) {
+            var form_id = $(this).attr('target');
+            $("#" + form_id).submit();
+        }
+    });
+    
+});   
+</script>
+{% end %}
 {% block content %}
 <div class="row-fluid">
 	<div>
@@ -26,7 +40,11 @@
 							<td>{{item.name}}</td>
 							<td>{{item.mobile}}</td>
 							<td class="hidden-480">{{item.create_time}}</td>
-							<td><a href="/artisan/{{item.id}}/profile" class="label label-delete">删除</a></td>
+							<td>
+							<form id="delete_{{item.id}}" action="/artisan/{{item.id}}/delete" method="post">
+							<a href="javascript:void(0)" target="delete_{{item.id}}" class="label label-delete delete_artisan">删除</a>
+							</form>
+							</td>
 						</tr>
 						{% end %}
 					</tbody>

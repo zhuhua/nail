@@ -10,6 +10,8 @@ from trade import services as order_serv
 from pay.wxpay import wxpay
 import logging
 
+log = logging.getLogger(__name__)
+
 def trade_order(out_trade_no):
     order = order_serv.get_order_orderno(out_trade_no)
     if order.order_no == out_trade_no and order.status == order_serv.order_status_description.index(u'待支付'):
@@ -51,7 +53,7 @@ class AliNotify(application.RequestHandler):
         
     def verify(self):
         params = self.request.arguments
-        logging.debug(params)
+        log.debug(params)
         response_txt = 'true'
         if params.get('notify_id') is not None:
             notify_id = params.get('notify_id')[0]
@@ -64,10 +66,10 @@ class AliNotify(application.RequestHandler):
         is_sign = self.get_sign_veryfy(params, sign)
         
         if is_sign and response_txt == 'true':
-            logging.debug('Alipay verify success')
+            log.debug('Alipay verify success')
             return True
         else:
-            logging.debug('Alipay verify failed')
+            log.debug('Alipay verify failed')
             return False
         
     def get_sign_veryfy(self, params, sign):
@@ -82,11 +84,15 @@ class AliNotify(application.RequestHandler):
             
         return is_sign
 
-@application.RequestMapping('/pay_notify/wxpay')
+@application.RequestMapping('/f/')
 class WxNotify(application.RequestHandler):
     '''
     微信支付回调地址
     '''
+    def get(self):
+        log.debug('tes url for weixin pay!')
+        self.finish('success')
+        
     def post(self):
         is_sign, params = self.verify()
         result_code = params.get('result_code')

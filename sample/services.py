@@ -4,12 +4,15 @@ Created on Jan 20, 2015
 
 @author: zhuhua
 '''
+import logging
 from simpletor.torndb import transactional
 from simpletor.application import AppError
-from simpletor.tornsolr import index, connect
+from simpletor.tornsolr import index, connect, delete_index
 from simpletor.tornredis import cacheable, cacheevict
 from simpletor.utils import validate_utils
 from common import services as common_services
+
+log = logging.getLogger(__name__)
 
 sample_count = {
     'sale': 0,
@@ -86,6 +89,8 @@ def get_sample_from_db(sample_id):
     sample = models.sampleDAO.find(sample_id)
     if sample is None:
         raise AppError(u'该作品不存在')
+    if sample.status == 1:
+        raise AppError(u'该作品已失效')
     
     images = common_services.get_gallery(sample_id, 'sample')
     sample.images = images
@@ -138,7 +143,28 @@ def search_sample(page=1, page_size=10, category_id='*', artisan_id='', tag='', 
     samples = [get_sample(doc['id']) for doc in docs]
     return samples, results.hits
 
+def delete_sample_by_artisan(artisan_id):
+    models.sampleDAO.delete_by_artisan(artisan_id)
+    sample_ids = models.sampleDAO.find_id_by_artisan(artisan_id)
+    res = []
+    #清缓存
+    for sample in sample_ids:
+        sample_id = sample['id']
+        res.append(sample_id)
+        remove_cache(sample_id)
+    #删除索引
+    try:
+        delete_index('sample', 'artisan_id:%s' % artisan_id)
+    except:
+        log.debug('delete sample index for artisan %s fail' % artisan_id)
+        
+    return res
+
 @index(core='sample')
-@cacheevict('#sample_id', prefix='SAMPLE')
 def update_sample_index(sample_id):
+    remove_cache(sample_id)
     return get_sample(sample_id)
+
+@cacheevict('#sample_id', prefix='SAMPLE')
+def remove_cache(sample_id):
+    pass
