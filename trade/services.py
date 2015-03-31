@@ -23,6 +23,8 @@ order_status_description = (u'待支付',u'已支付', u'已出发', u'已到达
                              u'已取消', u'已关闭', u'已过期')
 order_action_description = ('create', 'pay', 'send', 'arrived', 'finish', 
                             'cancel', 'close','expire')
+order_action_desc = ('用户下单', '用户支付', '手艺人出发', '手艺人到达', '交易完成', 
+                            '用户取消订单', '关闭交易','交易过期')
 order_trader_type = dict(user = 'USER', artisan = 'ARTISAN', system = 'SYSTEM')
 order_status_group = dict(wait_pay=[0,0], unfinished=[1,2,3], finished=[4, 4], other=[5,6,7])
 
@@ -261,11 +263,20 @@ def get_order(order_id, with_log = False):
         raise AppError(u"订单不存在(id:%s)" % (order_id))
     
     if with_log:
-        order.order_log = models.orderLogDAO.find(order.id)
+        get_order_log(order)
         
     add_order_remain(order)
     return order
 
+def get_order_log(order):
+    order_logs = models.orderLogDAO.find(order.id)
+    total = len(order_logs)
+    for order_log in order_logs:
+        order_log.trader_action = order_action_desc[order_log.trader_action]
+        if total > 2 and int(order_log.trader_action) == 7:
+            order_logs.remove(order_log)
+    order.order_log = order_logs
+    
 def get_order_orderno(order_no, with_log = False):
     order = models.orderDAO.find_by_order_no(order_no)
     if order == None:
@@ -273,7 +284,7 @@ def get_order_orderno(order_no, with_log = False):
         raise AppError(message)
     
     if with_log:
-        order.order_log = models.orderLogDAO.find(order.id)
+        get_order_log(order)
     
     add_order_remain(order)
     return order
