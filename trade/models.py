@@ -282,7 +282,7 @@ class OrderLogDAO:
     @torndb.select
     def find(self, order_id):
         sql = '''
-        SELECT * FROM order_log WHERE order_id = %s;
+        SELECT * FROM order_log WHERE order_id = %s AND trader_action <> 7;
         '''
         return sql
     
