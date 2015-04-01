@@ -1,0 +1,45 @@
+{% extends "../base.html" %} 
+{% block title %}Banner管理{% end %}
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+    
+});   
+</script>
+{% end %}
+{% block content %}
+<div class="row-fluid">
+	<div>
+		<!-- BEGIN SAMPLE TABLE PORTLET-->
+		<div class="portlet box">
+			<div class="portlet-body" style="display: block;">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>标题</th>
+							<th>Banner图</th>
+							<th>URL</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for item in items %}
+						<tr>
+							<td>{{item.serial_number}}</td>
+							<td>{{item.name}}</td>
+							<td><img src="{{item.cover}}" /></td>
+							<td>{{item.url}}</td>
+							<td>
+							<a href="/banner/{{item.id}}"class="label label-edit ">编辑</a>
+							</td>
+						</tr>
+						{% end %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!-- END SAMPLE TABLE PORTLET-->
+	</div>
+</div>
+{% end %}

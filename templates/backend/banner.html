@@ -1,0 +1,248 @@
+{% extends "../base.html" %}
+{% block title %}编辑Banner{% end %}
+
+{% block css %}
+<link href="/static/css/jquery.fileupload-ui.css" rel="stylesheet">
+{% end %}
+
+{% block js %}
+<script src="/static/js/jquery.iframe-transport.js"></script>
+<script src="/static/js/jquery.fileupload.js"></script>
+<script src="/static/js/jquery.fileupload-fp.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    
+    var remove_img = function() {
+        $(".icon-remove").unbind("click");
+        $(".icon-remove").click(function() {
+            $(this).parent().parent().parent().parent().remove();
+        });
+    };
+    
+    var upload = $('#fileupload').fileupload({
+        url : "/upload_image",
+        dataType : 'json',
+        acceptFileTypes : /(\.|\/)(gif|jpe?g|png)$/i,
+        maxFileSize : 5000000, // 5 MB
+        previewMaxWidth : 100,
+        previewMaxHeight : 100,
+        previewCrop : true,
+        progressall: function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $("#progress .bar").css("width", progress + "%");
+        },
+        done: function(e, data) {
+            $("#progress .bar").css("width", 0);
+            var img_url = data.result.url;
+            var template = _.template($("#preview_temp").html());
+            $("#files").text('').append($(template({url:img_url, number:''})));
+            remove_img();
+        }
+    });
+    var upload1 = $('#fileupload1').fileupload({
+        url : "/upload_image",
+        dataType : 'json',
+        acceptFileTypes : /(\.|\/)(gif|jpe?g|png)$/i,
+        maxFileSize : 5000000, // 5 MB
+        previewMaxWidth : 100,
+        previewMaxHeight : 100,
+        previewCrop : true,
+        progressall: function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $("#progress1 .bar").css("width", progress + "%");
+        },
+        done: function(e, data) {
+            $("#progress1 .bar").css("width", 0);
+            var img_url = data.result.url;
+            var template = _.template($("#preview_temp").html());
+            $("#files1").text('').append($(template({url:img_url, number:1})));
+            remove_img();
+        }
+    });
+    var upload2 = $('#fileupload2').fileupload({
+        url : "/upload_image",
+        dataType : 'json',
+        acceptFileTypes : /(\.|\/)(gif|jpe?g|png)$/i,
+        maxFileSize : 5000000, // 5 MB
+        previewMaxWidth : 100,
+        previewMaxHeight : 100,
+        previewCrop : true,
+        progressall: function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $("#progress2 .bar").css("width", progress + "%");
+        },
+        done: function(e, data) {
+            $("#progress2 .bar").css("width", 0);
+            var img_url = data.result.url;
+            var template = _.template($("#preview_temp").html());
+            $("#files2").text('').append($(template({url:img_url, number:2})));
+            remove_img();
+        }
+    });
+
+    remove_img();
+});
+</script>
+{% end %}
+
+{% block breadcrumb %}
+<li>
+	编辑Banner
+</li>
+{% end %}
+{% block content %}
+<div class="row-fluid">
+	<div class="portlet box">
+		<div class="portlet-body form">
+			<!-- BEGIN FORM-->
+			<form class="form-horizontal" method="post">
+				<div class="control-group">
+					<label class="control-label">标题</label>
+					<div class="controls">
+						<input type="text" name="name" placeholder="标题" class="m-wrap span6" value="{{item.name}}" />
+						<span class="help-block">{{ handler.get_error('name') }}</span>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">Banner图</label>
+					<div class="controls fileupload-buttonbar">
+                        <div class="row-fluid">
+                            <span class="btn green fileinput-button">
+                                <i class="icon-plus icon-white"></i>
+                                <span>选择图片上传</span>
+                                <input id="fileupload" type="file" name="file" />
+                            </span>
+                        </div>
+                        <div class="row-fluid">
+                            <div id="progress" class="progress span8">
+                                <div class="bar bar-success"></div>
+                            </div>
+                        </div>
+                        <div id="files" class="row-fluid">
+                            <div class="span2">
+                                <div class="item">
+                                    <div class="zoom">
+                                        <img src="{{item.cover}}" alt="Photo" style="max-width:100%">
+                                        <input name="image" type="hidden" value="{{item.cover}}">
+                                    </div>
+                                    <div class="details">
+                                        <a href="javascript:void(0)" class="icon"><i class="icon-remove"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="help-block">{{ handler.get_error('cover') }}</span>
+                    </div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label">URL</label>
+					<div class="controls">
+						<input type="text" name="url" placeholder="URL" class="m-wrap span4" value="{{item.url}}" />
+						<span class="help-block">{{ handler.get_error('url') }}</span>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">详情图片和说明(一)</label>
+                    <div class="controls fileupload-buttonbar">
+                        <div class="row-fluid">
+                            <span class="btn green fileinput-button">
+                                <i class="icon-plus icon-white"></i>
+                                <span>选择图片上传</span>
+                                <input id="fileupload1" type="file" name="file" />
+                            </span>
+                        </div>
+                        <div class="row-fluid">
+                            <div id="progress1" class="progress span8">
+                                <div class="bar bar-success"></div>
+                            </div>
+                        </div>
+                        <div id="files1" class="row-fluid">
+                            <div class="span2">
+                                <div class="item">
+                                    <div class="zoom">
+                                        <img src="{{item.detail[0]['image']}}" alt="Photo" style="max-width:100%">
+                                        <input name="image1" type="hidden" value="{{item.detail[0]['image']}}">
+                                    </div>
+                                    <div class="details">
+                                        <a href="javascript:void(0)" class="icon"><i class="icon-remove"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="help-block">{{ handler.get_error('image1') }}</span>
+                    </div>
+                    
+				</div>
+                <div class="controls">
+                    <input type="text" name="description1" placeholder="描述(二)" class="m-wrap span6" value="{{item.detail[0]['description']}}" />
+                    <span class="help-block">{{ handler.get_error('description1') }}</span>
+                </div>
+				
+				<div class="control-group">
+				<label class="control-label">详情图片和说明(二)</label>
+                    <div class="controls fileupload-buttonbar">
+                        <div class="row-fluid">
+                            <span class="btn green fileinput-button">
+                                <i class="icon-plus icon-white"></i>
+                                <span>选择图片上传</span>
+                                <input id="fileupload2" type="file" name="file" />
+                            </span>
+                        </div>
+                        <div class="row-fluid">
+                            <div id="progress2" class="progress span8">
+                                <div class="bar bar-success"></div>
+                            </div>
+                        </div>
+                        <div id="files2" class="row-fluid">
+                            <div class="span2">
+                                <div class="item">
+                                    <div class="zoom">
+                                        <img src="{{item.detail[1]['image']}}" alt="Photo" style="max-width:100%">
+                                        <input name="image2" type="hidden" value="{{item.detail[1]['image']}}">
+                                    </div>
+                                    <div class="details">
+                                        <a href="javascript:void(0)" class="icon"><i class="icon-remove"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="help-block">{{ handler.get_error('image2') }}</span>
+                    </div>
+				</div>
+				<div class="controls">
+                    <input type="text" name="description2" placeholder="描述(一)" class="m-wrap span6" value="{{item.detail[1]['description']}}" />
+                    <span class="help-block">{{ handler.get_error('description2') }}</span>
+                </div>
+				<div class="control-group">
+					<div class="controls">
+					    <input type="hidden" name="id" value="{{item.id}}"> 
+						<input type="submit" class="btn green" value="提交" />
+						<input type="reset" class="btn" value="取消" />
+					</div>
+				</div>
+			</form>
+			<!-- END FORM-->
+		</div>
+	</div>
+</div>
+
+
+
+{% end %}
+
+{% block template %}
+<script type="text/template" id="preview_temp">
+<div class="span2">
+    <div class="item">
+        <div class="zoom">
+            <img src="<%=url%>" alt="Photo" style="max-width:100%">
+            <input name="image<%=number%>" type="hidden" value="<%=url%>">
+        </div>
+        <div class="details">
+            <a href="javascript:void(0)" class="icon"><i class="icon-remove"></i></a>
+        </div>
+    </div>
+</div>
+</script>
+{% end %}

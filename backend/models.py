@@ -46,6 +46,15 @@ class BannerDAO:
         '''
         return sql
     
+    @torndb.update
+    def update(self, **banner):
+        sql = '''
+        UPDATE banner SET  name = %(name)s, cover = %(cover)s, detail = %(detail)s,
+        serial_number = %(serial_number)s, url = %(url)s
+        WHERE id = %(id)s
+        '''
+        return sql
+        
 bannerDAO = BannerDAO()
 
 class Manager(torndb.Row):
