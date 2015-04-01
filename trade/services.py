@@ -273,7 +273,7 @@ def get_order_log(order):
     total = len(order_logs)
     for order_log in order_logs:
         order_log.trader_action = order_action_desc[order_log.trader_action]
-        if total > 2 and int(order_log.trader_action) == order_action_desc[7]:
+        if total > 2 and order_log.trader_action == order_action_desc[7]:
             order_logs.remove(order_log)
 
     order.order_log = order_logs
