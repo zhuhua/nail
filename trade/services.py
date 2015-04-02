@@ -59,22 +59,25 @@ def artisan_appt_status(artisan_id, appt_date):
     for x in range(settings.appointmentRange[0], settings.appointmentRange[1] + 1):
         if appt_status.has_key(x):
             pass
-        elif (appt_date <= date.today() and x < datetime.now().time().hour):
-            appt_status[x] = dict(status = -1)
         else:
-            appt_status[x] = dict(status = 0)
+            if appt_date < date.today() or (appt_date == date.today() and x < datetime.now().time().hour):
+                appt_status[x] = dict(status = -1)
+            else:
+                appt_status[x] = dict(status = 0)
             
     return appt_status
 
-@transactional
-def close_appointment(artisan_id, appt_date, appt_hour):
+
+def close_appointment(artisan_id, appt_date, appt_hour, sample_id = None, user_id = None, order_no = None):
     if appt_hour < settings.appointmentRange[0] or appt_hour > settings.appointmentRange[1]:
         raise AppError(u"超出可预约时间范围")
     appt = models.Appointment()
     appt.artisan_id = artisan_id
     appt.appt_date = appt_date
     appt.appt_hour = appt_hour
-    
+    appt.sample_id = sample_id
+    appt.user_id = user_id
+    appt.order_no = order_no
     apptx = appointmentDAO.find(artisan_id, appt_date, appt_hour)
     if apptx != None:
         raise AppError(u"时间已经预约")
@@ -103,8 +106,6 @@ def create_order(user_id, sample_id, address, appt_date, appt_hour, order_from =
     artisan = artisan_serv.get_artisan(artisan_id)
     if artisan == None:
         raise AppError(u"手艺人不存在(id:%s)" % (artisan_id))
-    #设定预约
-    close_appointment(artisan_id, appt_date, appt_hour)
     
     order = models.Order()
     order.address = address
@@ -139,6 +140,9 @@ def create_order(user_id, sample_id, address, appt_date, appt_hour, order_from =
     order.user_id = user_id
     
     orderDAO.save(**order)
+    #设定预约
+    close_appointment(artisan_id, appt_date, appt_hour, sample_id, user_id, order_no)
+    
     order = get_order_orderno(order_no)
     orderLog = models.OrderLog()
     orderLog.order_id = order.id
@@ -225,11 +229,13 @@ def trade(trader_id, order_no, action, price = None):
 def batch_expire(expire_time):
     orders_ids = orderDAO.find_expire(expire_time)
     orders = list();
+    orders.append('')
     orderLogs = list()
+    order_nos = list()
     for x in orders_ids:
         order_id = x['id']
         orders.append(order_id)
-        
+        order_nos.append(long(x['order_no']))
         orderLog = models.OrderLog()
 #     orderLog.create_time 
         orderLog.order_id = order_id
@@ -239,6 +245,10 @@ def batch_expire(expire_time):
         orderLogs.append(orderLog)
         
     orderDAO.execute_expire(order_status_description.index(u'已过期'), orders)
+    if len(order_nos) == 1:
+        appointmentDAO.delete(order_nos[0])
+    if len(order_nos) > 1:
+        appointmentDAO.batch_delete(order_nos)
     orderLogDAO.batch_save(orderLogs)
     
 
@@ -270,10 +280,9 @@ def get_order(order_id, with_log = False):
 
 def get_order_log(order):
     order_logs = models.orderLogDAO.find(order.id)
-    
     for order_log in order_logs:
         order_log.trader_action = order_action_desc[order_log.trader_action]
-      
+
     order.order_log = order_logs
     
 def get_order_orderno(order_no, with_log = False):

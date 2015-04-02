@@ -9,6 +9,7 @@ from common import services as common_serv
 from simpletor.torndb import transactional
 from trade import services as trade_serv
 
+@transactional
 def test_closeAppointment():
     artisan_id = 28000009
     appt_date = datetime.date.today()
@@ -16,6 +17,16 @@ def test_closeAppointment():
     services.close_appointment(artisan_id, appt_date, appt_hours)
     
 # test_closeAppointment()
+
+@transactional
+def delete_appt():
+    order_no = '1'
+    models.appointmentDAO.delete(order_no)
+
+@transactional
+def batch_delete_appt():
+    order_nos = [3, 4]
+    models.appointmentDAO.batch_delete(order_nos)
     
 def test_findAppointment():
     artisan_id = 28000009
@@ -95,9 +106,12 @@ def test_trade():
         order = trade_serv.trade(o[0], str(o[1]), 'pay')
         print order.status
         
-test_trade()
+
 
 if __name__ == '__main__':
+#     test_trade()
 #     print datetime.date.today()
 #     test_closeAppointment()
+#     delete_appt()
+    batch_delete_appt()
     pass

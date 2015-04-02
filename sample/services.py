@@ -140,7 +140,12 @@ def search_sample(page=1, page_size=10, category_id='*', artisan_id='', tag='', 
     })
     
     docs = results.docs
-    samples = [get_sample(doc['id']) for doc in docs]
+    samples = []
+    for doc in docs:
+        try:
+            samples.append(get_sample(doc['id']) )
+        except AppError, e:
+            log.debug(e)
     return samples, results.hits
 
 def delete_sample_by_artisan(artisan_id):

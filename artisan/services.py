@@ -68,10 +68,10 @@ def login(artisan_id, password):
     '''
     artisan = models.artisanDAO.find(artisan_id)
     if artisan is None:
-        raise AppError('用户名错误')
+        raise AppError('用户名错误', field = 'username')
     
     if artisan.password != sha1(password):
-        raise AppError('密码错误')
+        raise AppError('密码错误', field = 'password')
     
     artisan.last_login = datetime.now()
     models.artisanDAO.update(**artisan)

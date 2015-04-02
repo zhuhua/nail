@@ -53,7 +53,7 @@ class OrderDAO:
     
     @torndb.select
     def find_expire(self, expire_time):
-        sql = '''SELECT id FROM orders o WHERE o.status = 0 AND o.create_time < %s'''
+        sql = '''SELECT id, order_no FROM orders o WHERE o.status = 0 AND o.create_time < %s'''
         return sql
     
     @torndb.update
@@ -327,6 +327,20 @@ class AppointmentDAO:
         appt_date, appt_hour, order_no, create_time) 
         VALUES (%(artisan_id)s, %(sample_id)s, %(user_id)s, 
         %(appt_date)s, %(appt_hour)s, %(order_no)s, %(create_time)s);
+        '''
+        return sql
+    
+    @torndb.delete
+    def delete(self, order_no):
+        sql = '''
+        DELETE FROM appointment WHERE order_no = %s
+        '''
+        return sql
+    
+    @torndb.delete
+    def batch_delete(self, order_nos):
+        sql = '''
+        DELETE FROM appointment WHERE order_no IN %s;
         '''
         return sql
     

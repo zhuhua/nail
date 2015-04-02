@@ -11,6 +11,7 @@ from artisan import services as artisan_service
 from common import services as common_service
 
 import settings
+from simpletor.application import AppError
 
 @application.RequestMapping("/artisan")
 class Add(application.RequestHandler):
@@ -63,7 +64,8 @@ class Edit(application.RequestHandler):
     @application.Security('ROLE_ARTISAN')
     def get(self, artisan_id):
         artisan = artisan_service.get_artisan(artisan_id)
-        self.render('artisan/edit.html', item=artisan)
+        tip = self.get_argument('tip', default= '', strip=True)
+        self.render('artisan/edit.html', item=artisan, tip=tip)
         
     @application.Security('ROLE_ARTISAN')
     def post(self, artisan_id):
@@ -73,15 +75,15 @@ class Edit(application.RequestHandler):
         artisan.gender = self.get_argument('gender', default=0, strip=True)
         artisan.brief = self.get_argument('brief', default='', strip=True)
         artisan.serv_area = self.get_argument('serv_area', default='', strip=True)
-        
+        tip = ''
         try:
             artisan_service.update_profile(artisan)
+            self.redirect('/artisan/%s' % artisan_id)
         except application.AppError, e:
             self.add_error(e)
-            self.render('artisan/edit.html', item=artisan)
-            return
-            
-        self.redirect('/artisan/%s' % artisan_id)
+            artisan = artisan_service.get_artisan(artisan_id)
+            self.render('artisan/edit.html', item=artisan, tip=tip)
+        
 
 @application.RequestMapping("/artisan/([0-9]+)/delete")
 class Delete(application.RequestHandler):
@@ -116,8 +118,12 @@ class UploadToGallery(application.RequestHandler):
         
         artisan = artisan_service.get_artisan(artisan_id)
         artisan.avatar = url
-        artisan_service.update_profile(artisan)
-        self.redirect('/gallery')
+        try:
+            artisan_service.update_profile(artisan)
+            self.redirect('/gallery')
+        except AppError, e:
+            self.add_error(e)
+            self.redirect('/artisan/%s/profile?tip=%s' % (artisan_id, '请先完善您的资料'))
         
 @application.RequestMapping("/gallery/([0-9]+)")
 class RemoveFromGallery(application.RequestHandler):

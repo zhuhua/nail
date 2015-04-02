@@ -9,7 +9,7 @@ from trade.models import orderDAO
 from trade import services as trade_serv
 import datetime
 
-expire_time = datetime.datetime.now() + datetime.timedelta(minutes = order_expire_time)
+expire_time = datetime.datetime.now() - datetime.timedelta(minutes = order_expire_time)
 def get_amount():
     return orderDAO.count_expire(expire_time)
 
@@ -19,8 +19,10 @@ def process_expired_orders():
     order_amount = get_amount()
     print 'found %s expired order(s)!' % order_amount['total']
     #查出过期订单ID，并将订单置为己过期状态，添加日志
-    trade_serv.batch_expire(expire_time)
-    
+    try:
+        trade_serv.batch_expire(expire_time)
+    except:
+        pass
     print 'expire worker finished!'
     
 if __name__ == '__main__':

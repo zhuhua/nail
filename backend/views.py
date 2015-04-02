@@ -28,8 +28,13 @@ class Login(application.RequestHandler):
             user, role, avatar = self.manager_login(login_id, password)
             home = '/artisans'
         else:
-            user, role, avatar = self.artisan_login(login_id, password)
-            home = '/artisan/%s' % user.id
+            try:
+                user, role, avatar = self.artisan_login(login_id, password)
+                home = '/artisan/%s' % user.id
+            except application.AppError, e:
+                self.add_error(e)
+                self.render('login.html')
+                return
             
         current_user = dict(id=user.id, name=user.name, role=role, avatar=avatar)
         self.set_current_user(current_user)
