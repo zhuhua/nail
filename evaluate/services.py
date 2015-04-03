@@ -180,8 +180,16 @@ def get_evaluates_by_artisan(artisan_id, rating, page, page_size, object_type = 
             evaluates.append(get_evaluate(eid.get('id')))
         except:
             print 'evaluate not exits (id:%s)' % eid
-        
-    return evaluates, hits['total']
+            
+    count_good = models.evaluateDAO.count_artisan_rating(artisan_id, 0, object_type)
+    count_normal = models.evaluateDAO.count_artisan_rating(artisan_id, 1, object_type)
+    count_bad = models.evaluateDAO.count_artisan_rating(artisan_id, 2, object_type)
+    res = dict(total=hits['total'], 
+               good=count_good['total'], 
+               normal=count_normal['total'],
+               bad=count_bad['total'],
+               evaluates = evaluates)
+    return res
 
 def count_evaluates(sample_id, object_type = 'sample'):
     

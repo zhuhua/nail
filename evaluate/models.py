@@ -73,6 +73,14 @@ class EvaluateDAO():
         '''
         return sql
     
+    @torndb.get
+    def count_artisan_rating(self, artisan_id, rating, object_type):
+        sql = '''
+        SELECT COUNT(id) AS total FROM evaluate o 
+        WHERE o.artisan_id = %s AND o.rating = %s AND o.object_type = %s;
+        '''
+        return sql
+    
     @torndb.select
     def find_obj_id_rating(self, object_id, rating, object_type, max_results, first_result):
         sql = '''

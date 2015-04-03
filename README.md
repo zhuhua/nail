@@ -808,6 +808,9 @@ Nail make up mobile app
         ...
     ],
     "total": 11
+    "good": 7,
+    "normal": 0,
+    "bad": 4
     }
 ###banner 列表接口
     /api/banners GET
