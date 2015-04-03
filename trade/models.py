@@ -237,6 +237,14 @@ class OrderDAO:
         '''
         return sql
     
+    @torndb.update
+    def close_evaluate(self, close_time):
+        sql = '''
+        UPDATE orders SET is_reviewed = 2, update_time = now()
+        WHERE order_no in (SELECT order_no FROM evaluate WHERE create_time < %s);
+        '''
+        return sql
+    
 orderDAO = OrderDAO()
 
 class OrderLog(torndb.Row):
