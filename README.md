@@ -753,7 +753,7 @@ Nail make up mobile app
 ###手艺人样品评价列表
     /api/evaluates/artisan GET
     参数
-    artisan 手艺人ID
+    artisan_id 手艺人ID
     rating 0 好评 1， 中评 2 差评  不传全部
     page  
     page_size
