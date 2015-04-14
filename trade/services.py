@@ -181,13 +181,13 @@ def trade(trader_id, order_no, action, price = None):
         order.update_time = datetime.now()
         orderLog.trader_type = order_trader_type['artisan']
         real_trade_id = order.artisan_id
-    elif order_action_description.index(action) == order_action_description.index('arrived'):#用户确认手艺人到达
+    elif order_action_description.index(action) == order_action_description.index('arrived'):#确认手艺人到达
         if status != order_status_description.index(u'已出发'): 
             raise AppError(u"订单不支持到达操作")
         order.status = order_status_description.index(u'已到达')
         order.update_time = datetime.now()
-        orderLog.trader_type = order_trader_type['user']
-        real_trade_id = order.user_id
+        orderLog.trader_type = order_trader_type['artisan']
+        real_trade_id = order.artisan_id
     elif order_action_description.index(action) == order_action_description.index('finish'):#用户确认交易结束
         if status != order_status_description.index(u'已到达'): 
             raise AppError(u"订单不支持完成操作")

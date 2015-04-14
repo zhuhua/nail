@@ -38,6 +38,14 @@
 							 <input type='submit'  value="出发">
 							</form>
 							</td>
+							{% elif order.status == 2 %}
+							<td>
+							<form action="/artisan/trade" method="post" style="margin:0">
+							 <input type='hidden' name="order_no" value="{{order.order_no}}">
+							 <input type='hidden' name="action" value="arrived">
+							 <input type='submit'  value="到达">
+							</form>
+							</td>
 							{% elif order.status == 4 %}
 							<td>
 							<form action="/artisan/order/delete" method="post" style="margin:0">
