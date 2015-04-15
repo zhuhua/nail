@@ -140,6 +140,9 @@ class UpdateIndex(application.RequestHandler):
     def get(self):
         artisans = artisan_models.artisanDAO.all()
         for artisan in artisans:
-            artisan_service.update_index(artisan.id)
+            try:
+                artisan_service.update_index(artisan.id)
+            except:
+                pass
         self.write('update index %s' % len(artisans))
         self.finish()

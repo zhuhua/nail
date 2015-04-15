@@ -94,6 +94,8 @@ class UpdateIndex(application.RequestHandler):
     def get(self):
         items = sample_models.sampleDAO.all()
         for item in items:
-            sample_services.update_sample_index(item.id)
-            
+            try:
+                sample_services.update_sample_index(item.id)
+            except:
+                pass
         self.finish("update sample index %s" % len(items))
