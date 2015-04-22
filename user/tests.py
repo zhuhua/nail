@@ -30,6 +30,17 @@ class Test(unittest.TestCase):
         offset = 0
         favs = models.favoriteDAO.find_by_user(user_id, fav_type, status, limit, offset)
         print favs
+        
+    def test_add_mecat(self):
+        favorite = models.Favorite()
+        favorite.user_id = 4
+        favorite.object_id = 28000006
+        favorite.type = '1'
+        try:
+            services.add_favorite(favorite);
+        except Exception, e:
+            print('add to mecat error:%s' % e)
+            
 if __name__ == "__main__":
 #     import sys;sys.argv = ['', 'Test.testRegister']
     unittest.main()

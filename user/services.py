@@ -159,11 +159,13 @@ def add_favorite(favorite):
             raise AppError(u'该收藏已存在')
         
     if favorite.type == '1':
+        #查看是否有删除状态
         favorite.status = 1
-        if models.favoriteDAO.find_by_object(**favorite) is not None:
-            favorite.update_time = datetime.now()
-            favorite.status = 0
-            models.favoriteDAO.update(**favorite)
+        old_fav = models.favoriteDAO.find_by_object(**favorite);
+        if old_fav is not None:
+            old_fav.update_time = datetime.now()
+            old_fav.status = 0
+            models.favoriteDAO.update(**old_fav)
             return
         else:
             favorite.status = 0

@@ -89,11 +89,12 @@ def get_sample_from_db(sample_id):
     sample = models.sampleDAO.find(sample_id)
     if sample is None:
         raise AppError(u'该作品不存在')
-    if sample.status == 1:
-        raise AppError(u'该作品已失效')
     
     images = common_services.get_gallery(sample_id, 'sample')
-    sample.images = images
+    imgs = list();
+    for img in images:
+        imgs.append(img.url)
+    sample.images = imgs
     sample.tags = sample.tags.split(' ')
     
     return sample

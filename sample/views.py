@@ -73,7 +73,10 @@ class Delete(application.RequestHandler):
     def get(self, sample_id):
         sample = sample_services.get_sample(sample_id)
         sample.status = 1
-        sample_services.update_sample(sample)
+        try:
+            sample_services.update_sample(sample)
+        except:
+            pass
         self.redirect('/samples')
         
 @application.RequestMapping("/samples")

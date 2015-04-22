@@ -8,7 +8,7 @@ import datetime
 from simpletor.torndb import transactional
 from trade import models as trade_models
 
-close_time = datetime.datetime.now() - datetime.timedelta(days = 30)
+close_time = datetime.datetime.now() - datetime.timedelta(days = 15)
 
 @transactional
 def close():
