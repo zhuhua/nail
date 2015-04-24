@@ -115,7 +115,7 @@ def create_order(user_id, sample_id, address, appt_date, appt_hour, order_from =
     order.buyer_name = user.nick
     order.buyer_avatar = user.avatar
     if len(sample.images) > 0:
-        order.cover = sample.images[0].url
+        order.cover = sample.images[0]
 #     order.create_time = datetime.now()
 #     order.display_buyer = True
 #     order.display_seller = True

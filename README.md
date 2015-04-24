@@ -331,7 +331,11 @@ Nail make up mobile app
 	    },
 	    "artisan_id": 美甲师Id,
 	    "create_time": 创建时间,
-	    "images": 图片,
+	    "images":[
+        "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg",
+        "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg",
+        "/img/af7762b2aafc3e53077aa0a461b6c7cf.jpg"
+        ] 图片,
 	    "category_id": 类别id,
 	    "id": 12,
 	    "is_fav": 是否收藏 0 未收藏 1，已经收藏,
