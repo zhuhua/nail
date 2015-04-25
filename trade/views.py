@@ -223,16 +223,17 @@ class ArtisanApptStatus(application.RequestHandler):
         appt_date = self.get_argument('appt_date', default = datetime.datetime.strftime(datetime.datetime.now(),"%Y-%m-%d"), strip=True)
         appt_date = str2date(appt_date)
         apptss = trade_serv.artisan_appt_status(artisan_id, appt_date);
+        
         first_day = (datetime.datetime.now() + datetime.timedelta(days = 1)).strftime('%Y-%m-%d')
         second_day = (datetime.datetime.now() + datetime.timedelta(days = 2)).strftime('%Y-%m-%d')
         third_day =  (datetime.datetime.now() + datetime.timedelta(days = 3)).strftime('%Y-%m-%d')
         vd = dict(
-                  day0 = dict(name="今天", value=""),
+                  day0 = dict(name="今天", value=datetime.datetime.now().strftime('%Y-%m-%d')),
                   day1 = dict(name="明天", value=first_day),
                   day2 = dict(name="后天", value=second_day),
                   day3 = dict(name=third_day, value=third_day)
                   )
-        self.render('artisan/apptss.html', apptss = apptss, chday = vd)
+        self.render('artisan/apptss.html', apptss = apptss, chday = vd, appt_date=appt_date.strftime('%Y-%m-%d'))
         
 @application.RequestMapping(r"/orders")
 class BackenAdminOrders(application.RequestHandler):
