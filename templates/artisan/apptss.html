@@ -10,16 +10,16 @@
 			<div class="portlet-body" style="display: block;">
 			<div class="row-fluid">
                 <a href="/artisan/appointment/status" >
-                    <span id="day0" class="btn">{{chday['day0']['name']}}</span>
+                    <span id="day_{{chday['day0']['value']}}" class="btn">{{chday['day0']['name']}}</span>
                 </a>
                 <a href="/artisan/appointment/status?appt_date={{chday['day1']['value']}}" >
-                   <span id="day1" class="btn">{{chday['day1']['name']}}</span>
+                   <span id="day_{{chday['day1']['value']}}" class="btn">{{chday['day1']['name']}}</span>
                 </a>
                 <a href="/artisan/appointment/status?appt_date={{chday['day2']['value']}}" >
-                   <span id="day2" class="btn">{{chday['day2']['name']}}</span>
+                   <span id="day_{{chday['day2']['value']}}" class="btn">{{chday['day2']['name']}}</span>
                 </a>
                 <a href="/artisan/appointment/status?appt_date={{chday['day3']['value']}}" >
-                   <span id="day3" class="btn">{{chday['day3']['name']}}</span>
+                   <span id="day_{{chday['day3']['value']}}" class="btn">{{chday['day3']['name']}}</span>
                 </a>
             </div>
             <br />
@@ -58,16 +58,8 @@
 {% block js %}
 <script type="text/javascript">
 $(document).ready(function(){
-	var find = "'";
-	var re = new RegExp(find, 'g');
-    var days = "{{chday}}".replace(re, '"')
     var current = "{{appt_date}}";
-    days = $.parseJSON(days)
-    $.each(days, function(k,v) {
-    	if (v.value == current) {
-    		$("#"+k).addClass("yellow");
-    	}
-    })
+    $("#day_"+current).addClass("yellow");
     
 });
 
