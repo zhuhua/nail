@@ -7,7 +7,7 @@ Created on Jan 28, 2015
 from simpletor import application
 from simpletor.application import AppError
 from simpletor.utils import str2date
-from datetime import datetime
+import datetime
 from api import Api
 from trade import services as trade_serv
 import logging
@@ -220,10 +220,19 @@ class ArtisanApptStatus(application.RequestHandler):
         @param appt_date: 预约日期 格式 2000-01-01
         '''
         artisan_id = self.get_current_user()['id']
-        appt_date = self.get_argument('appt_date', default = datetime.strftime(datetime.now(),"%Y-%m-%d"), strip=True)
+        appt_date = self.get_argument('appt_date', default = datetime.datetime.strftime(datetime.datetime.now(),"%Y-%m-%d"), strip=True)
         appt_date = str2date(appt_date)
         apptss = trade_serv.artisan_appt_status(artisan_id, appt_date);
-        self.render('artisan/apptss.html', apptss = apptss)
+        first_day = (datetime.datetime.now() + datetime.timedelta(days = 1)).strftime('%Y-%m-%d')
+        second_day = (datetime.datetime.now() + datetime.timedelta(days = 2)).strftime('%Y-%m-%d')
+        third_day =  (datetime.datetime.now() + datetime.timedelta(days = 3)).strftime('%Y-%m-%d')
+        vd = dict(
+                  day0 = dict(name="今天", value=""),
+                  day1 = dict(name="明天", value=first_day),
+                  day2 = dict(name="后天", value=second_day),
+                  day3 = dict(name=third_day, value=third_day)
+                  )
+        self.render('artisan/apptss.html', apptss = apptss, chday = vd)
         
 @application.RequestMapping(r"/orders")
 class BackenAdminOrders(application.RequestHandler):

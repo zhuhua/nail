@@ -8,6 +8,22 @@
 		<!-- BEGIN SAMPLE TABLE PORTLET-->
 		<div class="portlet box">
 			<div class="portlet-body" style="display: block;">
+			<div class="row-fluid">
+			
+                <a href="/artisan/appointment/status" >
+                    <span class="btn">{{chday['day0']['name']}}</span>
+                </a>
+                <a href="/artisan/appointment/status?appt_date={{chday['day1']['value']}}" >
+                   <span class="btn">{{chday['day1']['name']}}</span>
+                </a>
+                <a href="/artisan/appointment/status?appt_date={{chday['day2']['value']}}" >
+                   <span class="btn">{{chday['day2']['name']}}</span>
+                </a>
+                <a href="/artisan/appointment/status?appt_date={{chday['day3']['value']}}" >
+                   <span class="btn">{{chday['day3']['name']}}</span>
+                </a>
+            </div>
+            <br />
 				<table class="table table-hover">
 					<tbody>
 						{% for k, v in apptss.iteritems() %}
