@@ -5,6 +5,7 @@ Created on 2015-1-11
 @author: Zhuhua
 '''
 import logging
+import copy
 from simpletor.torndb import transactional
 from simpletor.application import AppError
 from simpletor.tornsolr import index, connect, delete_index
@@ -89,9 +90,9 @@ def get_artisan(artisan_id):
                 
     artisan = get_artisan_from_db(artisan_id)
     counts = common_services.get_counts(artisan_id, 'artisan')
-    
-    artisan_count.update(counts)
-    artisan.counts = artisan_count
+    acounts = copy.copy(artisan_count)
+    acounts.update(counts)
+    artisan.counts = acounts
     
     return artisan
 

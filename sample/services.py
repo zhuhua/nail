@@ -5,6 +5,7 @@ Created on Jan 20, 2015
 @author: zhuhua
 '''
 import logging
+import copy
 from simpletor.torndb import transactional
 from simpletor.application import AppError
 from simpletor.tornsolr import index, connect, delete_index
@@ -78,9 +79,9 @@ def get_sample(sample_id):
     
     sample = get_sample_from_db(sample_id)
     counts = common_services.get_counts(sample_id, 'sample')
-    
-    sample_count.update(counts)
-    sample.counts = sample_count
+    scounts = copy.copy(sample_count);
+    scounts.update(counts)
+    sample.counts = scounts
         
     return sample
 

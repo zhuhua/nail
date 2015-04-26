@@ -220,7 +220,8 @@ def trade(trader_id, order_no, action, price = None):
     models.orderLogDAO.save(**orderLog)
     #添加作品销量
     if order_action_description.index(action) == order_action_description.index('finish'):
-        add_sale(order.sample_id)
+        add_sale_to_sample(order.sample_id)
+        add_sale_to_artisan(order.artisan_id)
         add_mecat(order.user_id, order.artisan_id)
     order = get_order(order.id)
     return order
@@ -376,14 +377,26 @@ def add_order_remain(order):
     order.expire_remian = remain
     return order
 
-def add_sale(sample_id):
-    sample = sample_serv.get_sample(sample_id)
-    count_value = 1
-    if sample.counts.has_key('sale'):
-        count_value = sample.counts['sale'] + 1
-    
-    common_services.update_count(sample_id, 'sample', 'sale', count_value)
-    
+def add_sale_to_sample(sample_id):
+    try:
+        sample = sample_serv.get_sample(sample_id)
+        count_value = 1
+        if sample.counts.has_key('sale'):
+            count_value = sample.counts['sale'] + 1
+        
+        common_services.update_count(sample_id, 'sample', 'sale', count_value)
+    except:
+        pass
+def add_sale_to_artisan(artisan_id):
+    try:
+        artisan = artisan_serv.get_artisan(artisan_id)
+        count_value = 1
+        if artisan.counts.has_key('sale'):
+            count_value = artisan.counts['sale'] + 1
+        
+        common_services.update_count(artisan_id, 'artisan', 'sale', count_value)
+    except:
+        pass
 def add_mecat(user_id, artisan_id):
     favorite = user_models.Favorite()
     favorite.user_id = user_id
