@@ -223,8 +223,8 @@ def trade(trader_id, order_no, action, price = None):
         add_sale_to_sample(order.sample_id)
         add_sale_to_artisan(order.artisan_id)
         add_mecat(order.user_id, order.artisan_id)
-    order = get_order(order.id)
-    return order
+    orderx = get_order(order.id)
+    return orderx
 
 @transactional
 def batch_expire(expire_time):
@@ -385,8 +385,9 @@ def add_sale_to_sample(sample_id):
             count_value = sample.counts['sale'] + 1
         
         common_services.update_count(sample_id, 'sample', 'sale', count_value)
-    except:
-        pass
+    except Exception, e:
+        log.debug(e)
+    
 def add_sale_to_artisan(artisan_id):
     try:
         artisan = artisan_serv.get_artisan(artisan_id)
@@ -395,14 +396,25 @@ def add_sale_to_artisan(artisan_id):
             count_value = artisan.counts['sale'] + 1
         
         common_services.update_count(artisan_id, 'artisan', 'sale', count_value)
-    except:
-        pass
+    except Exception, e:
+        log.debug(e)
+    
 def add_mecat(user_id, artisan_id):
     favorite = user_models.Favorite()
     favorite.user_id = user_id
     favorite.object_id = artisan_id
     favorite.type = '1'
     try:
-        user_serv.add_favorite(favorite);
+        fav = user_models.favoriteDAO.find_by_object(**favorite)
+        if fav is None:
+            favorite.status = 1
+            old_fav = user_models.favoriteDAO.find_by_object(**favorite);
+            if old_fav is not None:
+                old_fav.update_time = datetime.now()
+                old_fav.status = 0
+                user_models.favoriteDAO.update(**old_fav)
+            else:
+                favorite.status = 0
+                user_models.favoriteDAO.save(**favorite)
     except Exception, e:
         log.debug('add to mecat error:%s' % e)
