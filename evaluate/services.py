@@ -50,9 +50,6 @@ def validate_evaluate(evaluate):
     if not (int(evaluate.rating) in (0, 1, 2)):
         raise AppError('评价级别超出范围', field='rating')
     
-    if len(evaluate.images) == 0:
-        raise AppError('至少上传一张图片', field='image')
-
     try:
         evaluate.content = evaluate.content.encode('utf-8')
     except Exception, e:
@@ -78,8 +75,9 @@ def add_evaluate(evaluate):
     
     evaluate_id = models.evaluateDAO.save(**evaluate)
     #保存评价图片
-    images = evaluate.images
-    save_images(images, evaluate_id)
+    if evaluate.get('images') is not None:
+        images = evaluate.images
+        save_images(images, evaluate_id)
     #修改订单评价状态
     order = trade_services.review(order_no, evaluate.author_id)
     

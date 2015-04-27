@@ -25,13 +25,15 @@ class Add(application.RequestHandler):
         evaluate.punctual_rank = self.get_argument('punctual_rank', strip=True)
         evaluate.rating = self.get_argument('rating', strip=True)
         evaluate.order_no = self.get_argument('order_no', strip=True)
+        
         file_dict_list = self.request.files.get('file')
         filenames = list()
-        for file_dict in file_dict_list:
-            filename = file_dict["filename"]
-            filename = save_image(filename, file_dict["body"])
-            filenames.append('/img/%s' % filename)
-            
+        if file_dict_list is not None:
+            for file_dict in file_dict_list:
+                filename = file_dict["filename"]
+                filename = save_image(filename, file_dict["body"])
+                filenames.append('/img/%s' % filename)
+                
         evaluate.images = filenames
         evaluate = evaluate_serv.add_evaluate(evaluate)
 
