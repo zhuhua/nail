@@ -74,6 +74,13 @@ class OrderDAO:
         SELECT * FROM orders o WHERE o.order_no = %s;
         '''
         return sql
+
+    @torndb.get
+    def find_by_trade_no(self, trade_no):
+        sql = '''
+        SELECT * FROM orders o WHERE o.trade_no = %s;
+        '''
+        return sql
     
     @torndb.get
     def count_orders_by_seller(self, artisan_id):

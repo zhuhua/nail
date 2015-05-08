@@ -13,7 +13,7 @@ import logging
 log = logging.getLogger(__name__)
 
 def trade_order(out_trade_no):
-    order = order_serv.get_order_orderno(out_trade_no)
+    order = order_serv.get_order_tradeno(out_trade_no)
     if order.order_no == out_trade_no and order.status == order_serv.order_status_description.index(u'待支付'):
         try:
             order = order_serv.trade(order.user_id, out_trade_no, 'pay')

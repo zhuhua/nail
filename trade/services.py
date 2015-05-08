@@ -298,6 +298,18 @@ def get_order_orderno(order_no, with_log = False):
     add_order_remain(order)
     return order
 
+def get_order_tradeno(trade_no, with_log = False):
+    order = models.orderDAO.find_by_trade_no(trade_no)
+    if order == None:
+        message = u"订单不存在(trade_no:%s)" % (trade_no)
+        raise AppError(message)
+    
+    if with_log:
+        get_order_log(order)
+    
+    add_order_remain(order)
+    return order
+
 def delete_order(order_id, user_id):
     order = get_order(order_id)
     if order.user_id != int(user_id):
