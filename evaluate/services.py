@@ -164,13 +164,13 @@ def get_evaluates_by_artisan(artisan_id, rating, page, page_size, object_type = 
     page = int(page)
     page_size = int(page_size)
     first_result = (page - 1) * page_size
-    hits = 0
+#     hits = 0
     evaluates_id = []
     if rating != None:
-        hits = models.evaluateDAO.count_by_artisan_rating(artisan_id, rating, object_type)
+#         hits = models.evaluateDAO.count_by_artisan_rating(artisan_id, rating, object_type)
         evaluates_id = models.evaluateDAO.find_by_artisan_rating(artisan_id, rating, object_type, page_size, first_result)
     else:
-        hits = models.evaluateDAO.count_by_artisan(artisan_id, object_type)
+#         hits = models.evaluateDAO.count_by_artisan(artisan_id, object_type)
         evaluates_id = models.evaluateDAO.find_by_artisan(artisan_id, object_type, page_size, first_result)
     evaluates = list()
     for eid in evaluates_id:
@@ -182,7 +182,7 @@ def get_evaluates_by_artisan(artisan_id, rating, page, page_size, object_type = 
     count_good = models.evaluateDAO.count_artisan_rating(artisan_id, 0, object_type)
     count_normal = models.evaluateDAO.count_artisan_rating(artisan_id, 1, object_type)
     count_bad = models.evaluateDAO.count_artisan_rating(artisan_id, 2, object_type)
-    res = dict(total=hits['total'], 
+    res = dict(total=count_good['total'] + count_normal['total'] + count_bad['total'], 
                good=count_good['total'], 
                normal=count_normal['total'],
                bad=count_bad['total'],
