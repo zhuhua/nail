@@ -16,7 +16,7 @@ def trade_order(out_trade_no):
     order = order_serv.get_order_tradeno(out_trade_no)
     if order.status == order_serv.order_status_description.index(u'待支付'):
         try:
-            order = order_serv.trade(order.user_id, out_trade_no, 'pay')
+            order = order_serv.trade(order.user_id, order.order_no, 'pay')
         except Exception, e:
             print e
             

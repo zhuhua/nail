@@ -8,9 +8,10 @@ import requests
 import uuid
 import md5
 import ConfigParser
+from numbers import Number
+import xml.etree.ElementTree as ET
 
 from trade import services as trade_serv
-import xml.etree.ElementTree as ET
 from simpletor.application import AppError
 from simpletor.utils import validate_utils
 import logging
@@ -66,10 +67,10 @@ class Wxpay:
         
         sign = self.generate_sign(stringA)
         params['sign'] =  sign
-        
         data = self.dump_xml(params)
+        logging.debug(data)
         
-        rep = requests.post(self.prepay_url, data=data, headers={'content-type':'text/plain'},)
+        rep = requests.post(self.prepay_url, data=data)
 
         return self.parse_xml(rep.content)
     
@@ -103,7 +104,8 @@ class Wxpay:
         for k, v in params.iteritems():
             if k.lower() == 'sign' or k.lower() == 'sign_type' or v is None or validate_utils.is_empty_str(v):
                 continue
-                
+            if isinstance(v, unicode):
+                v = v.encode('utf-8')
             result[k] = v
             
         return result
@@ -133,13 +135,13 @@ class Wxpay:
         for k, v in params.iteritems():
             if v is not None:
 #                 print type(v), v, k
-                if isinstance(v, unicode):
-                    v = str(v.encode('utf-8'))
-                if not isinstance(v, str):
-                    v = str(v)
+                if isinstance(v, str):
+                    v = v.decode('utf-8')
+                if isinstance(v, Number):
+                    v = unicode(str(v), 'utf-8');
                 ET.SubElement(root, k).text = v
              
-        return ET.tostring(root)
+        return ET.tostring(root, encoding='utf-8')
     
     def parse_xml(self, content):
         '''
