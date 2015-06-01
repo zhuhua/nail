@@ -47,7 +47,7 @@ class Wxpay:
                       body = order.title, #商品或支付单简要描述 String(32)
                       detail = '', ###商品名称明细列表 String(8192)  
                       attach = '', ###附加数据，在查询API和支付通知中原样返回，该字段主要用于商户携带订单的自定义数据 String(127)  
-                      out_trade_no = order_no, #商户系统内部的订单号,32个字符内、可包含字母 String(32)
+                      out_trade_no = order.trade_no, #商户系统内部的订单号,32个字符内、可包含字母 String(32)
                       fee_type = 'CNY',  ##0#符合ISO 4217标准的三位字母代码，默认人民币：CNY 
                       total_fee = int(float(order.price) * 100),  #订单总金额，只能为整数 单位 分
                       time_start = None,  ###订单生成时间，格式为yyyyMMddHHmmss，如2009年12月25日9点10分10秒表示为20091225091010  
