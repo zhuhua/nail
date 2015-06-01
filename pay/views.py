@@ -147,16 +147,16 @@ class WxSignture(application.RequestHandler):
         #trade_type=JSAPI，此参数必传，用户在商户appid下的唯一标识(有条件必要)
         openid = self.get_argument('openid', default = None, strip=True) 
         #APP和网页支付提交用户端ip，Native支付填调用微信支付API的机器IP
-        spbill_create_ip = self.get_argument('spbill_create_ip', strip=True)
         #
         order_no = self.get_argument('order_no', strip=True)
+        logging.debug(self.request.remote_ip) 
         params = dict(
                       device_info = device_info,
                       fee_type = fee_type,
                       trade_type = trade_type,
                       product_id = product_id,
                       openid = openid,
-                      spbill_create_ip = spbill_create_ip,
+                      spbill_create_ip = self.request.remote_ip,
                       order_no = order_no,
                       )
         rep = wxpay.sign(params)
