@@ -10,6 +10,7 @@ from trade import services as order_serv
 from pay.wxpay import wxpay
 import logging
 
+import json
 log = logging.getLogger(__name__)
 
 def trade_order(out_trade_no):
@@ -149,16 +150,19 @@ class WxSignture(application.RequestHandler):
         #APP和网页支付提交用户端ip，Native支付填调用微信支付API的机器IP
         #
         order_no = self.get_argument('order_no', strip=True)
-        logging.debug(self.request.remote_ip) 
+        logging.debug(self.request.headers.get('X-Real-IP'))
+#         logging.debug(dir(self.request))
+#         logging.debug(self.request.headers)
         params = dict(
                       device_info = device_info,
                       fee_type = fee_type,
                       trade_type = trade_type,
                       product_id = product_id,
                       openid = openid,
-                      spbill_create_ip = self.request.remote_ip,
+                      spbill_create_ip = self.request.headers.get('X-Real-IP'),
                       order_no = order_no,
                       )
         rep = wxpay.sign(params)
         
         self.render_json(rep)
+
