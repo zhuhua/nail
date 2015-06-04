@@ -10,7 +10,6 @@ from trade import services as order_serv
 from pay.wxpay import wxpay
 import logging
 
-import json
 log = logging.getLogger(__name__)
 
 def trade_order(out_trade_no):
@@ -95,9 +94,9 @@ class WxNotify(application.RequestHandler):
         self.finish('success')
         
     def post(self):
+        
         is_sign, params = self.verify()
-        result_code = params.get('result_code')
-        if is_sign and (result_code is not None) and result_code.lower().encode('utf-8') == 'success':
+        if is_sign:
             out_trade_no = params.get('out_trade_no')
             trade_order(out_trade_no)
             res = wxpay.dump_xml(dict(return_code='success', return_msg='ok'))
@@ -108,15 +107,15 @@ class WxNotify(application.RequestHandler):
         content = self.request.body
         logging.debug(content)
         params = wxpay.parse_xml(content)
-        return_code = params.pop('return_code').encode('utf-8')
+        return_code = params.get('return_code').encode('utf-8')
         if return_code.lower() != 'success':
             return False
-        
-        if params.has_key('return_msg'):
-            params.pop('return_msg')
+        result_code = params.get('result_code').encode('utf-8')
+        if result_code.lower() != 'success':
+            return False
         sign = ''
-        if params.get('sign') is not None:
-            sign = params.get('sign')
+        if params.has_key('sign') is not None:
+            sign = params.pop('sign')
             
         is_sign = self.get_sign_veryfy(params, sign)
 
