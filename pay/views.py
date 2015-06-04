@@ -106,7 +106,7 @@ class WxNotify(application.RequestHandler):
         
     def verify(self):
         content = self.request.body
-        
+        logging.debug(content)
         params = wxpay.parse_xml(content)
         return_code = params.pop('return_code')
         if return_code.lower() != 'success':
