@@ -97,7 +97,7 @@ class WxNotify(application.RequestHandler):
     def post(self):
         is_sign, params = self.verify()
         result_code = params.get('result_code')
-        if is_sign and (result_code is not None) and result_code.lower() == 'success':
+        if is_sign and (result_code is not None) and result_code.lower().encode('utf-8') == 'success':
             out_trade_no = params.get('out_trade_no')
             trade_order(out_trade_no)
             res = wxpay.dump_xml(dict(return_code='success', return_msg='ok'))
@@ -108,9 +108,10 @@ class WxNotify(application.RequestHandler):
         content = self.request.body
         logging.debug(content)
         params = wxpay.parse_xml(content)
-        return_code = params.pop('return_code')
+        return_code = params.pop('return_code').encode('utf-8')
         if return_code.lower() != 'success':
             return False
+        
         if params.has_key('return_msg'):
             params.pop('return_msg')
         sign = ''
