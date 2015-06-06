@@ -35,9 +35,9 @@ class Wxpay:
         except:
             log.error('load wxpay.properties failed')
         
-    def sign(self, client_params):
-        order_no = client_params.get('order_no')
-        order = trade_serv.get_order_orderno(order_no)
+    def sign(self, client_params, order):
+        
+            
         if int(order.status) == trade_serv.order_status_description.index(u'已支付'):
             raise AppError(u'订单已经支付')
         params = dict(

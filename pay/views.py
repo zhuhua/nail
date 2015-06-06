@@ -9,6 +9,8 @@ from alipay import sign_type, alipay
 from trade import services as order_serv
 from pay.wxpay import wxpay
 import logging
+from api import Api
+from simpletor.application import AppError
 
 log = logging.getLogger(__name__)
 
@@ -136,7 +138,9 @@ class WxSignture(application.RequestHandler):
     '''
     微信支付统一下单
     '''
+    @Api(auth=True)
     def get(self):
+        user_id = self.user_id
         #微信支付分配的终端设备号，商户自定义(非必要)
         device_info = self.get_argument('device_info', default = None, strip=True)
         #符合ISO 4217标准的三位字母代码，默认人民币：CNY (非必要)
@@ -160,9 +164,15 @@ class WxSignture(application.RequestHandler):
                       product_id = product_id,
                       openid = openid,
                       spbill_create_ip = self.request.headers.get('X-Real-IP'),
-                      order_no = order_no,
+                      
                       )
-        rep = wxpay.sign(params)
-        
+        order = order_serv.get_order_orderno(order_no)
+        wait_pay_status = order_serv.order_status_description.index(u'待支付')
+        expired_status = order_serv.order_status_description.index(u'已过期')
+        if order.user_id != user_id:
+            raise AppError("权限错误")
+        if order.status != wait_pay_status and order.status != expired_status: #订单为未支付状态
+            raise AppError(u"订单不支持支付操作")
+        rep = wxpay.sign(params, order)
         self.render_json(rep)
 
