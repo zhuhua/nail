@@ -1,0 +1,40 @@
+{% extends "../base.html" %} 
+{% block title %}修改密码{% end %}
+
+{% block content %}
+<div class="row-fluid">
+	<div class="portlet box">
+		<div class="portlet-body form">
+			<!-- BEGIN FORM-->
+			<form class="form-horizontal" method="post">
+				<div class="control-group">
+					<label class="control-label">新密码</label>
+					<div class="controls">
+						<input type="password" name="passwd" placeholder="新密码" class="m-wrap password span4" maxlength="12" pattern=".{6,12}" alt="密码长度必须为6-12个字符!" title="密码长度必须为6-12个字符!" required />
+						<span class="help-block">{{ handler.get_error('passwd') }}</span>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">再次输入密码</label>
+					<div class="controls">
+						<input type="password" name="passwd_repeat" placeholder="再次输入密码" class="m-wrap span4" maxlength="12" pattern=".{6,12}" alt="密码长度必须为6-12个字符!" required title="密码长度必须为6-12个字符!" />
+						<span class="help-block">{{ handler.get_error('passwd_repeat') }}</span>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="controls">
+						<input type="submit" class="btn green" value="提交" />
+						<input type="reset" class="btn" value="取消" />
+					</div>
+				</div>
+			</form>
+			<!-- END FORM-->
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+document.getElementsByClassName("password").setCustomValidity("密码长度必须为6-12个字符!");
+<!--
+//-->
+</script>
+{% end %}

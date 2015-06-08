@@ -40,9 +40,12 @@ $(document).ready(function() {
 							<td>{{item.mobile}}</td>
 							<td class="hidden-480">{{item.create_time}}</td>
 							<td>
-							<form id="delete_{{item.id}}" action="/artisan/{{item.id}}/delete" method="post">
+							<form id="delete_{{item.id}}" action="/artisan/{{item.id}}/delete" method="post" style="display: inline">
 							<a href="javascript:void(0)" target="delete_{{item.id}}" class="label label-delete delete_artisan">删除</a>
 							</form>
+							<!-- <a href="javascript:void(0)" class="label label-info">预约</a> -->
+							<a href="/artisan/passwd?artisan_id={{item.id}}" class="label label-important">修改密码</a>
+							
 							</td>
 						</tr>
 						{% end %}

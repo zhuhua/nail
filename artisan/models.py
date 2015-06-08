@@ -55,6 +55,15 @@ class ArtisanDAO:
         WHERE a.id = %(id)s 
         '''
         return sql
+    
+    @torndb.update
+    def change_pass(self, **artisan):
+        sql = '''
+        UPDATE artisan a SET 
+        password = %(password)s
+        WHERE a.id = %(id)s 
+        '''
+        return sql
         
     @torndb.select
     def all(self):

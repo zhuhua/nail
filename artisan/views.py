@@ -9,6 +9,7 @@ from simpletor import application
 from artisan import models as artisan_models
 from artisan import services as artisan_service
 from common import services as common_service
+from simpletor.utils import sha1
 
 import settings
 from simpletor.application import AppError
@@ -21,7 +22,7 @@ class Add(application.RequestHandler):
         artisan = artisan_models.Artisan()
         self.render('artisan/add.html', item=artisan)
         
-    @application.Security('ROLE_ADMIN')
+    @application.Security('ROLE_ADMIN', 'ROLE_MANAGER')
     def post(self):
         artisan = artisan_models.Artisan()
         artisan.name = self.get_argument('name', strip=True)
@@ -35,6 +36,34 @@ class Add(application.RequestHandler):
         except application.AppError, e:
             self.add_error(e)
             self.render('artisan/add.html', item=artisan)
+            return
+            
+        self.redirect('/artisans')
+@application.RequestMapping("/artisan/passwd")
+class ChangePass(application.RequestHandler):
+    
+    @application.Security('ROLE_ADMIN', 'ROLE_MANAGER')
+    def get(self):
+        self.get_argument('artisan_id', strip=True)
+#         artisan = artisan_service.get_artisan(artisan_id);
+        self.render('artisan/change_passwd.html')
+        
+    @application.Security('ROLE_ADMIN', 'ROLE_MANAGER')
+    def post(self):
+        artisan_id = self.get_argument('artisan_id', strip=True)
+        passwd = self.get_argument('passwd', strip=True)
+        passwd_repeat = self.get_argument('passwd_repeat', strip=True)
+        artisan = artisan_service.get_artisan(artisan_id);
+        try:
+            if (passwd is None or len(passwd) < 6 or len(passwd) > 12):
+                raise AppError("密码长度不符合要求(6-12个字符)!", 'passwd')
+            if (passwd != passwd_repeat):
+                raise AppError("两次输入密码不一致!", 'passwd_repeat')
+            artisan.password = sha1(passwd)
+            artisan_service.change_pass(artisan)
+        except application.AppError, e:
+            self.add_error(e)
+            self.render('artisan/change_passwd.html')
             return
             
         self.redirect('/artisans')

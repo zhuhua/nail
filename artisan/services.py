@@ -120,7 +120,13 @@ def update_profile(artisan):
         common_services.update_count(artisan.id, 'artisan', k, v)
     
     return get_artisan(artisan.id)
+
+@transactional
+def change_pass(artisan):
+    models.artisanDAO.change_pass(**artisan)
     
+    return get_artisan(artisan.id)
+
 def search_artisan(page=1, page_size=10, name='', order_by='create_time', sort='desc'):
     page = int(page)
     if page < 1:
