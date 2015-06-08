@@ -54,6 +54,8 @@ def register(artisan):
     
     if not validate_utils.is_mobile(artisan.mobile):
         raise AppError('请填写正确的手机号', field='mobile')
+    
+    artisan.password = sha1(artisan.password)
         
     artisan_id = models.artisanDAO.save(**artisan)
     
