@@ -25,8 +25,13 @@ class Login(application.RequestHandler):
         home = ''
         
         if re.match('[0-9]*', login_id).group() == '':
-            user, role, avatar = self.manager_login(login_id, password)
-            home = '/artisans'
+            try:
+                user, role, avatar = self.manager_login(login_id, password)
+                home = '/artisans'
+            except application.AppError, e:
+                self.add_error(e)
+                self.render('login.html')
+                return
         else:
             try:
                 user, role, avatar = self.artisan_login(login_id, password)
