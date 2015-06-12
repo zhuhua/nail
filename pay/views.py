@@ -209,7 +209,7 @@ class WxSignture(application.RequestHandler):
                 if rep.has_key('mch_id'):
                     rep.pop('mch_id')
                 if rep.has_key('nonce_str'):
-                    rep['noncestr'] = rep.pop('nonce_str')
+                    rep.pop('nonce_str')
                 if rep.has_key('prepay_id'):
                     rep['prepayid'] = rep.pop('prepay_id')
 #                 rep.pop('sign')

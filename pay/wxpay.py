@@ -169,7 +169,7 @@ class Wxpay:
         param['partnerid'] = self.mch_id
         param['package'] = 'Sign=WXPay'
         param['timestamp'] = int(time.time())
-        param['nonce_str'] = self.generate_nonce_str()
+        param['noncestr'] = self.generate_nonce_str()
         param = self.para_filter(param)
         logging.debug(param)
         stringA = self.create_link_string(param)
