@@ -7,6 +7,7 @@ Created on 2015-03-13
 import requests
 import uuid
 import md5
+import time
 import ConfigParser
 from numbers import Number
 import xml.etree.ElementTree as ET
@@ -163,4 +164,18 @@ class Wxpay:
         '''
         return uuid.uuid4().hex
     
+    def prepare(self, param):
+        param['appid'] = self.appid
+        param['partnerid'] = self.mch_id
+        param['package'] = 'Sign=WXPay'
+        param['timestamp'] = int(time.time())
+        param['nonce_str'] = self.generate_nonce_str()
+        param = self.para_filter(param)
+        logging.debug(param)
+        stringA = self.create_link_string(param)
+        
+        sign = self.generate_sign(stringA)
+        param['sign'] =  sign
+        
+        return param
 wxpay = Wxpay()

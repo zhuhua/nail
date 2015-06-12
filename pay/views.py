@@ -146,6 +146,7 @@ class WxSignture(application.RequestHandler):
         except:
             pass
         #微信支付分配的终端设备号，商户自定义(非必要)
+        signOnServer = self.get_argument('sign_on_server', default = None, strip=True)
         device_info = self.get_argument('device_info', default = None, strip=True)
         #符合ISO 4217标准的三位字母代码，默认人民币：CNY (非必要)
         fee_type = self.get_argument('fee_type', default = 'CNY', strip=True)
@@ -178,5 +179,37 @@ class WxSignture(application.RequestHandler):
         if order.status != wait_pay_status and order.status != expired_status: #订单为未支付状态
             raise AppError(u"订单不支持支付操作")
         rep = wxpay.sign(params, order)
+        log.debug(rep)
+        if signOnServer is not None:
+            return_code = rep.get('return_code')
+            if return_code.lower() != 'success':
+                return False
+            result_code = rep.get('result_code')
+            if result_code.lower() != 'success':
+                return False
+            sign = ''
+            if rep.has_key('sign'):
+                sign = rep.pop('sign')
+                
+            #过滤空值、sign与sign_type参数
+            rep = wxpay.para_filter(rep)
+            #获取待签名字符串
+            pre_sign_str = wxpay.create_link_string(rep)
+            #获得签名验证结果
+            is_sign = wxpay.verify(pre_sign_str, sign)
+            if is_sign:
+                if rep.has_key('return_code'):
+                    rep.pop('return_code')
+                if rep.has_key('return_msg'):
+                    rep.pop('return_msg')
+                if rep.has_key('result_code'):
+                    rep.pop('result_code')
+                if rep.has_key('trade_type'):
+                    rep.pop('trade_type')
+                if rep.has_key('mch_id'):
+                    rep.pop('mch_id')
+#                 rep.pop('sign')
+                rep = wxpay.prepare(rep)
+                
         self.render_json(rep)
 
