@@ -18,11 +18,12 @@ class Image(application.RequestHandler):
 class UploadAvatar(application.RequestHandler):
 
     def post(self):
+        is_crop = self.get_argument("is_crop", default=True)
         file_dict_list = self.request.files['file']
         filename = ''
         for file_dict in file_dict_list:
             filename = file_dict["filename"]
-            filename = utils.save_image(filename, file_dict["body"])
+            filename = utils.save_image(filename, file_dict["body"], is_crop=is_crop)
             
         data = dict(url="/img/%s" % filename)
         self.write(data)

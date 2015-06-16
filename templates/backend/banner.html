@@ -20,7 +20,7 @@ $(document).ready(function() {
     };
     
     var upload = $('#fileupload').fileupload({
-        url : "/upload_image",
+        url : "/upload_image?is_crop=False",
         dataType : 'json',
         acceptFileTypes : /(\.|\/)(gif|jpe?g|png)$/i,
         maxFileSize : 5000000, // 5 MB
@@ -40,7 +40,7 @@ $(document).ready(function() {
         }
     });
     var upload1 = $('#fileupload1').fileupload({
-        url : "/upload_image",
+        url : "/upload_image?is_crop=False",
         dataType : 'json',
         acceptFileTypes : /(\.|\/)(gif|jpe?g|png)$/i,
         maxFileSize : 5000000, // 5 MB
@@ -60,7 +60,7 @@ $(document).ready(function() {
         }
     });
     var upload2 = $('#fileupload2').fileupload({
-        url : "/upload_image",
+        url : "/upload_image?is_crop=False",
         dataType : 'json',
         acceptFileTypes : /(\.|\/)(gif|jpe?g|png)$/i,
         maxFileSize : 5000000, // 5 MB
