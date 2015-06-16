@@ -94,14 +94,12 @@ def save_image(filename, data, sizes=[(320, 320), (640, 640)], is_crop=True):
     ext = filename.split(".")[1]
     data_io.seek(0)
     
-    log.error(is_crop)
-    
     img = Image.open(data_io)
     if is_crop:
         images = crop(img, sizes)
     else:
-        _image = data_io.read()
-        images = [_image, _image]
+        _img = img.getvalue()
+        images = [_img, _img]
     
     
     save_path = "%s/%s.%s" % (settings.img_dir, name, ext)
