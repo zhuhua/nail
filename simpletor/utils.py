@@ -113,9 +113,11 @@ def save_image(filename, data, sizes=[(320, 320), (640, 640)], is_crop=True):
         else:
             save_path = "%s/%s.%s" % (settings.img_dir, name, ext)
         
+        os.remove(save_path)
         image_file = open(save_path, 'wb+')
         image_file.write(image)
         image_file.close()
+        del image_file
         i += 1
 
     return '%s.%s' % (name, ext)
