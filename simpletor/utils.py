@@ -59,20 +59,23 @@ def sha1(password):
     return _sha1.hexdigest()
 
 
-def crop(img, sizes):
+def crop(img, sizes, is_crop):
     '''裁切'''
     fmt = img.format
     w, h = img.size
-    aspect = w;
-    x, y = 0, 0
-    
-    if w > h:
-        aspect = h;
-        x = (w - aspect) / 2;
-    else:
-        y = (h - aspect) / 2;
         
-    img = img.crop((x, y, x + aspect, y + aspect))
+    if is_crop:
+        aspect = w;
+        x, y = 0, 0
+        
+        if w > h:
+            aspect = h;
+            x = (w - aspect) / 2;
+        else:
+            y = (h - aspect) / 2;
+        img = img.crop((x, y, x + aspect, y + aspect))
+    else:
+        sizes = [(w, h), (w, h)]
     
     images = []
     for width, height in sizes:
@@ -95,11 +98,7 @@ def save_image(filename, data, sizes=[(320, 320), (640, 640)], is_crop=True):
     data_io.seek(0)
     
     img = Image.open(data_io)
-    if is_crop:
-        images = crop(img, sizes)
-    else:
-        _img = img.getvalue()
-        images = [_img, _img]
+    images = crop(img, sizes, is_crop)
     
     
     save_path = "%s/%s.%s" % (settings.img_dir, name, ext)
