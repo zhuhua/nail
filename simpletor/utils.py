@@ -12,12 +12,15 @@ import settings
 import re
 import random
 import time
+import logging
 
 from PIL import Image
 from io import BytesIO
 
 from datetime import date, datetime
 import application
+
+log = logging.getLogger(__name__)
 
 class ValidateUtils:
     '''验证工具类'''
@@ -91,7 +94,7 @@ def save_image(filename, data, sizes=[(320, 320), (640, 640)], is_crop=True):
     ext = filename.split(".")[1]
     data_io.seek(0)
     
-    print is_crop
+    log.error(is_crop)
     
     img = Image.open(data_io)
     if is_crop:

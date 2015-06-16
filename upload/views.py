@@ -3,8 +3,11 @@ Created on Jan 13, 2015
 
 @author: zhuhua
 '''
+import logging
 from simpletor import application
 from simpletor import utils
+
+log = logging.getLogger(__name__)
 
 @application.RequestMapping("/img/(.*)")
 class Image(application.RequestHandler):
@@ -24,7 +27,7 @@ class UploadAvatar(application.RequestHandler):
         if crop == 'false':
             is_crop = False
             
-        print is_crop
+        log.error(is_crop)
         
         file_dict_list = self.request.files['file']
         filename = ''
