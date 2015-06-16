@@ -91,6 +91,8 @@ def save_image(filename, data, sizes=[(320, 320), (640, 640)], is_crop=True):
     ext = filename.split(".")[1]
     data_io.seek(0)
     
+    print is_crop
+    
     img = Image.open(data_io)
     if is_crop:
         images = crop(img, sizes)

@@ -23,6 +23,8 @@ class UploadAvatar(application.RequestHandler):
         is_crop = True
         if crop == 'false':
             is_crop = False
+            
+        print is_crop
         
         file_dict_list = self.request.files['file']
         filename = ''
