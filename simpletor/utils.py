@@ -113,7 +113,7 @@ def save_image(filename, data, sizes=[(320, 320), (640, 640)], is_crop=True):
         else:
             save_path = "%s/%s.%s" % (settings.img_dir, name, ext)
         
-        image_file = open(save_path, 'wb')
+        image_file = open(save_path, 'wb+')
         image_file.write(image)
         image_file.close()
         i += 1
