@@ -100,7 +100,8 @@ def save_image(filename, data, sizes=[(320, 320), (640, 640)], is_crop=True):
     if is_crop:
         images = crop(img, sizes)
     else:
-        images = [data_io, data_io]
+        _image = data_io.read()
+        images = [_image, _image]
     
     
     save_path = "%s/%s.%s" % (settings.img_dir, name, ext)
