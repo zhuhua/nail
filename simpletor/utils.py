@@ -93,7 +93,7 @@ def crop(img, sizes, is_crop):
 def save_image(filename, data, sizes=[(320, 320), (640, 640)], is_crop=True):
     '''保存图片到本地'''
     data_io = BytesIO(data)
-    name = md5(data_io.read())
+    name = '%s_%s' % (md5(data_io.read()), time.time())
     ext = filename.split(".")[1]
     data_io.seek(0)
     
@@ -113,7 +113,6 @@ def save_image(filename, data, sizes=[(320, 320), (640, 640)], is_crop=True):
         else:
             save_path = "%s/%s.%s" % (settings.img_dir, name, ext)
         
-        os.remove(save_path)
         image_file = open(save_path, 'wb+')
         image_file.write(image)
         image_file.close()
