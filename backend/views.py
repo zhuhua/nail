@@ -64,12 +64,18 @@ class Logout(application.RequestHandler):
         self.redirect('/login')
         
 
-@application.RequestMapping("/")
-class Index(application.RequestHandler):
+@application.RequestMapping("/manager")
+class Manager(application.RequestHandler):
     
     @application.Security('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_ARTISAN')
     def get(self):
         self.render('index.html')
+        
+@application.RequestMapping("/")
+class Index(application.RequestHandler):
+    
+    def get(self):
+        self.render('www/index.html')
         
 @application.RequestMapping("/banners")
 class BannerList(application.RequestHandler):
