@@ -13,6 +13,8 @@ import logging
 
 log = logging.getLogger(__name__)
 
+test_mobile = dict(mobile_15039816615 = '594824')
+
 def sendsms(mobile, content):
     
     log.debug('Send sms to %s' % mobile)
@@ -21,7 +23,7 @@ def sendsms(mobile, content):
     r = requests.post('http://cf.lmobile.cn/submitdata/Service.asmx/g_Submit', data)
     doc = minidom.parseString(r.content)
     state = int(doc.getElementsByTagName('State')[0].firstChild.data)
-    
+
     if int(state) == 0:
         return True
     return False
@@ -40,7 +42,12 @@ class Checkcode:
     
     def send(self, mobile):
         sms_template = u'您的验证码是：%s。请不要把验证码泄露给其他人。【咪咖美妆】'
-        code = self.generate()
+        test_code = test_mobile.get('mobile_%s' % mobile)
+        code = ''
+        if test_code is not None:
+            code = test_code
+        else:
+            code = self.generate()
         content = sms_template % code
         result = sendsms(mobile, content)
         if result:
